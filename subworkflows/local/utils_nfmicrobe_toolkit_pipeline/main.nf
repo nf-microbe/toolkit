@@ -29,17 +29,21 @@ include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
 workflow PIPELINE_INITIALISATION {
 
     take:
-    version           // boolean: Display version and exit
-    help              // boolean: Display help text
-    validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
-    nextflow_cli_args //   array: List of positional nextflow CLI args
-    outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    version             // boolean: Display version and exit
+    help                // boolean: Display help text
+    validate_params     // boolean: Boolean whether to validate parameters against the schema at runtime
+    monochrome_logs     // boolean: Do not use coloured log outputs
+    nextflow_cli_args   // array: List of positional nextflow CLI args
+    outdir              // string: The output directory where the results will be saved
+    input               // string: Path to input samplesheet
+    input_fastqs        // string: Path to input FastQ files
+    input_fastas        // string: Path to input FastA files
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions     = Channel.empty()
+    ch_input_fastqs = Channel.empty()
+    ch_input_fastas = Channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -77,31 +81,81 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters()
 
-    //
-    // Create channel from input file provided through params.input
-    //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+    if (input) {
+        //
+        // Create channel from input file provided through params.input
+        //
+        ch_samplesheet = Channel.fromSamplesheet("input")
+            .map {
+                meta, fastq_1, fastq_2, fasta ->
+                    meta.run        = meta.run == null ? "0" : meta.run
+                    meta.group      = meta.group == null ? meta.id : meta.group
+                    meta.single_end = fastq_2 ? false : true
+                    if (meta.single_end) {
+                        return [ meta, [ fastq_1 ], fasta ]
+                    } else {
+                        return [ meta, [ fastq_1, fastq_2 ], fasta ]
+                    }
+            }
+            .multiMap { meta, fastqs, fastas ->
+                fastqs: [ meta, fastqs ]
+                fastas: [ meta, fastas ]
+            }
+
+        // validate samplesheet
+        ch_samplesheet.fastqs
+            .map { meta, fastq ->
+                [ meta.id, meta, fastq ]
+            }
+            .groupTuple()
+            .map{ validateInputSamplesheet(it) }
+
+        ch_input_fastqs = ch_input_fastqs.mix(ch_samplesheet.fastqs)
+        ch_input_fastas = ch_input_fastas.mix(ch_samplesheet.fastas)
+    }
+
+    if (input_fastqs) {
+        // Prepare FastQ channel
+        ch_input_fastqs = Channel
+            .fromFilePairs(input_fastqs, size:-1)
+            .ifEmpty { exit 1, "Cannot find any reads matching: ${input_fastqs}\nNB: Path needs to be enclosed in quotes!" }
+            .map { meta, fastq ->
+                def meta_new = [:]
+                meta_new.id           = meta
+                meta_new.run          = 0
+                meta_new.group        = meta
+                meta_new.single_end   = fastq.size() == 1 ? true : false
+                if ( meta_new.single_end ) {
+                    return [ meta_new, [ fastq[0] ] ]
                 } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+                    return [ meta_new, [ fastq[0], fastq[1] ] ]
                 }
-        }
-        .groupTuple()
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
+            }
+            .mix(ch_input_fastqs)
+    }
+
+    if (input_fastas) {
+        // Prepare FastA channel
+        ch_input_fastas = Channel
+            .fromPath(input_fastas)
+            .ifEmpty { exit 1, "Cannot find any FastA files matching: ${input_fastas}\nNB: Path needs to be enclosed in quotes!" }
+            .map { fasta ->
+                def meta_new = [:]
+                meta_new.id           = fasta
+                meta_new.run          = 0
+                meta_new.group        = fasta
+                return [ meta_new, fasta ]
+            }
+            .mix(ch_input_fastas)
+    }
+
+    // Filter out empty channels
+    ch_input_fastq_filter = ch_input_fastqs.filter { meta, fastqs -> fastqs[0] }
+    ch_input_fasta_filter = ch_input_fastas.filter { meta, fastas -> fastas }
 
     emit:
-    samplesheet = ch_samplesheet
+    fastqs      = ch_input_fastq_filter
+    fastas      = ch_input_fasta_filter
     versions    = ch_versions
 }
 
@@ -162,16 +216,27 @@ def validateInputParameters() {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
+    def (metas) = input[1..2]
+
+    println metas
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
     def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
     if (!endedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
-
-    return [ metas[0], fastqs ]
+    // Check that multiple runs of the same sample are placed in the same group
+    def grouping_ok = metas.collect{ it.group }.unique().size == 1
+    if (!endedness_ok) {
+        error("Please check input samplesheet -> Multiple runs of a sample must be placed into the same group: ${metas[0].id}")
+    }
+    // Check that multiple runs of the same sample are given different run ids
+    def runs_ok   = metas.collect{ it.run }.unique().size == metas.collect{ it.run }.size
+    if (!endedness_ok) {
+        error("Please check input samplesheet -> Multiple runs of a sample must be given a different run id: ${metas[0].id}")
+    }
 }
+
 //
 // Get attribute from genome config file e.g. fasta
 //

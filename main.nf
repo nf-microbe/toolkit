@@ -15,11 +15,11 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { TOOLKIT  } from './workflows/toolkit'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_toolkit_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_toolkit_pipeline'
+include { PIPELINE_INITIALISATION   } from './subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
+include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
+include { getGenomeAttribute        } from './subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
 
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_toolkit_pipeline'
+include { TOOLKIT                   } from './workflows/toolkit'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,10 +27,10 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_tool
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// TODO nf-core: Remove this line if you don't need a FASTA file
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
+params.host_fasta = getGenomeAttribute('fasta')
+params.host_index = getGenomeAttribute('bowtie2')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,7 +44,8 @@ params.fasta = getGenomeAttribute('fasta')
 workflow NFMICROBE_TOOLKIT {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+    fastqs  // channel: fastq files read in from --input (samplesheet) and --fastqs
+    fastas  // channel: fasta files read in from --input (samplesheet) and --fastss
 
     main:
 
@@ -52,7 +53,8 @@ workflow NFMICROBE_TOOLKIT {
     // WORKFLOW: Run pipeline
     //
     TOOLKIT (
-        samplesheet
+        fastqs,
+        fastas
     )
 
     emit:
@@ -79,14 +81,17 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.fastqs,
+        params.fastas
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     NFMICROBE_TOOLKIT (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.fastq,
+        PIPELINE_INITIALISATION.out.fasta
     )
 
     //

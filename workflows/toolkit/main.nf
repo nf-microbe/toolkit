@@ -4,12 +4,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_toolkit_pipeline'
+
+include { MULTIQC                } from '../modules/nf-core/multiqc/main'
+
+include { FASTQ_READPREPROCESSING_FASTQ } from '../subworkflows/nf-core/fastq_readpreprocessing_fastq'
+include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_toolkit_pipeline'
+include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,21 +23,31 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_tool
 workflow TOOLKIT {
 
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    input_fastqs    // channel: fastq files read in from --input (samplesheet) and --fastqs
+    input_fastas    // channel: fasta files read in from --input (samplesheet) and --fastss
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_versions             = Channel.empty()
+    ch_multiqc_files        = Channel.empty()
+    ch_workdirs_to_clean    = Channel.empty()
 
     //
-    // MODULE: Run FastQC
+    // SUBWORKFLOW: Read preprocessing
     //
-    FASTQC (
-        ch_samplesheet
+    FASTQ_READPREPROCESSING_FASTQ(
+        fastqs,                     // ch_raw_fastq_gz
+        run_fastp,                  // run_fastp
+        perform_run_merging,        // perform_run_merging
+        run_bowtie2_host_removal,   // run_bowtie2_host_removal
+        igenomes,                   // igenomes
+        igenomes_index,             // igenomes_index
+        host_fasta,                 // host_fasta_gz
+        host_bowtie2_index          // host_bt2_index
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    ch_preprocessed_fastq_gz    = FASTQ_READPREPROCESSING_FASTQ.out.preprocessed_fastq_gz
+    ch_versions                 = FASTQ_READPREPROCESSING_FASTQ.out.versions
+    ch_workdirs_to_clean        = FASTQ_READPREPROCESSING_FASTQ.out.workdirs_to_clean
 
     //
     // Collate and save software versions

@@ -1,0 +1,2 @@
+subworkflows/utils_nfmicrobe_toolkit_pipeline:
+  - subworkflows/local/utils_nfmicrobe_toolkit_pipeline/**
