@@ -1,0 +1,345 @@
+{
+    "sarscov2 - fastq - single_end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": true,
+                        "assembler": "megahit_coassembly"
+                    },
+                    "group-1.contigs.fa.gz:md5,a916da100469759d482ef4bab9227df3"
+                ],
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": true,
+                        "assembler": "penguin_coassembly"
+                    },
+                    "group-1.fasta.gz:md5,5fcfe9ad8721ca1bdd2826a7193a764e"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": true,
+                        "assembler": "megahit_single"
+                    },
+                    "test1.contigs.fa.gz:md5,06b460f221b75d26dd65ec8bfff45bf6"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": true,
+                        "assembler": "penguin_single"
+                    },
+                    "test1.fasta.gz:md5,4645a1bcba5c26590def3928d0f4e374"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": true,
+                        "assembler": "megahit_single"
+                    },
+                    "test2.contigs.fa.gz:md5,06b460f221b75d26dd65ec8bfff45bf6"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": true,
+                        "assembler": "penguin_single"
+                    },
+                    "test2.fasta.gz:md5,4645a1bcba5c26590def3928d0f4e374"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,0f6c13d714f06c72ec4d2c1d826cde3d",
+                "versions.yml:md5,3dd125d7dfc9d974f05284344bcc4332",
+                "versions.yml:md5,9549e86557bb75c5efd49c755ba8d0e9",
+                "versions.yml:md5,9549e86557bb75c5efd49c755ba8d0e9",
+                "versions.yml:md5,c24023dec295e94b9ffc0481993af2ab",
+                "versions.yml:md5,c24023dec295e94b9ffc0481993af2ab",
+                "versions.yml:md5,f4dda6dc8b98419bd6adf3fd65938f1c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T14:48:06.973394287"
+    },
+    "sarscov2 - fastq - paired_end - scaffolds": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "megahit_coassembly"
+                    },
+                    "group-1.contigs.fa.gz:md5,da40ccf271166ccfc233e70adb0a23ae"
+                ],
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "penguin_coassembly"
+                    },
+                    "group-1.fasta.gz:md5,fcca93c83faefb62ef5377f6ac1a359a"
+                ],
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_coassembly"
+                    },
+                    "group-1.scaffolds.fa.gz:md5,998806d5d2b1eb69a65a382ada0d3d4a"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "megahit_single"
+                    },
+                    "test1.contigs.fa.gz:md5,3055734183fc34cba4b50afbda4f34cf"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "penguin_single"
+                    },
+                    "test1.fasta.gz:md5,313bea78d04a9f1635c3f83992324b5a"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test1.scaffolds.fa.gz:md5,764a4642957adeb6a8cc02ad083b4baa"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "megahit_single"
+                    },
+                    "test2.contigs.fa.gz:md5,093b87fe274ddb7f7dbf5d5e574495ad"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "penguin_single"
+                    },
+                    "test2.fasta.gz:md5,c2be9fc452b53e0379ea36dbbd23412f"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test2.scaffolds.fa.gz:md5,c822d360df5b09defd67ff5bfefcf8f2"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_coassembly"
+                    },
+                    "group-1.assembly.gfa.gz:md5,cd910f74924befb5baf9f78019f8b5fd"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test1.assembly.gfa.gz:md5,369329ea1ce204e4ca6786ba62cd3f24"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test2.assembly.gfa.gz:md5,d24f1f3331edcbbcd5e0e299db2abe55"
+                ]
+            ],
+            [
+                "versions.yml:md5,0f6c13d714f06c72ec4d2c1d826cde3d",
+                "versions.yml:md5,3dd125d7dfc9d974f05284344bcc4332",
+                "versions.yml:md5,9549e86557bb75c5efd49c755ba8d0e9",
+                "versions.yml:md5,9549e86557bb75c5efd49c755ba8d0e9",
+                "versions.yml:md5,c24023dec295e94b9ffc0481993af2ab",
+                "versions.yml:md5,c24023dec295e94b9ffc0481993af2ab",
+                "versions.yml:md5,e2b9d66aa650af835f6b3423bf185f06",
+                "versions.yml:md5,e2b9d66aa650af835f6b3423bf185f06",
+                "versions.yml:md5,f4dda6dc8b98419bd6adf3fd65938f1c",
+                "versions.yml:md5,f71be9bdf17bb2d291caaf9cb8f3960c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T14:52:45.943372468"
+    },
+    "sarscov2 - fastq - paired_end - contigs": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "megahit_coassembly"
+                    },
+                    "group-1.contigs.fa.gz:md5,da40ccf271166ccfc233e70adb0a23ae"
+                ],
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "penguin_coassembly"
+                    },
+                    "group-1.fasta.gz:md5,fcca93c83faefb62ef5377f6ac1a359a"
+                ],
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_coassembly"
+                    },
+                    "group-1.contigs.fa.gz:md5,11c451821e7feb37b1434fb9d1c16fc9"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "megahit_single"
+                    },
+                    "test1.contigs.fa.gz:md5,3055734183fc34cba4b50afbda4f34cf"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "penguin_single"
+                    },
+                    "test1.fasta.gz:md5,313bea78d04a9f1635c3f83992324b5a"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test1.contigs.fa.gz:md5,ebc2250764960c2c48f754065d600c81"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "megahit_single"
+                    },
+                    "test2.contigs.fa.gz:md5,093b87fe274ddb7f7dbf5d5e574495ad"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "penguin_single"
+                    },
+                    "test2.fasta.gz:md5,c2be9fc452b53e0379ea36dbbd23412f"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test2.contigs.fa.gz:md5,9e9ead4f95566cc91039a74d02d85d32"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "group-1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_coassembly"
+                    },
+                    "group-1.assembly.gfa.gz:md5,cd910f74924befb5baf9f78019f8b5fd"
+                ],
+                [
+                    {
+                        "id": "test1",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test1.assembly.gfa.gz:md5,369329ea1ce204e4ca6786ba62cd3f24"
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "group": "1",
+                        "single_end": false,
+                        "assembler": "spades_single"
+                    },
+                    "test2.assembly.gfa.gz:md5,d24f1f3331edcbbcd5e0e299db2abe55"
+                ]
+            ],
+            [
+                "versions.yml:md5,0f6c13d714f06c72ec4d2c1d826cde3d",
+                "versions.yml:md5,3dd125d7dfc9d974f05284344bcc4332",
+                "versions.yml:md5,9549e86557bb75c5efd49c755ba8d0e9",
+                "versions.yml:md5,9549e86557bb75c5efd49c755ba8d0e9",
+                "versions.yml:md5,c24023dec295e94b9ffc0481993af2ab",
+                "versions.yml:md5,c24023dec295e94b9ffc0481993af2ab",
+                "versions.yml:md5,e2b9d66aa650af835f6b3423bf185f06",
+                "versions.yml:md5,e2b9d66aa650af835f6b3423bf185f06",
+                "versions.yml:md5,f4dda6dc8b98419bd6adf3fd65938f1c",
+                "versions.yml:md5,f71be9bdf17bb2d291caaf9cb8f3960c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T14:51:34.64038407"
+    }
+}

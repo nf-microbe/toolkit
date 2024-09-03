@@ -11,11 +11,12 @@ include { MULTIQC                       } from '../../modules/nf-core/multiqc/ma
 
 include { getGenomeAttribute            } from '../../subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
 include { methodsDescriptionText        } from '../../subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
+
+include { FASTQ_READASSEMBLY_FASTA      } from '../../subworkflows/nf-core/fastq_readassembly_fasta'
 include { paramsSummaryMultiqc          } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML        } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 
 include { READPREPROCESSING             } from '../readpreprocessing'
-
 
 
 /*
@@ -49,6 +50,25 @@ workflow TOOLKIT {
     ch_multiqc_files            = ch_multiqc_files.mix(READPREPROCESSING.out.multiqc_files)
     ch_versions                 = READPREPROCESSING.out.versions
     ch_workdirs_to_clean        = READPREPROCESSING.out.workdirs_to_clean
+
+    //
+    // WORKFLOW: Read assembly
+    //
+    FASTQ_READASSEMBLY_FASTA(
+        ch_preprocessed_fastq_gz,           // channel: [ [ meta.id, meta.single_end, meta.run ], [ reads_1.fastq.gz, reads_2.fastq.gz ] ] (MANDATORY)
+        parameters.run_megahit_single,      // boolean: false
+        parameters.run_megahit_coassembly,  // boolean: false
+        parameters.run_spades_single,       // boolean: false
+        parameters.run_spades_coassembly,   // boolean: false
+        parameters.use_spades_scaffolds,    // boolean: false
+        parameters.run_penguin_single,      // boolean: false
+        parameters.run_penguin_coassembly,  // boolean: false
+    )
+    ch_assemblies_fasta_gz  = FASTQ_READASSEMBLY_FASTA.out.assemblies_fasta_gz
+    ch_assembly_graph_gz    = FASTQ_READASSEMBLY_FASTA.out.assembly_graph_gz
+    ch_spades_logs          = FASTQ_READASSEMBLY_FASTA.out.spades_logs
+    ch_multiqc_files        = ch_multiqc_files.mix(FASTQ_READASSEMBLY_FASTA.out.multiqc_files)
+    ch_versions             = FASTQ_READASSEMBLY_FASTA.out.versions
 
     //
     // MODULE: Clean intermediate files

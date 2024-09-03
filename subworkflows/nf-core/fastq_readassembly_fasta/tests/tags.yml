@@ -1,0 +1,2 @@
+subworkflows/fastq_readassembly_fasta:
+  - subworkflows/nf-core/fastq_readassembly_fasta/**
