@@ -109,6 +109,55 @@
                 }
             }
         },
+        "read_assembly_options": {
+            "title": "Read assembly options",
+            "type": "object",
+            "description": "Parameters for read assembly.",
+            "default": "",
+            "fa_icon": "fas fa-tools",
+            "properties": {
+                "run_megahit_single": {
+                    "type": "boolean",
+                    "description": "Run megahit single sample assembly?"
+                },
+                "run_megahit_coassembly": {
+                    "type": "boolean",
+                    "description": "Run megahit coassembly?"
+                },
+                "megahit_args": {
+                    "type": "string",
+                    "description": "CLI arguments to include when running megahit."
+                },
+                "run_spades_single": {
+                    "type": "boolean",
+                    "description": "Run SPAdes single sample assembly?"
+                },
+                "run_spades_coassembly": {
+                    "type": "boolean",
+                    "description": "Run SPAdes coassembly?"
+                },
+                "spades_args": {
+                    "type": "string",
+                    "description": "CLI arguments to include when running SPAdes."
+                },
+                "use_spades_scaffolds": {
+                    "type": "boolean",
+                    "description": "Use SPAdes scaffolds output (instead of contigs)."
+                },
+                "run_penguin_single": {
+                    "type": "boolean",
+                    "description": "Run PenguiN single sample assembly?"
+                },
+                "run_penguin_coassembly": {
+                    "type": "boolean",
+                    "description": "Run PenguiN coassembly?"
+                },
+                "penguin_args": {
+                    "type": "string",
+                    "description": "CLI arguments to include when running PenguiN."
+                }
+            }
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -338,6 +387,9 @@
         },
         {
             "$ref": "#/definitions/read_preprocessing_options"
+        },
+        {
+            "$ref": "#/definitions/read_assembly_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"

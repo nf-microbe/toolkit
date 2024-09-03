@@ -131,4 +131,60 @@ nextflow_function {
             )
         }
     }
+
+    test("rmEmptyFastAs: nonempty + cleaned") {
+        function "rmEmptyFastAs"
+        when {
+            function {
+            """
+            input[0] = Channel.of(
+                [
+                    [ id:'nonempty' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkifExists: true)
+                ],
+                [
+                    [ id:'cleaned' ], // meta map
+                    file("${projectDir}/assets/test-datasets/genomics/sarscov2/illumina/fastq/cleaned.fastq.gz", checkIfExists: true)
+                ]
+            )
+            input[1] = true
+            """
+            }
+        }
+        then {
+            assertAll (
+                { assert function.success },
+                { assert function.stdout.any() { it.contains("[[id:nonempty], /nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz]") } },
+                { assert function.stdout.any() { it.contains("[[id:cleaned]") } }
+            )
+        }
+    }
+
+    test("rmEmptyFastAs: nonempty + empty") {
+        function "rmEmptyFastAs"
+        when {
+            function {
+            """
+            input[0] = Channel.of(
+                [
+                    [ id:'nonempty' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkifExists: true)
+                ],
+                [
+                    [ id:'empty' ], // meta map
+                    file("${projectDir}/assets/test-datasets/genomics/sarscov2/genome/empty.fasta.gz", checkIfExists: true)
+                ]
+            )
+            input[1] = true
+            """
+            }
+        }
+        then {
+            assertAll (
+                { assert function.success },
+                { assert function.stdout.any() { it.contains("[[id:nonempty], /nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz]") } },
+                { assert function.stdout.any() { !it.contains("id:empty") } }
+            )
+        }
+    }
 }

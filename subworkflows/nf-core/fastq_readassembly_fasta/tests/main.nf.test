@@ -1,0 +1,151 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTQ_READASSEMBLY_FASTA"
+    script "../main.nf"
+    workflow "FASTQ_READASSEMBLY_FASTA"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/fastq_readassembly_fasta"
+    tag "cat/fastq"
+    tag "megahit"
+    tag "plass/penguin"
+    tag "spades"
+    tag "subworkflows/utils_nfmicrobe_functions"
+
+    test("sarscov2 - fastq - single_end") {
+        when {
+            params {
+                plass_penguin_args  = "--min-contig-len 100"
+                spades_args         = null
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test1', group:'1', single_end:true ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkifExists: true)
+                    ],
+                    [
+                        [ id:'test2', group:'1', single_end:true ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkifExists: true)
+                    ]
+                )
+                input[1] = true
+                input[2] = true
+                input[3] = true
+                input[4] = true
+                input[5] = true
+                input[6] = true
+                input[7] = true
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.assemblies_fasta_gz,
+                    workflow.out.assembly_graph_gz,
+                    workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("sarscov2 - fastq - paired_end - contigs") {
+        when {
+            params {
+                plass_penguin_args  = null
+                spades_args         = "--meta --only-assembler"
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test1', group:'1', single_end:false ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test1_1.fastq.gz', checkifExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test1_2.fastq.gz', checkifExists: true)
+                        ]
+                    ],
+                    [
+                        [ id:'test2', group:'1', single_end:false ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test2_1.fastq.gz', checkifExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test2_2.fastq.gz', checkifExists: true)
+                        ]
+                    ]
+                )
+                input[1] = true
+                input[2] = true
+                input[3] = true
+                input[4] = true
+                input[5] = false
+                input[6] = true
+                input[7] = true
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.assemblies_fasta_gz,
+                    workflow.out.assembly_graph_gz,
+                    workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("sarscov2 - fastq - paired_end - scaffolds") {
+        when {
+            params {
+                plass_penguin_args  = null
+                spades_args         = "--meta --only-assembler"
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test1', group:'1', single_end:false ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test1_1.fastq.gz', checkifExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test1_2.fastq.gz', checkifExists: true)
+                        ]
+                    ],
+                    [
+                        [ id:'test2', group:'1', single_end:false ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test2_1.fastq.gz', checkifExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fastq/test2_2.fastq.gz', checkifExists: true)
+                        ]
+                    ]
+                )
+                input[1] = true
+                input[2] = true
+                input[3] = true
+                input[4] = true
+                input[5] = true
+                input[6] = true
+                input[7] = true
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.assemblies_fasta_gz,
+                    workflow.out.assembly_graph_gz,
+                    workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+}

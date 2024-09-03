@@ -67,7 +67,7 @@ def getWorkDirs(ch_to_clean, ch_downstream, print_output) {
 }
 
 //
-// Filter channels to remove empty fastq files
+// Filter channels to remove empty FastQ files
 //
 def rmEmptyFastQs(ch_fastqs, print_output) {
     def ch_nonempty_fastqs = ch_fastqs
@@ -99,4 +99,28 @@ def rmEmptyFastQs(ch_fastqs, print_output) {
 
     return ch_nonempty_fastqs
 }
+
+//
+// Filter channels to remove empty FastA files
+//
+def rmEmptyFastAs(ch_fastas, print_output) {
+    def ch_nonempty_fastas = ch_fastas
+        .filter { meta, fasta ->
+            try {
+                fasta.countLines( limit: 10 ) > 1
+            } catch (java.util.zip.ZipException e) {
+                log.warn "[rmEmptyFastAs]: ${fasta} is not in GZIP format, this is likely because it was cleaned with --remove_intermediate_files"
+                true
+            } catch (EOFException) {
+                log.warn "[rmEmptyFastAs]: ${fasta} has an EOFException, this is likely an empty gzipped file."
+            }
+        }
+
+    if (print_output) {
+        ch_nonempty_fastas.view()
+    }
+
+    return ch_nonempty_fastas
+}
+
 
