@@ -23,7 +23,7 @@ nextflow_pipeline {
     }
 
     test("test nothing") {
-        config "../conf/test_nothing.config"
+        config "../conf/test.config"
         when {
             params {
                 outdir = "$outputDir"

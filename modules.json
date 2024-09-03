@@ -2,7 +2,7 @@
     "name": "nf-microbe/toolkit",
     "homePage": "https://github.com/nf-microbe/toolkit",
     "repos": {
-        "git@github.com:nf-microbe/modules.git": {
+        "https://github.com/nf-microbe/modules.git": {
             "modules": {
                 "nf-core": {
                     "bowtie2/align": {
