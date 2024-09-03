@@ -1,10 +1,10 @@
 nextflow_workflow {
 
-    name "Test Subworkflow: TOOLKIT"
+    name "Test Subworkflow: READPREPROCESSING"
     script "../main.nf"
-    workflow "TOOLKIT"
+    workflow "READPREPROCESSING"
 
-    tag "nfmicrobe_toolkit"
+    tag "nfmicrobe_toolkit_ci"
 
     test("host_removal: igenomes input") {
         when {

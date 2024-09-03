@@ -3,7 +3,7 @@ nextflow_pipeline {
     name "Test pipeline"
     script "../main.nf"
 
-    tag "nfmicrobe_toolkit"
+    tag "nfmicrobe_toolkit_ci"
 
     test("fastq full test") {
         config "../conf/test_fastq.config"

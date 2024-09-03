@@ -4,7 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "PIPELINE_INITIALISATION"
 
-    tag "nfmicrobe_toolkit"
+    tag "nfmicrobe_toolkit_ci"
     tag "subworkflows"
     tag "subworkflows/utils_nfmicrobe_toolkit_pipeline"
 

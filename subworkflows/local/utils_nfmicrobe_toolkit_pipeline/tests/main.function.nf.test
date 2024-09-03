@@ -3,7 +3,7 @@ nextflow_function {
     name "Test pipeline initialisation functions"
     script "../main.nf"
 
-    tag "nfmicrobe_toolkit"
+    tag "nfmicrobe_toolkit_ci"
     tag 'subworkflows'
     tag 'utils_nfmicrobe_toolkit_pipeline'
     tag 'subworkflows/utils_nfmicrobe_toolkit_pipeline'

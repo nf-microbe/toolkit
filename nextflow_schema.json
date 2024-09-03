@@ -24,7 +24,7 @@
                     "fa_icon": "fas fa-file-csv"
                 },
                 "fastqs": {
-                    "type": "string",
+                    "type": "array",
                     "fa_icon": "fas fa-dna",
                     "description": "Path to input FastQ files."
                 },
