@@ -1,0 +1,48 @@
+{
+    "host_removal: local index input": {
+        "content": [
+            [
+                "versions.yml:md5,80cfeb19f0ae7253fe651a3f62a62c4f",
+                "versions.yml:md5,80cfeb19f0ae7253fe651a3f62a62c4f",
+                "versions.yml:md5,d811842b5ed00884adfa2e5a05696719",
+                "versions.yml:md5,f456ba4a0830019ee50cde183d50c0f9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T09:38:15.305743504"
+    },
+    "host_removal: local fasta input": {
+        "content": [
+            [
+                "versions.yml:md5,80cfeb19f0ae7253fe651a3f62a62c4f",
+                "versions.yml:md5,80cfeb19f0ae7253fe651a3f62a62c4f",
+                "versions.yml:md5,c3ede7a4174a51d15686d375e895a72d",
+                "versions.yml:md5,d811842b5ed00884adfa2e5a05696719",
+                "versions.yml:md5,f456ba4a0830019ee50cde183d50c0f9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T09:36:25.972886023"
+    },
+    "host_removal: igenomes input": {
+        "content": [
+            [
+                "versions.yml:md5,80cfeb19f0ae7253fe651a3f62a62c4f",
+                "versions.yml:md5,80cfeb19f0ae7253fe651a3f62a62c4f",
+                "versions.yml:md5,d811842b5ed00884adfa2e5a05696719",
+                "versions.yml:md5,f456ba4a0830019ee50cde183d50c0f9"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T09:30:37.023836464"
+    }
+}

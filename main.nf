@@ -17,20 +17,8 @@ nextflow.enable.dsl = 2
 
 include { PIPELINE_INITIALISATION   } from './subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
 include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
-include { getGenomeAttribute        } from './subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
 
 include { TOOLKIT                   } from './workflows/toolkit'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//   This is an example of how to use getGenomeAttribute() to fetch parameters
-//   from igenomes.config using `--genome`
-params.host_fasta = getGenomeAttribute('fasta')
-params.host_index = getGenomeAttribute('bowtie2')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,8 +32,9 @@ params.host_index = getGenomeAttribute('bowtie2')
 workflow NFMICROBE_TOOLKIT {
 
     take:
-    fastqs  // channel: fastq files read in from --input (samplesheet) and --fastqs
-    fastas  // channel: fasta files read in from --input (samplesheet) and --fastss
+    fastqs      // channel: fastq files read in from --input (samplesheet) and --fastqs
+    fastas      // channel: fasta files read in from --input (samplesheet) and --fastas
+    parameters  // pipeline parameters
 
     main:
 
@@ -54,7 +43,8 @@ workflow NFMICROBE_TOOLKIT {
     //
     TOOLKIT (
         fastqs,
-        fastas
+        fastas,
+        parameters
     )
 
     emit:
@@ -90,8 +80,9 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFMICROBE_TOOLKIT (
-        PIPELINE_INITIALISATION.out.fastq,
-        PIPELINE_INITIALISATION.out.fasta
+        PIPELINE_INITIALISATION.out.fastqs,
+        PIPELINE_INITIALISATION.out.fastas,
+        params
     )
 
     //

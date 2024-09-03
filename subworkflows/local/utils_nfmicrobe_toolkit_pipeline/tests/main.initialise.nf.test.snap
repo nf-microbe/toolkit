@@ -74,13 +74,25 @@
                     ],
                     [
                         {
-                            "id": "test2_1",
+                            "id": "test",
                             "run": 0,
-                            "group": "test2_1",
+                            "group": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec",
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "run": 0,
+                            "group": "test2",
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_1.fastq.gz"
+                            "test2.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -91,7 +103,7 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -102,26 +114,26 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
                         ]
                     ]
                 ],
                 "1": [
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz",
+                            "id": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                            "group": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                        "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                     ],
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz",
+                            "id": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                            "group": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                        "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                     ],
                     [
                         {
@@ -166,19 +178,19 @@
                 "fastas": [
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz",
+                            "id": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                            "group": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                        "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                     ],
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz",
+                            "id": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                            "group": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                        "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                     ],
                     [
                         {
@@ -289,13 +301,25 @@
                     ],
                     [
                         {
-                            "id": "test2_1",
+                            "id": "test",
                             "run": 0,
-                            "group": "test2_1",
+                            "group": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec",
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "run": 0,
+                            "group": "test2",
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_1.fastq.gz"
+                            "test2.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -306,7 +330,7 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -317,7 +341,7 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
                         ]
                     ]
                 ],
@@ -330,7 +354,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-02T22:37:26.559842733"
+        "timestamp": "2024-09-03T06:58:57.16183429"
     },
     "fastq only": {
         "content": [
@@ -338,13 +362,25 @@
                 "0": [
                     [
                         {
-                            "id": "test2_1",
+                            "id": "test",
                             "run": 0,
-                            "group": "test2_1",
+                            "group": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec",
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "run": 0,
+                            "group": "test2",
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_1.fastq.gz"
+                            "test2.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -355,7 +391,7 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -366,7 +402,7 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
                         ]
                     ]
                 ],
@@ -382,13 +418,25 @@
                 "fastqs": [
                     [
                         {
-                            "id": "test2_1",
+                            "id": "test",
                             "run": 0,
-                            "group": "test2_1",
+                            "group": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec",
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "run": 0,
+                            "group": "test2",
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_1.fastq.gz"
+                            "test2.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -399,7 +447,7 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
+                            "test_1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
                     ],
                     [
@@ -410,7 +458,7 @@
                             "single_end": true
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
+                            "test_2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
                         ]
                     ]
                 ],
@@ -423,7 +471,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-02T22:36:45.815817457"
+        "timestamp": "2024-09-03T06:55:26.238983025"
     },
     "samplesheet only": {
         "content": [
@@ -669,19 +717,19 @@
                 "1": [
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz",
+                            "id": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                            "group": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                        "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                     ],
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz",
+                            "id": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                            "group": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                        "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                     ]
                 ],
                 "2": [
@@ -690,19 +738,19 @@
                 "fastas": [
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz",
+                            "id": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                            "group": "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz"
+                        "contigs.fasta.gz:md5,c96caedf8c949a2b871b83152d99c652"
                     ],
                     [
                         {
-                            "id": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz",
+                            "id": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6",
                             "run": 0,
-                            "group": "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                            "group": "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                        "genome.fasta.gz:md5,6e9fe4042a72f2345f644f239272b7e6"
                     ]
                 ],
                 "fastqs": [
@@ -717,6 +765,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-02T22:38:55.621387613"
+        "timestamp": "2024-09-03T06:58:35.604631851"
     }
 }

@@ -4,6 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "PIPELINE_INITIALISATION"
 
+    tag "nfmicrobe_toolkit"
     tag "subworkflows"
     tag "subworkflows/utils_nfmicrobe_toolkit_pipeline"
 
@@ -45,7 +46,7 @@ nextflow_workflow {
                 input[4] = []
                 input[5] = null
                 input[6] = []
-                input[7] = ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz", "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz", "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_1.fastq.gz"]
+                input[7] = ["${projectDir}/assets/test-datasets/fastqs/*_{1,2}.fastq.gz", "${projectDir}/assets/test-datasets/fastqs/*.fastq.gz"]
                 input[8] = []
                 """
             }
@@ -70,7 +71,7 @@ nextflow_workflow {
                 input[5] = null
                 input[6] = []
                 input[7] = []
-                input[8] = ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz", "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"]
+                input[8] = "${projectDir}/assets/test-datasets/fastas/*.fasta.gz"
                 """
             }
         }
@@ -96,8 +97,8 @@ nextflow_workflow {
                 input[4] = []
                 input[5] = null
                 input[6] = "${projectDir}/assets/test-datasets/samplesheets/test_samplesheet.csv"
-                input[7] = ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz", "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz", "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_1.fastq.gz"]
-                input[8] = ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta.gz", "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"]
+                input[7] = ["${projectDir}/assets/test-datasets/fastqs/*_{1,2}.fastq.gz", "${projectDir}/assets/test-datasets/fastqs/*.fastq.gz"]
+                input[8] = "${projectDir}/assets/test-datasets/fastas/*.fasta.gz"
                 """
             }
         }

@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "custom_cleanworkdirs"
+description: Clean work directories with outputs no longer needed for downstream tasks.
+keywords:
+  - clean
+  - work
+  - intermediate
+tools:
+  - "custom":
+      description: "Custom module to clean up intermediate work directories once all downstream tasks are complete."
+      tool_dev_url: "https://github.com/nf-core/modules/blob/master/modules/nf-core/custom/cleanworkdirs/main.nf"
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - directory:
+      type: directory
+      description: Path to the working directory to be cleaned
+      pattern: "**/work/**"
+  - module_being_cleaned:
+      type: string
+      description: The name of the module being cleaned so that cleaning can be tracked.
+      pattern: "*"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - cleaned_workdir:
+      type: file
+      description: Log file containing the paths to the files that were cleaned.
+      pattern: "*.log"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

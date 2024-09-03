@@ -1,0 +1,2 @@
+custom/cleanworkdirs:
+  - "modules/nf-core/custom/cleanworkdirs/**"

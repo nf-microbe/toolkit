@@ -20,6 +20,11 @@
                         "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
                         "installed_by": ["fastq_readpreprocessing_fastq"]
                     },
+                    "custom/cleanworkdirs": {
+                        "branch": "master",
+                        "git_sha": "477c17f586a4ce2132c0582233e0fe2efd0a6472",
+                        "installed_by": ["modules"]
+                    },
                     "fastp": {
                         "branch": "quick-fixes",
                         "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",

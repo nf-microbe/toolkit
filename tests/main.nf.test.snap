@@ -1,0 +1,25 @@
+{
+    "fastq full test": {
+        "content": [
+            [
+                [
+                    [
+                        "paired_end_no_fasta.bowtie2.log:md5,8ffa821eee07e00e9aab700e344bd82e",
+                        "paired_end_w_fasta.bowtie2.log:md5,8e23fed25a121f513a1b0a93fd891643",
+                        "single_end_no_fasta.bowtie2.log:md5,65726c20f8c88b63686170af7fafdffc",
+                        "single_end_w_fasta.bowtie2.log:md5,b2a8712807e0bb26ee380787ef613dfe",
+                        "test.bowtie2.log:md5,8e23fed25a121f513a1b0a93fd891643",
+                        "test2.bowtie2.log:md5,b2a8712807e0bb26ee380787ef613dfe",
+                        "test_1.bowtie2.log:md5,b2a8712807e0bb26ee380787ef613dfe",
+                        "test_2.bowtie2.log:md5,708baa4cfe0bc231fbeeb9fabe5175b3"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T09:15:42.72190101"
+    }
+}
