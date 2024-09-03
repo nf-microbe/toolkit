@@ -18,7 +18,7 @@
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
-                        "installed_by": ["fastq_readassembly_fasta", "fastq_readpreprocessing_fastq"]
+                        "installed_by": ["fastq_readpreprocessing_fastq"]
                     },
                     "custom/cleanworkdirs": {
                         "branch": "master",
