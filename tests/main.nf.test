@@ -9,7 +9,8 @@ nextflow_pipeline {
         config "../conf/test_fastq.config"
         when {
             params {
-                outdir = "$outputDir"
+                outdir                      = "$outputDir"
+                remove_intermediate_files   = false
             }
         }
         then {
