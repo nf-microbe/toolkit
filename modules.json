@@ -6,17 +6,17 @@
             "modules": {
                 "nf-core": {
                     "bowtie2/align": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "9bfc81874554e87740bcb3e5e07acf0a153c9ecb",
                         "installed_by": ["fastq_bowtie2_fastq"]
                     },
                     "bowtie2/build": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "1fea64f5132a813ec97c1c6d3a74e0aee7142b6d",
                         "installed_by": ["fastq_bowtie2_fastq"]
                     },
                     "cat/fastq": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
                         "installed_by": ["fastq_readpreprocessing_fastq"]
                     },
@@ -26,12 +26,12 @@
                         "installed_by": ["modules"]
                     },
                     "fastp": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
                         "installed_by": ["fastq_readpreprocessing_fastq"]
                     },
                     "fastqc": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "b49b8992e5271ce427f3a7cdb29628fc58400eb5",
                         "installed_by": ["fastq_readpreprocessing_fastq"]
                     },
@@ -45,12 +45,12 @@
             "subworkflows": {
                 "nf-core": {
                     "fastq_bowtie2_fastq": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "0f7ec432d2c5388b613f24d1b63c5bd00d2a6015",
                         "installed_by": ["fastq_readpreprocessing_fastq"]
                     },
                     "fastq_readpreprocessing_fastq": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "fbc969b5b154103a13f9bbcfd4f93d8b7178dba8",
                         "installed_by": ["subworkflows"]
                     },
@@ -65,7 +65,7 @@
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfmicrobe_functions": {
-                        "branch": "quick-fixes",
+                        "branch": "master",
                         "git_sha": "fbc969b5b154103a13f9bbcfd4f93d8b7178dba8",
                         "installed_by": ["subworkflows"]
                     },

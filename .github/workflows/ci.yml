@@ -100,6 +100,7 @@ jobs:
           NFT_WORKDIR=~ \
           nf-test test \
             --ci \
+            --shard ${{ matrix.shard }}/${{ env.SHARDS }} \
             --changed-since HEAD^ \
             --tag nfmicrobe_toolkit \
             --related-tests \
