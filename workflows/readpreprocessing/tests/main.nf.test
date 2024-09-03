@@ -30,8 +30,7 @@ nextflow_workflow {
                         ]
                     ]
                 )
-                input[1] = []
-                input[2] = params
+                input[1] = params
                 """
             }
         }
@@ -71,8 +70,7 @@ nextflow_workflow {
                         ]
                     ]
                 )
-                input[1] = []
-                input[2] = params
+                input[1] = params
                 """
             }
         }
@@ -111,8 +109,7 @@ nextflow_workflow {
                         ]
                     ]
                 )
-                input[1] = []
-                input[2] = params
+                input[1] = params
                 """
             }
         }
@@ -150,8 +147,7 @@ nextflow_workflow {
                         ]
                     ]
                 )
-                input[1] = []
-                input[2] = params
+                input[1] = params
                 """
             }
         }
