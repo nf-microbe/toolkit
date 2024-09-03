@@ -1,0 +1,40 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    tag "nfmicrobe_toolkit_ci"
+
+    test("fastq full test") {
+        config "../conf/test_fastq.config"
+        when {
+            params {
+                outdir                      = "$outputDir"
+                remove_intermediate_files   = false
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    path("$outputDir/ReadPreprocessing/")
+                ).match() }
+            )
+        }
+    }
+
+    test("test nothing") {
+        config "../conf/test.config"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() == 1 },
+            )
+        }
+    }
+}

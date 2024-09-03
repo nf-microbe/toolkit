@@ -1,0 +1,197 @@
+nextflow_function {
+
+    name "Test pipeline initialisation functions"
+    script "../main.nf"
+
+    tag "nfmicrobe_toolkit_ci"
+    tag 'subworkflows'
+    tag 'utils_nfmicrobe_toolkit_pipeline'
+    tag 'subworkflows/utils_nfmicrobe_toolkit_pipeline'
+
+
+    test("getGenomeAttribute fasta") {
+        function "getGenomeAttribute"
+        when {
+            params {
+                genome = "EB1"
+            }
+            function {
+                """
+                input[0] = 'fasta'
+                """
+            }
+        }
+        then {
+            assertAll (
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("getGenomeAttribute bowtie2") {
+        function "getGenomeAttribute"
+        when {
+            params {
+                genome = "EB1"
+            }
+            function {
+                """
+                input[0] = 'bowtie2'
+                """
+            }
+        }
+        then {
+            assertAll (
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("validateInputParameters pass") {
+        function "validateInputParameters"
+        when {
+            params {
+                genome = "EB1"
+            }
+        }
+        then {
+            assertAll (
+                { assert function.success },
+            )
+        }
+    }
+
+    test("validateInputParameters fail") {
+        function "validateInputParameters"
+        when {
+            params {
+                genome = "test"
+            }
+        }
+        then {
+            assertAll (
+                { assert !function.success },
+                { assert snapshot(function.stdout).match() },
+            )
+        }
+    }
+
+    test("validateInputSamplesheet double pass") {
+        function "validateInputSamplesheet"
+        when {
+            function {
+            """
+            input[0] = [
+                'test',
+                [
+                    [ id:'test', run:'1', group:'test', single_end:true ],
+                    [ id:'test', run:'2', group:'test', single_end:true ]
+                ],
+                []
+            ]
+            """
+            }
+        }
+        then {
+            assertAll (
+                { assert function.success }
+            )
+        }
+    }
+
+    test("validateInputSamplesheet single pass") {
+        function "validateInputSamplesheet"
+        when {
+            function {
+            """
+            input[0] = [
+                'test',
+                [
+                    [ id:'test', run:'1', group:'test', single_end:true ],
+                ],
+                []
+            ]
+            """
+            }
+        }
+        then {
+            assertAll (
+                { assert function.success }
+            )
+        }
+    }
+
+    test("validateInputSamplesheet single_end fail") {
+        function "validateInputSamplesheet"
+        when {
+            function {
+            """
+            input[0] = [
+                'test',
+                [
+                    [ id:'test', run:'1', group:'test', single_end:true ],
+                    [ id:'test', run:'2', group:'test', single_end:false ]
+                ],
+                []
+            ]
+            """
+            }
+        }
+        then {
+            assertAll (
+                { assert !function.success },
+                { assert snapshot(function.stdout).match() },
+            )
+        }
+    }
+
+    test("validateInputSamplesheet group fail") {
+        function "validateInputSamplesheet"
+        when {
+            function {
+            """
+            input[0] = [
+                'test',
+                [
+                    [ id:'test', run:'1', group:'test', single_end:true ],
+                    [ id:'test', run:'2', group:'test2', single_end:true ]
+                ],
+                []
+            ]
+            """
+            }
+        }
+        then {
+            assertAll (
+                { assert !function.success },
+                { assert snapshot(function.stdout).match() },
+            )
+        }
+    }
+
+    test("validateInputSamplesheet run fail") {
+        function "validateInputSamplesheet"
+        when {
+            function {
+            """
+            input[0] = [
+                'test',
+                [
+                    [ id:'test', run:'1', group:'test', single_end:true ],
+                    [ id:'test', run:'1', group:'test', single_end:true ]
+                ],
+                []
+            ]
+            """
+            }
+        }
+        then {
+            assertAll (
+                { assert !function.success },
+                { assert snapshot(function.stdout).match() },
+            )
+        }
+    }
+}

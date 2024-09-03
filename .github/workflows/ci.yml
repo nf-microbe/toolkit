@@ -4,12 +4,10 @@ on:
   push:
     branches:
       - dev
+      - master
   pull_request:
   release:
     types: [published]
-
-env:
-  NXF_ANSI_LOG: false
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -22,25 +20,108 @@ jobs:
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-microbe/toolkit') }}"
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        NXF_VER:
-          - "23.04.0"
-          - "latest-everything"
+        NXF_VER: ["23.04.0", "latest-everything"]
+        shard: [1, 2, 3, 4, 5]
+        profile: [conda, docker, singularity]
+    env:
+      SHARDS: "5"
+      NXF_ANSI_LOG: false
+      NFT_VER: "0.9.0"
+      NFT_WORKDIR: "~"
+      NFT_DIFF: "pdiff"
+      NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
+      NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+      NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v2
+      - uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+      - uses: nf-core/setup-nf-test@v1
+        with:
+          version: ${{ env.NFT_VER }}
 
-      - name: Run pipeline with test data
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
+      - name: Setup apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Set up Python
+        uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3 # v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        id: cache-pip-pdiff
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-pdiff
+          restore-keys: |
+            ${{ runner.os }}-pip-pdiff
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip pdiff cryptography
+
+      - name: Set up miniconda
+        if: matrix.profile == 'conda'
+        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
+        with:
+          miniconda-version: "latest"
+          auto-update-conda: true
+          channels: conda-forge,bioconda,defaults
+
+      - name: Conda setup
+        if: matrix.profile == 'conda'
+        run: |
+          conda clean -a
+          conda install -n base conda-libmamba-solver
+          conda config --set solver libmamba
+          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+          echo $(realpath python) >> $GITHUB_PATH
+
+      # Test the module
+      - name: Run nf-test
+        env:
+          NFT_DIFF: "pdiff"
+          NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
+        run: |
+          NFT_WORKDIR=~ \
+          nf-test test \
+            --ci \
+            --shard ${{ matrix.shard }}/${{ env.SHARDS }} \
+            --changed-since HEAD^ \
+            --tag nfmicrobe_toolkit_ci \
+            --related-tests \
+            --follow-dependencies \
+            --profile=+${{ matrix.profile }} \
+            --tap=test.tap
+
+      - uses: pcolby/tap-summary@v1
+        with:
+          path: >-
+            test.tap
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always ${{ github.workspace }}/.nf-test/tests/*/meta/nextflow.log
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: test.xml

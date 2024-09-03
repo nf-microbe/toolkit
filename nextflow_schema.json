@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -23,11 +23,26 @@
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "fastqs": {
+                    "type": "array",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to input FastQ files."
+                },
+                "fastas": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path to input FastA files."
+                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
+                },
+                "remove_intermediate_files": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-trash-alt",
+                    "description": "Delete intermediate files after all directly following steps have been completed?"
                 },
                 "email": {
                     "type": "string",
@@ -43,6 +58,57 @@
                 }
             }
         },
+        "read_preprocessing_options": {
+            "title": "Read preprocessing options",
+            "type": "object",
+            "description": "Parameters for read trimming, complexity filtering, and host read removal.",
+            "default": "",
+            "fa_icon": "fas fa-ban",
+            "properties": {
+                "run_fastp": {
+                    "type": "boolean",
+                    "description": "Run fastp on raw reads?"
+                },
+                "fastp_args": {
+                    "type": "string",
+                    "description": "CLI arguments to include when running fastp."
+                },
+                "save_fastp_fastq": {
+                    "type": "boolean",
+                    "description": "Save FastQ files output by fastp?"
+                },
+                "perform_run_merging": {
+                    "type": "boolean",
+                    "description": "Merge runs within samples?"
+                },
+                "save_run_merged_fastq": {
+                    "type": "boolean",
+                    "description": "Save run merged reads?"
+                },
+                "run_bowtie2_host_removal": {
+                    "type": "boolean",
+                    "description": "Run bowtie2 to remove host reads?"
+                },
+                "bowtie2_host_removal_args": {
+                    "type": "string",
+                    "description": "CLI arguments to include when running bowtie2 for host removal."
+                },
+                "host_fasta": {
+                    "type": "string",
+                    "description": "Local FastA file containing reference genome",
+                    "help_text": "This option is an alternative to using the `--genomes` parameter, which will automatically download a specific host FastA and bowtie2 index."
+                },
+                "host_bowtie2_index": {
+                    "type": "string",
+                    "description": "Local directory containing a reference bowtie2 index.",
+                    "help_text": "This option is an alternative to using the `--genomes` parameter, which will automatically download a specific host FastA and bowtie2 index."
+                },
+                "save_host_removed_fastq": {
+                    "type": "boolean",
+                    "description": "Save unmapped reads output by bowtie2 host removal?"
+                }
+            }
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -54,16 +120,6 @@
                     "description": "Name of iGenomes reference.",
                     "fa_icon": "fas fa-book",
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
@@ -279,6 +335,9 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/read_preprocessing_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"

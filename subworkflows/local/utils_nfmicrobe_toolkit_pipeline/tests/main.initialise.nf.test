@@ -1,0 +1,112 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PIPELINE_INITIALISATION"
+    script "../main.nf"
+    workflow "PIPELINE_INITIALISATION"
+
+    tag "nfmicrobe_toolkit_ci"
+    tag "subworkflows"
+    tag "subworkflows/utils_nfmicrobe_toolkit_pipeline"
+
+    test("samplesheet only") {
+        when {
+            params {
+                input = "${projectDir}/assets/test-datasets/samplesheets/test_samplesheet.csv"
+            }
+            workflow {
+                """
+                input[0] = false
+                input[1] = false
+                input[2] = false
+                input[3] = false
+                input[4] = []
+                input[5] = null
+                input[6] = "${projectDir}/assets/test-datasets/samplesheets/test_samplesheet.csv"
+                input[7] = []
+                input[8] = []
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+    test("fastq only") {
+        when {
+            workflow {
+                """
+                input[0] = false
+                input[1] = false
+                input[2] = false
+                input[3] = false
+                input[4] = []
+                input[5] = null
+                input[6] = []
+                input[7] = ["${projectDir}/assets/test-datasets/fastqs/*_{1,2}.fastq.gz", "${projectDir}/assets/test-datasets/fastqs/*.fastq.gz"]
+                input[8] = []
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+    test("fasta only") {
+        when {
+            workflow {
+                """
+                input[0] = false
+                input[1] = false
+                input[2] = false
+                input[3] = false
+                input[4] = []
+                input[5] = null
+                input[6] = []
+                input[7] = []
+                input[8] = "${projectDir}/assets/test-datasets/fastas/*.fasta.gz"
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+    test("all inputs") {
+        when {
+            params {
+                input = "${projectDir}/assets/test-datasets/samplesheets/test_samplesheet.csv"
+            }
+            workflow {
+                """
+                input[0] = false
+                input[1] = false
+                input[2] = false
+                input[3] = false
+                input[4] = []
+                input[5] = null
+                input[6] = "${projectDir}/assets/test-datasets/samplesheets/test_samplesheet.csv"
+                input[7] = ["${projectDir}/assets/test-datasets/fastqs/*_{1,2}.fastq.gz", "${projectDir}/assets/test-datasets/fastqs/*.fastq.gz"]
+                input[8] = "${projectDir}/assets/test-datasets/fastas/*.fasta.gz"
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}

@@ -1,0 +1,183 @@
+{
+    "sarscov2 - fastq - pe - run_hostremoval": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test1",
+                        "run": "1",
+                        "single_end": false
+                    },
+                    [
+                        "test1.unmapped_1.fastq.gz:md5,84b4ab15e6ffc9f29d0a3f1b79003744",
+                        "test1.unmapped_2.fastq.gz:md5,40bbe14edd48a98cca6f53574b2198fd"
+                    ]
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "run": "1",
+                        "single_end": false
+                    },
+                    [
+                        "test2.unmapped_1.fastq.gz:md5,84b4ab15e6ffc9f29d0a3f1b79003744",
+                        "test2.unmapped_2.fastq.gz:md5,40bbe14edd48a98cca6f53574b2198fd"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,34c8bb54dc64b1d0c61b06ba41df2607",
+                "versions.yml:md5,3e1e8984113ed604f68b1f6e900c3861",
+                "versions.yml:md5,9c188e1b4ceb39ee699c9f101ecaba66",
+                "versions.yml:md5,9c188e1b4ceb39ee699c9f101ecaba66"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-02T10:34:19.912157449"
+    },
+    "sarscov2 - fastq - pe - run_fastp": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test1",
+                        "run": "1",
+                        "single_end": false
+                    },
+                    [
+                        "test1_1.fastp.fastq.gz:md5,67b2bbae47f073e05a97a9c2edce23c7",
+                        "test1_2.fastp.fastq.gz:md5,25cbdca08e2083dbd4f0502de6b62f39"
+                    ]
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "run": "1",
+                        "single_end": false
+                    },
+                    [
+                        "test2_1.fastp.fastq.gz:md5,67b2bbae47f073e05a97a9c2edce23c7",
+                        "test2_2.fastp.fastq.gz:md5,25cbdca08e2083dbd4f0502de6b62f39"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,34c8bb54dc64b1d0c61b06ba41df2607",
+                "versions.yml:md5,3e1e8984113ed604f68b1f6e900c3861",
+                "versions.yml:md5,4c93c8965c1649dcb4200566f7e23c0c",
+                "versions.yml:md5,4c93c8965c1649dcb4200566f7e23c0c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-02T10:33:21.615113944"
+    },
+    "sarscov2 - fastq - pe - perform_runmerging": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test1",
+                        "single_end": false
+                    },
+                    [
+                        "test1_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                        "test1_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,34c8bb54dc64b1d0c61b06ba41df2607",
+                "versions.yml:md5,3e1e8984113ed604f68b1f6e900c3861",
+                "versions.yml:md5,fb74000119ba8633f74df4722fbc970c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-02T10:33:47.653579672"
+    },
+    "sarscov2 - fastq - pe - run_all": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test1",
+                        "single_end": false
+                    },
+                    [
+                        "test1.unmapped_1.fastq.gz:md5,7c5ebf036675d62c6801607c603575a7",
+                        "test1.unmapped_2.fastq.gz:md5,8911bb9e09de3ebf0c5b9dacaeff5569"
+                    ]
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "single_end": false
+                    },
+                    [
+                        "test2.unmapped_1.fastq.gz:md5,84b4ab15e6ffc9f29d0a3f1b79003744",
+                        "test2.unmapped_2.fastq.gz:md5,40bbe14edd48a98cca6f53574b2198fd"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,34c8bb54dc64b1d0c61b06ba41df2607",
+                "versions.yml:md5,3e1e8984113ed604f68b1f6e900c3861",
+                "versions.yml:md5,4c93c8965c1649dcb4200566f7e23c0c",
+                "versions.yml:md5,4c93c8965c1649dcb4200566f7e23c0c",
+                "versions.yml:md5,4c93c8965c1649dcb4200566f7e23c0c",
+                "versions.yml:md5,9c188e1b4ceb39ee699c9f101ecaba66",
+                "versions.yml:md5,9c188e1b4ceb39ee699c9f101ecaba66",
+                "versions.yml:md5,fb74000119ba8633f74df4722fbc970c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-02T10:35:21.494327775"
+    },
+    "sarscov2 - fastq - pe - run_nothing": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test1",
+                        "run": "1",
+                        "single_end": false
+                    },
+                    [
+                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz",
+                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz"
+                    ]
+                ],
+                [
+                    {
+                        "id": "test2",
+                        "run": "1",
+                        "single_end": false
+                    },
+                    [
+                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_1.fastq.gz",
+                        "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test2_2.fastq.gz"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,34c8bb54dc64b1d0c61b06ba41df2607"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-02T10:34:39.107597635"
+    }
+}
