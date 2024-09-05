@@ -6,6 +6,9 @@ on:
       - dev
       - master
   pull_request:
+    branches:
+      - dev
+      - master
   release:
     types: [published]
 
@@ -14,10 +17,44 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-microbe/toolkit') }}"
+  nf-test-changes:
+    name: nf-test-changes
+    runs-on: ubuntu-latest
+    outputs:
+      # Expose detected tags as 'modules' and 'workflows' output variables
+      paths: ${{ steps.list.outputs.components }}
+      modules: ${{ steps.outputs.outputs.modules }}
+      subworkflows: ${{ steps.outputs.outputs.subworkflows}}
+      # Prod for version bumping
+
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        with:
+          fetch-depth: 0
+
+      - name: List nf-test files
+        id: list
+        uses: adamrtalbot/detect-nf-test-changes@7c8be3ffd0d6538312b363c8c949dbbf5f26c3dd # v0.0.4
+        with:
+          head: ${{ github.sha }}
+          base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          n_parents: 2
+
+      - name: Separate modules and subworkflows
+        id: outputs
+        run: |
+          echo modules=$(echo '${{ steps.list.outputs.components }}' | jq -c '. | map(select(contains("modules"))) | map(gsub("modules/nf-core/"; ""))') >> $GITHUB_OUTPUT
+          echo subworkflows=$(echo '${{ steps.list.outputs.components }}' | jq '. | map(select(contains("subworkflows"))) | map(gsub("subworkflows/nf-core/"; ""))') >> $GITHUB_OUTPUT
+
+      - name: debug
+        run: |
+          echo ${{ steps.outputs.outputs.modules }}
+          echo ${{ steps.outputs.outputs.subworkflows }}
+
+  nf-test:
+    name: Run nf-test on changed files
+    needs: [nf-test-changes]
+    if: ( needs.nf-test-changes.outputs.paths != '[]' )
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -108,6 +145,12 @@ jobs:
             --follow-dependencies \
             --profile=+${{ matrix.profile }} \
             --tap=test.tap
+
+      - uses: pcolby/tap-summary@v1
+        if:
+        with:
+          path: >-
+            test.tap
 
       - name: Output log on failure
         if: failure()
