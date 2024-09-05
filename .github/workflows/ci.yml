@@ -109,11 +109,6 @@ jobs:
             --profile=+${{ matrix.profile }} \
             --tap=test.tap
 
-      - uses: pcolby/tap-summary@v1
-        with:
-          path: >-
-            test.tap
-
       - name: Output log on failure
         if: failure()
         run: |
