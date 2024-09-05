@@ -52,7 +52,7 @@ jobs:
   test:
     name: Run pipeline with test data
     needs: [nf-test-changes]
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-microbe/toolkit') }}"
+    if: ( needs.nf-test-changes.outputs.modules != '[]')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -145,7 +145,6 @@ jobs:
             --tap=test.tap
 
       - uses: pcolby/tap-summary@v1
-        if:
         with:
           path: >-
             test.tap
