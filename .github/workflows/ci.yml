@@ -15,7 +15,7 @@ concurrency:
 jobs:
   nf-test-changes:
     name: nf-test-changes
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-microbe/toolkit') }}"
+    if: "${{ github.event_name != 'push' }}"
     runs-on: ubuntu-latest
     outputs:
       # Expose detected tags as 'modules' and 'workflows' output variables
