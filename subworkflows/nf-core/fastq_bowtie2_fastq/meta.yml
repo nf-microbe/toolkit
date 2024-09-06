@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fastq_bowtie2_fastq"
+description: Create a bowtie2 index if necessary and align fastq files to a reference genome.
+keywords:
+  - align
+  - bowtie2
+  - host
+  - reference
+components:
+  - bowtie2/build
+  - bowtie2/align
+input:
+  - fastq_gz:
+      type: file
+      description: |
+        Channel containing FastQ files to be aligned.
+        Structure: [ val(meta), [ path(fastq_1), path(fastq_2) ] ]
+      pattern: "*.{fastq,fq,fastq.gz,fq.gz}"
+  - fasta_gz:
+      type: file
+      description: |
+        Path to reference FastA file to be used for alignment.
+      pattern: "*.{fasta,fna,fa,fasta.gz,fna.gz,fa.gz}"
+  - bt2_index:
+      type: directory
+      description: |
+        Path to directory containing bowtie2 index files.
+      pattern: "*/*.bt2"
+output:
+  - fastq_gz:
+      type: file
+      description: |
+        Channel containing FastQ files with reads that were unaligned to reference.
+        Structure: [ val(meta), [ path(fastq_1), path(fastq_2) ] ]
+      pattern: "*.{fastq,fq,fastq.gz,fq.gz}"
+  - bt2_log:
+      type: directory
+      description: |
+        Channel containing the bowtie2 log files.
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

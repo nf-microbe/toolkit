@@ -1,0 +1,50 @@
+{
+    "cat/fastq": {
+        "content": [
+            "test.CAT_FASTQ.log",
+            [
+                "versions.yml:md5,76d921a4ac4c079c04a5ac1969673e86"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-02T20:30:17.404501311"
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.CAT_FASTQ.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,76d921a4ac4c079c04a5ac1969673e86"
+                ],
+                "cleaned_workdir": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.CAT_FASTQ.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,76d921a4ac4c079c04a5ac1969673e86"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-02T20:30:26.191980306"
+    }
+}

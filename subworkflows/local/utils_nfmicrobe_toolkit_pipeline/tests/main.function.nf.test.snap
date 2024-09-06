@@ -1,0 +1,74 @@
+{
+    "validateInputSamplesheet group fail": {
+        "content": [
+            [
+                "Please check input samplesheet -> Multiple runs of a sample must be placed into the same group: test"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T08:01:10.18612124"
+    },
+    "getGenomeAttribute fasta": {
+        "content": [
+            "s3://ngi-igenomes/igenomes//Escherichia_coli_K_12_DH10B/Ensembl/EB1/Sequence/WholeGenomeFasta/genome.fa"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T08:06:07.452101378"
+    },
+    "validateInputSamplesheet single_end fail": {
+        "content": [
+            [
+                "Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: test"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T08:00:48.62831037"
+    },
+    "getGenomeAttribute bowtie2": {
+        "content": [
+            "s3://ngi-igenomes/igenomes//Escherichia_coli_K_12_DH10B/Ensembl/EB1/Sequence/Bowtie2Index/"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T08:06:29.862858695"
+    },
+    "validateInputParameters fail": {
+        "content": [
+            [
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "  Genome 'test' not found in any config files provided to the pipeline.",
+                "  Currently, the available genome keys are:",
+                "  GRCh37, GRCh38, CHM13, GRCm38, TAIR10, EB2, UMD3.1, WBcel235, CanFam3.1, GRCz10, BDGP6, EquCab2, EB1, Galgal4, Gm01, Mmul_1, IRGSP-1.0, CHIMP2.1.4, Rnor_5.0, Rnor_6.0, R64-1-1, EF2, Sbi1, Sscrofa10.2, AGPv3, hg38, hg19, mm10, bosTau8, ce10, canFam3, danRer10, dm6, equCab2, galGal4, panTro4, rn6, sacCer3, susScr3",
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T07:41:50.77602996"
+    },
+    "validateInputSamplesheet run fail": {
+        "content": [
+            [
+                "Please check input samplesheet -> Multiple runs of a sample must be given a different run id: test"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-03T08:01:31.978531318"
+    }
+}
