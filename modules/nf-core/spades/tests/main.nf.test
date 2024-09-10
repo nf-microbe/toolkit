@@ -9,7 +9,6 @@ nextflow_process {
     tag "spades"
 
     test("sarscov2 - se ") {
-
         when {
             process {
                 """
@@ -31,6 +30,8 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
+                    process.out.min_kmer,
+                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } }
@@ -39,7 +40,6 @@ nextflow_process {
     }
 
     test("sarscov2 - pe ") {
-
         when {
             process {
                 """
@@ -54,7 +54,6 @@ nextflow_process {
                 """
             }
         }
-
         then {
             assertAll(
                 { assert process.success },
@@ -63,14 +62,16 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
+                    process.out.min_kmer,
+                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
                 { assert file(process.out.warnings[0][1]).find{ file(it).name == "warnings.log"} }
             )
         }
-
     }
+
      // isnt perfect, because CCS reads should rather be used with -s instead of --pacbio
     test("sarscov2 - pe - pacbio ") {
         when {
@@ -87,7 +88,6 @@ nextflow_process {
                 """
             }
         }
-
         then {
             assertAll(
                 { assert process.success },
@@ -96,6 +96,8 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
+                    process.out.min_kmer,
+                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
@@ -105,7 +107,6 @@ nextflow_process {
     }
 
     test("sarscov2 - pe - nanopore ") {
-
         when {
             process {
                 """
@@ -120,7 +121,6 @@ nextflow_process {
                 """
             }
         }
-
         then {
             assertAll(
                 { assert process.success },
@@ -129,6 +129,8 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
+                    process.out.min_kmer,
+                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
@@ -152,7 +154,6 @@ nextflow_process {
                 """
             }
         }
-
         then {
             assertAll(
                 { assert process.success },
@@ -161,6 +162,8 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
+                    process.out.min_kmer,
+                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
@@ -184,7 +187,6 @@ nextflow_process {
                 """
             }
         }
-
         then {
             assertAll(
                 { assert process.success },
@@ -193,6 +195,8 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
+                    process.out.min_kmer,
+                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } }
@@ -216,7 +220,6 @@ nextflow_process {
                 """
             }
         }
-
         then {
             assertAll(
                 { assert process.success },
@@ -224,5 +227,4 @@ nextflow_process {
             )
         }
     }
-
 }

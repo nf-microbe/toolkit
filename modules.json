@@ -7,18 +7,28 @@
                 "nf-core": {
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "9bfc81874554e87740bcb3e5e07acf0a153c9ecb",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["fastq_bowtie2_fastq"]
                     },
                     "bowtie2/build": {
                         "branch": "master",
-                        "git_sha": "1fea64f5132a813ec97c1c6d3a74e0aee7142b6d",
-                        "installed_by": ["fastq_bowtie2_fastq"]
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "installed_by": ["fastq_bowtie2_fastq", "modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
-                        "installed_by": ["fastq_readpreprocessing_fastq", "fastq_readassembly_fasta"]
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "installed_by": ["fastq_readassembly_fasta"]
+                    },
+                    "cobrameta": {
+                        "branch": "master",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
+                        "installed_by": ["fastqfasta_cobra_fasta"]
+                    },
+                    "coverm/contig": {
+                        "branch": "master",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
+                        "installed_by": ["fastqfasta_cobra_fasta"]
                     },
                     "custom/cleanworkdirs": {
                         "branch": "master",
@@ -27,23 +37,33 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
-                        "installed_by": ["fastq_readpreprocessing_fastq"]
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "installed_by": ["modules"]
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "b49b8992e5271ce427f3a7cdb29628fc58400eb5",
-                        "installed_by": ["fastq_readpreprocessing_fastq"]
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "installed_by": ["modules"]
                     },
-                    "megahit": {
+                    "megahit/megahit": {
                         "branch": "master",
-                        "git_sha": "f5efd4ff526a91f32f87c818943b4d7ce82f80cb",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
                         "installed_by": ["fastq_readassembly_fasta"]
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "19ca321db5d8bd48923262c2eca6422359633491",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["modules"]
+                    },
+                    "phables/install": {
+                        "branch": "master",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
+                        "installed_by": ["fastqgfa_phables_fasta"]
+                    },
+                    "phables/run": {
+                        "branch": "master",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
+                        "installed_by": ["fastqgfa_phables_fasta"]
                     },
                     "plass/penguin": {
                         "branch": "master",
@@ -52,7 +72,7 @@
                     },
                     "spades": {
                         "branch": "master",
-                        "git_sha": "b3f04d8392f4571d5869eb3a345892dd2cbea225",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
                         "installed_by": ["fastq_readassembly_fasta"]
                     }
                 }
@@ -61,17 +81,22 @@
                 "nf-core": {
                     "fastq_bowtie2_fastq": {
                         "branch": "master",
-                        "git_sha": "477c17f586a4ce2132c0582233e0fe2efd0a6472",
-                        "installed_by": ["fastq_readpreprocessing_fastq"]
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
+                        "installed_by": ["subworkflows"]
                     },
                     "fastq_readassembly_fasta": {
                         "branch": "master",
-                        "git_sha": "c4dfde9c933760976c1a92b4c2b74d9182396df6",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
                         "installed_by": ["subworkflows"]
                     },
-                    "fastq_readpreprocessing_fastq": {
+                    "fastqfasta_cobra_fasta": {
                         "branch": "master",
-                        "git_sha": "477c17f586a4ce2132c0582233e0fe2efd0a6472",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fastqgfa_phables_fasta": {
+                        "branch": "master",
+                        "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {

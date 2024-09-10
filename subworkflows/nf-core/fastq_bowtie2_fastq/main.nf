@@ -7,7 +7,7 @@ workflow FASTQ_BOWTIE2_FASTQ {
 
     take:
     fastq_gz        // channel: [ [ meta ], [ reads_1.fastq.gz, reads_2.fastq.gz ] ] (MANDATORY)
-    fasta_gz        // val: /path/to/fasta.fasta.gz (OPTIONAL)
+    fasta_gz        // val: /path/to/fasta.fasta.gz (MANDATORY)
     bt2_index       // val: /path/to/host_index.bt2 (OPTIONAL)
 
     main:

@@ -3,21 +3,27 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
+// Import plugins
 include { paramsSummaryMap              } from 'plugin/nf-validation'
 
-include { CUSTOM_CLEANWORKDIRS          } from '../../modules/nf-core/custom/cleanworkdirs/main'
-include { MULTIQC                       } from '../../modules/nf-core/multiqc/main'
+// Import modules
+include { CAT_FASTQ                     } from '../../modules/nf-core/cat/fastq'
+include { CUSTOM_CLEANWORKDIRS          } from '../../modules/nf-core/custom/cleanworkdirs'
+include { FASTQC as FASTQC_RAW          } from '../../modules/nf-core/fastqc'
+include { FASTQC as FASTQC_PREPROCESSED } from '../../modules/nf-core/fastqc'
+include { FASTP                         } from '../../modules/nf-core/fastp'
+include { MULTIQC                       } from '../../modules/nf-core/multiqc'
 
+// Import functions from subworkflows
 include { getGenomeAttribute            } from '../../subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
+include { getWorkDirs; rmEmptyFastQs    } from '../../subworkflows/nf-core/utils_nfmicrobe_functions'
 include { methodsDescriptionText        } from '../../subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
 
+// Import subworkflows
+include { FASTQ_BOWTIE2_FASTQ           } from '../../subworkflows/nf-core/fastq_bowtie2_fastq'
 include { FASTQ_READASSEMBLY_FASTA      } from '../../subworkflows/nf-core/fastq_readassembly_fasta'
 include { paramsSummaryMultiqc          } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML        } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-
-include { READPREPROCESSING             } from '../readpreprocessing'
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +38,6 @@ workflow TOOLKIT {
     input_fastas    // channel: fasta files read in from --input (samplesheet) and --fastas
     parameters      // pipeline parameters
 
-
     main:
 
     ch_versions             = Channel.empty()
@@ -40,22 +45,196 @@ workflow TOOLKIT {
     ch_workdirs_to_clean    = Channel.empty()
 
     //
-    // WORKFLOW: Read preprocessing
+    // MODULE: Run FastQC on raw reads
     //
-    READPREPROCESSING(
-        input_fastqs,   // channel: [ [ meta.id, meta.single_end, meta.run ], [ reads_1.fastq.gz, reads_2.fastq.gz ] ] (MANDATORY)
-        parameters      // pipeline parameters
+    FASTQC_RAW (
+        input_fastqs
     )
-    ch_preprocessed_fastq_gz    = READPREPROCESSING.out.preprocessed_fastq_gz
-    ch_multiqc_files            = ch_multiqc_files.mix(READPREPROCESSING.out.multiqc_files)
-    ch_versions                 = READPREPROCESSING.out.versions
-    ch_workdirs_to_clean        = READPREPROCESSING.out.workdirs_to_clean
+    ch_multiqc_files    = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{ zip -> zip[1] })
+    ch_versions         = ch_versions.mix(FASTQC_RAW.out.versions.first())
 
+
+    /*
+    -------------------------------------------------
+        READ PREPROCESSING
+    -------------------------------------------------
+    */
+    ch_preprocessed_prefilt_fastq_gz    = Channel.empty()
+
+    if (parameters.run_fastp) {
+        //
+        // MODULE: Run fastp on raw reads
+        //
+        FASTP(
+            input_fastqs,
+            [],
+            false,
+            false,
+            false
+        )
+        ch_preprocessed_prefilt_fastq_gz    = ch_preprocessed_prefilt_fastq_gz.mix(FASTP.out.reads)
+        ch_multiqc_files                    = ch_multiqc_files.mix(FASTP.out.json.collect{ json -> json[1] })
+        ch_versions                         = ch_versions.mix(FASTP.out.versions)
+    }
+
+    // REMOVE EMPTY FASTQ FILES
+    ch_preprocessed_fastq_gz = rmEmptyFastQs(ch_preprocessed_prefilt_fastq_gz, false)
+
+    // IDENTIFY WORKDIRS TO CLEAN
+    ch_pre_preprocessing_workdirs = getWorkDirs(
+        input_fastqs,
+        ch_preprocessed_fastq_gz,
+        false
+    )
+    ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
+        ch_pre_preprocessing_workdirs.map { meta, dir -> [ meta, dir, 'RAW' ] }
+    )
+
+    // Use input fasta if no preprocessing is selected
+    if (!parameters.run_fastp) {
+        ch_preprocessed_fastq_gz = input_fastqs
+    }
+
+    /*
+    -------------------------------------------------
+        RUN MERGING
+    -------------------------------------------------
+    */
+    ch_runmerged_fastq_gz   = Channel.empty()
+
+    if (parameters.perform_run_merging) {
+        // prepare reads for concatenating within runs
+        ch_reads_forcat = ch_preprocessed_fastq_gz
+            .map { meta, reads -> [ meta - meta.subMap('run'), reads ] }
+            .groupTuple(sort: 'deep')
+            .branch {
+                meta, reads ->
+                    cat:      reads.size() >= 2 // SE: [ [ meta ], [ S1_R1, S2_R1 ] ]; PE: [ [ meta ], [ [ S1_R1, S1_R2 ], [ S2_R1, S2_R2 ] ] ]
+                    skip_cat: true              // Can skip merging if only single lanes
+            }
+
+        //
+        // MODULE: Concatenate reads across runs, within samples
+        //
+        CAT_FASTQ(
+            ch_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ] }
+        )
+        ch_runmerged_fastq_gz   = ch_runmerged_fastq_gz.mix(CAT_FASTQ.out.reads)
+        ch_versions             = ch_versions.mix(CAT_FASTQ.out.versions)
+
+        // Ensure we don't have nests of nests so that structure is in form expected for assembly
+        ch_reads_forcat_skipped = ch_reads_forcat.skip_cat
+            .map { meta, reads ->
+                def new_reads = meta.single_end ? reads[0] : reads.flatten()
+                [ meta, new_reads ]
+            }
+
+        // Combine single run and multi-run-merged data
+        ch_runmerged_fastq_gz = ch_runmerged_fastq_gz.mix(ch_reads_forcat_skipped)
+    }
+
+    // IDENTIFY WORKDIRS TO CLEAN
+    ch_pre_runmerge_workdirs = getWorkDirs(
+        ch_preprocessed_fastq_gz.map { meta, reads -> [ meta - meta.subMap('run'), reads[0] ] },
+        ch_runmerged_fastq_gz,
+        false
+    )
+    ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
+        ch_pre_runmerge_workdirs.map { meta, dir -> [ meta, dir, 'PREPROCESSING' ] }
+    )
+
+    // Use preprocessing fasta if no run merging is selected
+    if (!parameters.perform_run_merging) {
+        ch_runmerged_fastq_gz = ch_preprocessed_fastq_gz
+    }
+
+    /*
+    -------------------------------------------------
+        HOST READ REMOVAL
+    -------------------------------------------------
+    */
+    // Load igenomes fasta and bowtie2 index
+    igenomes_fasta   = getGenomeAttribute('fasta')
+    igenomes_index   = getGenomeAttribute('bowtie2')
+
+    if (parameters.run_bowtie2_host_removal) {
+        // create host fasta and index channels based on input parameters
+        if (parameters.genome) {
+            ch_host_fasta_gz    = file(igenomes_fasta, checkIfExists: true)
+            ch_bowtie2_index    = file(igenomes_index, checkIfExists: true)
+        } else if (parameters.host_bowtie2_index) {
+            if (!parameters.host_fasta) {
+                error "[nf-microbe/toolkit]: --run_bowtie2_host_removal = true but no iGenomes (--genome) or custom fasta (--host_fasta) provided"
+            }
+            ch_host_fasta_gz    = file(parameters.host_fasta, checkIfExists: true)
+            ch_bowtie2_index    = file(parameters.host_bowtie2_index, checkIfExists: true)
+        } else {
+            if (!parameters.host_fasta) {
+                error "[nf-microbe/toolkit]: --run_bowtie2_host_removal = true but no iGenomes (--genome) or custom fasta (--host_fasta) provided"
+            }
+            ch_host_fasta_gz    = file(parameters.host_fasta, checkIfExists: true)
+            ch_bowtie2_index    = null
+        }
+    }
+
+    ch_hostremoved_prefilt_fastq_gz = Channel.empty()
+
+    if (parameters.run_bowtie2_host_removal) {
+        //
+        // SUBWORKFLOW: Remove host reads using Bowtie2
+        //
+        FASTQ_BOWTIE2_FASTQ(
+            ch_runmerged_fastq_gz,
+            ch_host_fasta_gz,
+            ch_bowtie2_index
+        )
+        ch_hostremoved_prefilt_fastq_gz = ch_hostremoved_prefilt_fastq_gz.mix(FASTQ_BOWTIE2_FASTQ.out.fastq_gz)
+        ch_multiqc_files                = ch_multiqc_files.mix(FASTQ_BOWTIE2_FASTQ.out.bt2_log.collect{ bt2_log -> bt2_log[1] })
+        ch_versions                     = ch_versions.mix(FASTQ_BOWTIE2_FASTQ.out.versions)
+    }
+
+    // REMOVE EMPTY FASTQ FILES FROM CHANNEL
+    ch_hostremoved_fastq_gz = rmEmptyFastQs(ch_hostremoved_prefilt_fastq_gz, false)
+
+    // IDENTIFY WORKDIRS TO CLEAN
+    ch_pre_hostremove_workdirs = getWorkDirs(
+        ch_runmerged_fastq_gz.map { meta, reads -> [ meta, reads[0] ] },
+        ch_hostremoved_prefilt_fastq_gz,
+        false
+    )
+    ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
+        ch_pre_hostremove_workdirs.map { meta, dir -> [ meta, dir, 'RUNMERGE' ] }
+    )
+
+    // Use runmerged fasta if no host removal is selected
+    if (!parameters.run_bowtie2_host_removal) {
+        ch_hostremoved_fastq_gz = ch_runmerged_fastq_gz
+    }
+
+
+    if (parameters.run_fastp ||
+        parameters.perform_run_merging ||
+        parameters.run_bowtie2_host_removal) {
+        //
+        // MODULE: Run FastQC on preprocessed reads
+        //
+        FASTQC_PREPROCESSED (
+            ch_hostremoved_fastq_gz
+        )
+        ch_multiqc_files    = ch_multiqc_files.mix(FASTQC_PREPROCESSED.out.zip.collect{ zip -> zip[1]})
+        ch_versions         = ch_versions.mix(FASTQC_PREPROCESSED.out.versions.first())
+    }
+
+    /*
+    -------------------------------------------------
+        READ ASSEMBLY
+    -------------------------------------------------
+    */
     //
-    // WORKFLOW: Read assembly
+    // SUBWORKFLOW: Read assembly
     //
     FASTQ_READASSEMBLY_FASTA(
-        ch_preprocessed_fastq_gz,           // channel: [ [ meta.id, meta.single_end, meta.run ], [ reads_1.fastq.gz, reads_2.fastq.gz ] ] (MANDATORY)
+        ch_preprocessed_fastq_gz,           // channel: [ [ meta.id, meta.single_end, meta.run, meta.group ], [ reads_1.fastq.gz, reads_2.fastq.gz ] ] (MANDATORY)
         parameters.run_megahit_single,      // boolean: false
         parameters.run_megahit_coassembly,  // boolean: false
         parameters.run_spades_single,       // boolean: false
@@ -69,6 +248,54 @@ workflow TOOLKIT {
     ch_spades_logs          = FASTQ_READASSEMBLY_FASTA.out.spades_logs
     ch_multiqc_files        = ch_multiqc_files.mix(FASTQ_READASSEMBLY_FASTA.out.multiqc_files)
     ch_versions             = FASTQ_READASSEMBLY_FASTA.out.versions
+
+    /*
+    -------------------------------------------------
+        ASSEMBLY EXTENSION
+    -------------------------------------------------
+    */
+
+    /*
+    -------------------------------------------------
+        ASSEMBLY QC
+    -------------------------------------------------
+    */
+
+    /*
+    -------------------------------------------------
+        VIRUS IDENTIFICATION
+    -------------------------------------------------
+    */
+
+    /*
+    -------------------------------------------------
+        VIRUS QC
+    -------------------------------------------------
+    */
+
+    /*
+    -------------------------------------------------
+        VIRUS TAXONOMY
+    -------------------------------------------------
+    */
+
+    /*
+    -------------------------------------------------
+        VIRUS HOST
+    -------------------------------------------------
+    */
+
+    /*
+    -------------------------------------------------
+        VIRUS LIFESTYLE
+    -------------------------------------------------
+    */
+
+    /*
+    -------------------------------------------------
+        VIRUS FUNCTION
+    -------------------------------------------------
+    */
 
     //
     // MODULE: Clean intermediate files
@@ -133,9 +360,16 @@ workflow TOOLKIT {
         []
     )
 
+    // create a channel to contain all output files for testing
+    ch_outputs = ch_preprocessed_fastq_gz
+        .mix(ch_runmerged_fastq_gz)
+        .mix(ch_hostremoved_fastq_gz)
+        .mix(ch_assemblies_fasta_gz)
+
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    output_files    = ch_outputs
+    multiqc_report  = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    versions        = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
 /*

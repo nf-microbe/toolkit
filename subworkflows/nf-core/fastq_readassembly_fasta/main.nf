@@ -1,7 +1,7 @@
 // Import modules
 include { CAT_FASTQ                             } from '../../../modules/nf-core/cat/fastq/main'
-include { MEGAHIT as MEGAHIT_SINGLE             } from '../../../modules/nf-core/megahit/main'
-include { MEGAHIT as MEGAHIT_COASSEMBLY         } from '../../../modules/nf-core/megahit/main'
+include { MEGAHIT_MEGAHIT as MEGAHIT_SINGLE     } from '../../../modules/nf-core/megahit/megahit/main'
+include { MEGAHIT_MEGAHIT as MEGAHIT_COASSEMBLY } from '../../../modules/nf-core/megahit/megahit/main'
 include { PLASS_PENGUIN as PENGUIN_SINGLE       } from '../../../modules/nf-core/plass/penguin/main'
 include { PLASS_PENGUIN as PENGUIN_COASSEMBLY   } from '../../../modules/nf-core/plass/penguin/main'
 include { SPADES as SPADES_SINGLE               } from '../../../modules/nf-core/spades/main'
