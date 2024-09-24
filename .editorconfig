@@ -1,5 +1,13 @@
 root = true
 
+[*.{hmm}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+
 [*]
 charset = utf-8
 end_of_line = lf
@@ -10,14 +18,6 @@ indent_style = space
 
 [*.{md,yml,yaml,html,css,scss,js}]
 indent_size = 2
-
-[*.{hmm}]
-charset = unset
-end_of_line = unset
-insert_final_newline = unset
-trim_trailing_whitespace = unset
-indent_style = unset
-indent_size = unset
 
 # These files are edited and tested upstream in nf-core/modules
 [/modules/nf-core/**]
