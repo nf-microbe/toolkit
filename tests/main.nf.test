@@ -3,10 +3,8 @@ nextflow_pipeline {
     name "Test pipeline"
     script "../main.nf"
 
-    tag "nfmicrobe_toolkit_ci"
-
-    test("fastq full test") {
-        config "../conf/test_fastq.config"
+    test("Test with minimal disk usage") {
+        config "../conf/test.config"
         when {
             params {
                 outdir                      = "$outputDir"
@@ -16,15 +14,13 @@ nextflow_pipeline {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(
-                    path("$outputDir/ReadPreprocessing/")
-                ).match() }
+                { assert workflow.trace.succeeded().size() == 143 },
             )
         }
     }
 
-    test("test nothing") {
-        config "../conf/test.config"
+    test("Test nothing") {
+        config "../conf/test_nothing.config"
         when {
             params {
                 outdir = "$outputDir"
@@ -33,7 +29,7 @@ nextflow_pipeline {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.trace.succeeded().size() == 1 },
+                { assert workflow.trace.succeeded().size() == 5 },
             )
         }
     }

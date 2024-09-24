@@ -1,0 +1,336 @@
+{
+    "b_fragilis - fasta - test_full": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_genes.tsv:md5,6dc7430ee60aaefd85463efed5606842"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_genes.tsv:md5,58715a4e9bf3ea74f0bcc67fb9855148"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_features.tsv:md5,342d5282e2f1641ae9cdfaffd59e94db"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_features.tsv:md5,212025892130e064bd8d8ff8d3d3d4b7"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_aggregated_classification.tsv:md5,a04364fde5ef24e5c039834603ac2581"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_aggregated_classification.tsv:md5,c4502d66f355e27a2184f37e34b8d415"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_taxonomy.tsv:md5,7575a15c50b67c52dfb0dce827917558"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_taxonomy.tsv:md5,557073c4a2e221e20a3f395fc8cc65d7"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1.virus_markers.tsv:md5,257ff260fc8e9d1e3238148e9c3f3a14"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2.virus_markers.tsv:md5,dec1756f0796d25cd52b46c6d1c50ed6"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1.plasmid_markers.tsv:md5,cd9749ea509af4ba03535150b2cd2d75"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2.plasmid_markers.tsv:md5,dec1756f0796d25cd52b46c6d1c50ed6"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1.busco_markers.tsv:md5,9eaebf4012abdb6233e98d471f9b9578"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2.busco_markers.tsv:md5,dec1756f0796d25cd52b46c6d1c50ed6"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,5411d4c90c4b661fdb37cbfab274609a",
+                    "versions.yml:md5,65857439c31c76f76c166c79d61c0e41",
+                    "versions.yml:md5,86c3deb495050c40da08880047f5bbed",
+                    "versions.yml:md5,fc50a85f739654bc8b6ed05dc3413e02"
+                ],
+                "genomad_features_tsv": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_features.tsv:md5,342d5282e2f1641ae9cdfaffd59e94db"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_features.tsv:md5,212025892130e064bd8d8ff8d3d3d4b7"
+                    ]
+                ],
+                "genomad_genes_tsv": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_genes.tsv:md5,6dc7430ee60aaefd85463efed5606842"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_genes.tsv:md5,58715a4e9bf3ea74f0bcc67fb9855148"
+                    ]
+                ],
+                "genomad_scores_tsv": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_aggregated_classification.tsv:md5,a04364fde5ef24e5c039834603ac2581"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_aggregated_classification.tsv:md5,c4502d66f355e27a2184f37e34b8d415"
+                    ]
+                ],
+                "genomad_taxonomy_tsv": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1_taxonomy.tsv:md5,7575a15c50b67c52dfb0dce827917558"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2_taxonomy.tsv:md5,557073c4a2e221e20a3f395fc8cc65d7"
+                    ]
+                ],
+                "pyhmmer_busco_hmms_tsv": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1.busco_markers.tsv:md5,9eaebf4012abdb6233e98d471f9b9578"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2.busco_markers.tsv:md5,dec1756f0796d25cd52b46c6d1c50ed6"
+                    ]
+                ],
+                "pyhmmer_plasmid_hmms_tsv": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1.plasmid_markers.tsv:md5,cd9749ea509af4ba03535150b2cd2d75"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2.plasmid_markers.tsv:md5,dec1756f0796d25cd52b46c6d1c50ed6"
+                    ]
+                ],
+                "pyhmmer_virus_hmms_tsv": [
+                    [
+                        {
+                            "id": "test1",
+                            "single_end": false
+                        },
+                        "test1.virus_markers.tsv:md5,257ff260fc8e9d1e3238148e9c3f3a14"
+                    ],
+                    [
+                        {
+                            "id": "test2",
+                            "single_end": false
+                        },
+                        "test2.virus_markers.tsv:md5,dec1756f0796d25cd52b46c6d1c50ed6"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5411d4c90c4b661fdb37cbfab274609a",
+                    "versions.yml:md5,65857439c31c76f76c166c79d61c0e41",
+                    "versions.yml:md5,86c3deb495050c40da08880047f5bbed",
+                    "versions.yml:md5,fc50a85f739654bc8b6ed05dc3413e02"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-12T15:39:08.389017985"
+    },
+    "b_fragilis - fasta - test_nothing": {
+        "content": [
+            {
+                "0": [
+                    [
+                        
+                    ]
+                ],
+                "1": [
+                    [
+                        
+                    ]
+                ],
+                "2": [
+                    [
+                        
+                    ]
+                ],
+                "3": [
+                    [
+                        
+                    ]
+                ],
+                "4": [
+                    [
+                        
+                    ]
+                ],
+                "5": [
+                    [
+                        
+                    ]
+                ],
+                "6": [
+                    [
+                        
+                    ]
+                ],
+                "7": [
+                    
+                ],
+                "genomad_features_tsv": [
+                    [
+                        
+                    ]
+                ],
+                "genomad_genes_tsv": [
+                    [
+                        
+                    ]
+                ],
+                "genomad_scores_tsv": [
+                    [
+                        
+                    ]
+                ],
+                "genomad_taxonomy_tsv": [
+                    [
+                        
+                    ]
+                ],
+                "pyhmmer_busco_hmms_tsv": [
+                    [
+                        
+                    ]
+                ],
+                "pyhmmer_plasmid_hmms_tsv": [
+                    [
+                        
+                    ]
+                ],
+                "pyhmmer_virus_hmms_tsv": [
+                    [
+                        
+                    ]
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-12T15:39:19.927199077"
+    }
+}
