@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-microbe/toolkit/master/nextflow_schema.json",
     "title": "nf-microbe/toolkit pipeline parameters",
     "description": "A toolkit for running microbe-related analyses within a Nextflow infrastructure.",
@@ -73,9 +73,9 @@
                     "type": "string",
                     "description": "CLI arguments to include when running fastp."
                 },
-                "save_fastp_fastq": {
+                "save_preprocessed_fastq": {
                     "type": "boolean",
-                    "description": "Save FastQ files output by fastp?"
+                    "description": "Save preprocessed reads?"
                 },
                 "perform_run_merging": {
                     "type": "boolean",
@@ -93,6 +93,19 @@
                     "type": "string",
                     "description": "CLI arguments to include when running bowtie2 for host removal."
                 },
+                "genome": {
+                    "type": "string",
+                    "description": "Name of iGenomes reference to use for host removal.",
+                    "fa_icon": "fas fa-book",
+                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
                 "host_fasta": {
                     "type": "string",
                     "description": "Local FastA file containing reference genome",
@@ -102,10 +115,6 @@
                     "type": "string",
                     "description": "Local directory containing a reference bowtie2 index.",
                     "help_text": "This option is an alternative to using the `--genomes` parameter, which will automatically download a specific host FastA and bowtie2 index."
-                },
-                "save_host_removed_fastq": {
-                    "type": "boolean",
-                    "description": "Save unmapped reads output by bowtie2 host removal?"
                 }
             }
         },
@@ -138,7 +147,8 @@
                 },
                 "spades_args": {
                     "type": "string",
-                    "description": "CLI arguments to include when running SPAdes."
+                    "description": "CLI arguments to include when running SPAdes.",
+                    "default": "--meta"
                 },
                 "use_spades_scaffolds": {
                     "type": "boolean",
@@ -158,26 +168,148 @@
                 }
             }
         },
-        "reference_genome_options": {
-            "title": "Reference genome options",
+        "assembly_extension_options": {
+            "title": "Assembly extension options",
             "type": "object",
-            "fa_icon": "fas fa-dna",
-            "description": "Reference genome related files and options required for the workflow.",
+            "description": "Parameters to use when extending assemblies.",
+            "default": "",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "igenomes_ignore": {
+                "run_cobra": {
                     "type": "boolean",
-                    "description": "Do not load the iGenomes reference config.",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                    "description": "Run COBRA to extend assemblies?"
+                },
+                "cobra_min_len": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Minimum sequence length for a sequence to be used as a seed for COBRA extension."
+                },
+                "cobra_coverm_args": {
+                    "type": "string",
+                    "description": "CLI arguments to use when running CoverM to calculate sequences coverage for COBRA."
+                },
+                "cobra_args": {
+                    "type": "string",
+                    "description": "CLI arguments to use when running COBRA."
+                },
+                "run_phables": {
+                    "type": "boolean",
+                    "description": "Run Phables to resolve phage componenets in assembly graph?"
+                },
+                "phables_db": {
+                    "type": "string",
+                    "description": "Path to predownloaded Phables database."
+                },
+                "phables_args": {
+                    "type": "string",
+                    "description": "CLI arguments to use when running Phables."
                 }
-            }
+            },
+            "fa_icon": "fas fa-arrow-right"
+        },
+        "assembly_quality_control_options": {
+            "title": "Assembly quality control options",
+            "type": "object",
+            "description": "Parameters for assessing the quality of and filtering assemblies",
+            "default": "",
+            "properties": {
+                "assembly_min_len": {
+                    "type": "integer",
+                    "default": 1500,
+                    "description": "Remove assembly sequences shorter than defined length."
+                },
+                "save_filtered_fasta": {
+                    "type": "boolean",
+                    "description": "Save length filtered assemblies?"
+                },
+                "run_seqkit_stats": {
+                    "type": "boolean",
+                    "description": "Run seqkit/stats to obtain assembly statistics?"
+                },
+                "run_trfinder": {
+                    "type": "boolean",
+                    "description": "Run TRFinder to identify terminal repeats in assembly sequences?"
+                },
+                "trfinder_args": {
+                    "type": "string",
+                    "description": "CLI arguments to use when running TRFinder."
+                },
+                "use_trfinder_fasta": {
+                    "type": "boolean",
+                    "description": "Use TRFinder's output FastA in downstream analyses (as opposed to the length filtered FastA)"
+                },
+                "run_tantan": {
+                    "type": "boolean",
+                    "description": "Run tantan to identify low-complexity regions?"
+                },
+                "tantan_args": {
+                    "type": "string",
+                    "default": "-s 0.9",
+                    "description": "CLI arguments to use when running tantan."
+                },
+                "pyrodigalgv_args": {
+                    "type": "string",
+                    "description": "CLI arguments to use when running pyrodigal-gv."
+                },
+                "run_nucleotide_stats": {
+                    "type": "boolean",
+                    "description": "Run nucleotide stats to calculate sequence length, GC content, N content, and CDS density?"
+                }
+            },
+            "fa_icon": "fas fa-search"
+        },
+        "mge_classification_options": {
+            "title": "MGE classification options",
+            "type": "object",
+            "description": "Parameters to use when classifying mobile genetic elements.",
+            "default": "",
+            "properties": {
+                "run_genomad": {
+                    "type": "boolean",
+                    "description": "Run geNomad to classify viruses and plasmids?"
+                },
+                "genomad_db": {
+                    "type": "string",
+                    "description": "Path to pre-downloaded geNomad database."
+                },
+                "genomad_args": {
+                    "type": "string",
+                    "description": "CLI arguments to use when running geNomad."
+                },
+                "run_pyhmmer_virus": {
+                    "type": "boolean",
+                    "description": "Run pyhmmer to identify virus hallmark HMMs?"
+                },
+                "run_pyhmmer_plasmid": {
+                    "type": "boolean",
+                    "description": "Run pyhmmer to identify plasmid hallmark HMMs?"
+                },
+                "run_pyhmmer_busco": {
+                    "type": "boolean",
+                    "description": "Run pyhmmer to identify cellular hallmark HMMs?"
+                }
+            },
+            "fa_icon": "fas fa-viruses"
+        },
+        "virus_completeness_options": {
+            "title": "Virus completeness options",
+            "type": "object",
+            "description": "Parameters to use when assessing virus completeness.",
+            "default": "",
+            "properties": {
+                "run_checkv": {
+                    "type": "boolean",
+                    "description": "Run CheckV to calculate virus completeness?"
+                },
+                "checkv_db": {
+                    "type": "string",
+                    "description": "Path to pre-downloaded Checkv database."
+                },
+                "checkv_args": {
+                    "type": "string",
+                    "description": "CLI arguments to use when running CheckV."
+                }
+            },
+            "fa_icon": "fas fa-circle-notch"
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -392,7 +524,16 @@
             "$ref": "#/definitions/read_assembly_options"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/definitions/assembly_extension_options"
+        },
+        {
+            "$ref": "#/definitions/assembly_quality_control_options"
+        },
+        {
+            "$ref": "#/definitions/mge_classification_options"
+        },
+        {
+            "$ref": "#/definitions/virus_completeness_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"

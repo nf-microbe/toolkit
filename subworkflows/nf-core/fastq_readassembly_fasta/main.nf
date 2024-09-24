@@ -1,7 +1,7 @@
 // Import modules
 include { CAT_FASTQ                             } from '../../../modules/nf-core/cat/fastq/main'
-include { MEGAHIT as MEGAHIT_SINGLE             } from '../../../modules/nf-core/megahit/main'
-include { MEGAHIT as MEGAHIT_COASSEMBLY         } from '../../../modules/nf-core/megahit/main'
+include { MEGAHIT_MEGAHIT as MEGAHIT_SINGLE     } from '../../../modules/nf-core/megahit/megahit/main'
+include { MEGAHIT_MEGAHIT as MEGAHIT_COASSEMBLY } from '../../../modules/nf-core/megahit/megahit/main'
 include { PLASS_PENGUIN as PENGUIN_SINGLE       } from '../../../modules/nf-core/plass/penguin/main'
 include { PLASS_PENGUIN as PENGUIN_COASSEMBLY   } from '../../../modules/nf-core/plass/penguin/main'
 include { SPADES as SPADES_SINGLE               } from '../../../modules/nf-core/spades/main'
@@ -31,16 +31,18 @@ workflow FASTQ_READASSEMBLY_FASTA {
     // create empty channels for combining assemblies
     ch_assemblies_prefilt_fasta_gz  = Channel.empty()
     ch_assembly_graph_gz            = Channel.empty()
-    ch_spades_logs                  = Channel.empty()
+    ch_assembly_logs                = Channel.empty()
 
     if (run_megahit_single) {
         //
         // MODULE: Assemble reads individually with MEGAHIT
         //
         MEGAHIT_SINGLE(
-            fastq_gz.map { meta, fasta -> [ meta + [ assembler: 'megahit_single' ], fasta ] }
+            fastq_gz.map { meta, fasta -> [ meta + [ assembler: 'megahit', assembly_method: 'single' ], fasta ] }
         ).contigs
         ch_assemblies_prefilt_fasta_gz  = ch_assemblies_prefilt_fasta_gz.mix(MEGAHIT_SINGLE.out.contigs)
+        ch_assembly_graph_gz            = ch_assembly_graph_gz.mix(MEGAHIT_SINGLE.out.gfa)
+        ch_assembly_logs                = ch_assembly_logs.mix(MEGAHIT_SINGLE.out.log)
         ch_versions                     = ch_versions.mix(MEGAHIT_SINGLE.out.versions)
     }
 
@@ -48,7 +50,7 @@ workflow FASTQ_READASSEMBLY_FASTA {
         // prepare reads for metaspades input
         ch_spades_single_input = fastq_gz
             .map { meta, fastq ->
-                [ meta + [ assembler: 'spades_single' ], fastq, [], [] ]
+                [ meta + [ assembler: 'spades', assembly_method: 'single' ], fastq, [], [] ]
             }
             .branch { meta, fastq, extra1, extra2 ->
                 single_end: meta.single_end
@@ -70,7 +72,7 @@ workflow FASTQ_READASSEMBLY_FASTA {
         }
         ch_assemblies_prefilt_fasta_gz  = ch_assemblies_prefilt_fasta_gz.mix(ch_spades_single_fasta_gz)
         ch_assembly_graph_gz            = ch_assembly_graph_gz.mix(SPADES_SINGLE.out.gfa)
-        ch_spades_logs                  = ch_spades_logs.mix(SPADES_SINGLE.out.log)
+        ch_assembly_logs                = ch_assembly_logs.mix(SPADES_SINGLE.out.log)
         ch_versions                     = ch_versions.mix(SPADES_SINGLE.out.versions)
     }
 
@@ -79,11 +81,9 @@ workflow FASTQ_READASSEMBLY_FASTA {
         // MODULE: Assemble reads individually with PenguiN
         //
         PENGUIN_SINGLE(
-            fastq_gz.map { meta, fasta -> [ meta + [ assembler: 'penguin_single' ], fasta ] }
+            fastq_gz.map { meta, fasta -> [ meta + [ assembler: 'penguin', assembly_method: 'single' ], fasta ] }
         )
-        ch_penguin_single_fasta_gz      = PENGUIN_SINGLE.out.contigs
-
-        ch_assemblies_prefilt_fasta_gz  = ch_assemblies_prefilt_fasta_gz.mix(ch_penguin_single_fasta_gz)
+        ch_assemblies_prefilt_fasta_gz  = ch_assemblies_prefilt_fasta_gz.mix(PENGUIN_SINGLE.out.contigs)
         ch_versions                     = ch_versions.mix(PENGUIN_SINGLE.out.versions)
     }
 
@@ -124,17 +124,19 @@ workflow FASTQ_READASSEMBLY_FASTA {
         // MODULE: Co-assemble reads with MEGAHIT
         //
         MEGAHIT_COASSEMBLY(
-            ch_coassembly_fastq_gz.map { meta, fastq -> [ meta + [ assembler: 'megahit_coassembly' ], fastq ] }
+            ch_coassembly_fastq_gz.map { meta, fastq -> [ meta + [ assembler: 'megahit', assembly_method: 'coassembly' ], fastq ] }
         )
         ch_versions                     = ch_versions.mix(MEGAHIT_COASSEMBLY.out.versions)
         ch_assemblies_prefilt_fasta_gz  = ch_assemblies_prefilt_fasta_gz.mix(MEGAHIT_COASSEMBLY.out.contigs)
+        ch_assembly_graph_gz            = ch_assembly_graph_gz.mix(MEGAHIT_COASSEMBLY.out.gfa)
+        ch_assembly_logs                = ch_assembly_logs.mix(MEGAHIT_COASSEMBLY.out.log)
     }
 
     if (run_spades_coassembly) {
         // prepare reads for metaspades input
         ch_metaspades_coassembly_input = ch_coassembly_fastq_gz
             .map { meta, fastq ->
-                [ meta + [ assembler: 'spades_coassembly' ], fastq, [], [] ]
+                [ meta + [ assembler: 'spades', assembly_method: 'coassembly' ], fastq, [], [] ]
             }
             .branch { meta, fastq, extra1, extra2 ->
                 single_end: meta.single_end
@@ -150,13 +152,13 @@ workflow FASTQ_READASSEMBLY_FASTA {
             []
         )
         if (use_spades_scaffolds) {
-            ch_metaspades_co_fasta_gz   = SPADES_COASSEMBLY.out.scaffolds
+            ch_spades_co_fasta_gz   = SPADES_COASSEMBLY.out.scaffolds
         } else {
-            ch_metaspades_co_fasta_gz   = SPADES_COASSEMBLY.out.contigs
+            ch_spades_co_fasta_gz   = SPADES_COASSEMBLY.out.contigs
         }
-        ch_assemblies_prefilt_fasta_gz  = ch_assemblies_prefilt_fasta_gz.mix(ch_metaspades_co_fasta_gz)
+        ch_assemblies_prefilt_fasta_gz  = ch_assemblies_prefilt_fasta_gz.mix(ch_spades_co_fasta_gz)
         ch_assembly_graph_gz            = ch_assembly_graph_gz.mix(SPADES_COASSEMBLY.out.gfa)
-        ch_spades_logs                  = ch_spades_logs.mix(SPADES_COASSEMBLY.out.log)
+        ch_assembly_logs                = ch_assembly_logs.mix(SPADES_COASSEMBLY.out.log)
         ch_versions                     = ch_versions.mix(SPADES_COASSEMBLY.out.versions)
     }
 
@@ -165,7 +167,7 @@ workflow FASTQ_READASSEMBLY_FASTA {
         // MODULE: Co-assemble reads with PenguiN
         //
         PENGUIN_COASSEMBLY(
-            ch_cat_coassembly_fastq_gz.coassembly.map { meta, fastq -> [ meta + [ assembler: 'penguin_coassembly' ], fastq ] }
+            ch_cat_coassembly_fastq_gz.coassembly.map { meta, fastq -> [ meta + [ assembler: 'penguin', assembly_method: 'coassembly' ], fastq ] }
         )
         ch_penguin_co_fasta_gz          = PENGUIN_COASSEMBLY.out.contigs
         ch_versions                     = ch_versions.mix(PENGUIN_COASSEMBLY.out.versions)
@@ -176,9 +178,9 @@ workflow FASTQ_READASSEMBLY_FASTA {
     ch_assemblies_fasta_gz = rmEmptyFastAs(ch_assemblies_prefilt_fasta_gz, false)
 
     emit:
-    assemblies_fasta_gz = ch_assemblies_fasta_gz    // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler ], assembly.fasta.gz ]
+    assemblies_fasta_gz = ch_assemblies_fasta_gz    // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler, meta.assembly_method, meta.mink, meta.maxk ], assembly.fasta.gz ]
     assembly_graph_gz   = ch_assembly_graph_gz      // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler ], assembly_graph.gfa.gz ]
-    spades_logs         = ch_spades_logs            // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler ], spades.log ]
+    assembly_logs       = ch_assembly_logs          // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler ], spades.log ]
     multiqc_files       = ch_multiqc_files          // channel: /path.to/multiqc_files
     versions            = ch_versions               // channel: [ path(versions.yml) ]
 }

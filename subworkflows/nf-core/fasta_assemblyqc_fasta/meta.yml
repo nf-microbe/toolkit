@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fasta_assemblyqc_fasta"
+description: Filter and assess the quality of an assembly FASTA file
+keywords:
+  - assembly
+  - filter
+  - quality
+  - qc
+components:
+  - seqkit/seq
+  - seqkit/stats
+  - trfinder
+  - kcounter
+  - tantan
+  - pyrodigalgv
+  - sequencestats
+  - filter/composition
+
+input:
+  - fasta_gz:
+      type: file
+      description: |
+        The input channel containing a nucleotide assembly in FastA format.
+        Structure: [ val(meta), path(fasta.gz) ]
+      pattern: "*.{fasta,fa,fna}.gz"
+  - min_len:
+      type: integer
+      description: |
+        An integer specifying the minimum length of a sequence to be included in the output.
+        If the value is 0 or null, no filtering will take place.
+        Structure: 1500
+  - run_seqkit_stats:
+      type: boolean
+      description: |
+        Boolean to determine if Seqkit stats will be run on the input FastA file.
+  - use_trfinder_fasta:
+      type: boolean
+      description: |
+        Boolean to determine if only TR sequences will be used in downstream analyses.
+  - run_tantan:
+      type: boolean
+      description: |
+        Boolean to determine if tantan should be run on input FastA file.
+  - run_sequence_stats:
+      type: boolean
+      description: |
+        Boolean to determine if sequence stats will be run on the input FastA file.
+
+output:
+  - fasta_gz:
+      type: file
+      description: |
+        Channel containing nucleotide FastA files that have been filtered and/or processed.
+        Structure: [ val(meta), path(fasta.gz) ]
+      pattern: "*fasta.gz"
+  - faa_gz:
+      type: file
+      description: |
+        Channel containing protein FastA files that have been filtered and/or processed.
+        Structure: [ val(meta), path(faa.gz) ]
+      pattern: "*faa.gz"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

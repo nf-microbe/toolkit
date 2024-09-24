@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "trfinder"
+description: Identify terminal repeats in nucleotide assemblies.
+keywords:
+  - terminal
+  - repeat
+  - phage
+  - plasmid
+tools:
+  - "trfinder":
+      description: "Identify terminal repeats in nucleotide assemblies."
+      documentation: "https://bitbucket.org/berkeleylab/checkv/src/master/checkv/"
+      tool_dev_url: "https://bitbucket.org/berkeleylab/checkv/src/master/checkv/modules/complete_genomes.py"
+      doi: "10.1038/s41587-020-00774-7"
+      licence: ["The Regents of the University of California, through Lawrence Berkeley National Laboratory"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - fasta:
+      type: file
+      description: Input nucleotide assembly in FASTA format.
+      pattern: "*.{fna,fa,fasta}.gz"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - fasta:
+      type: file
+      description: Terminal repeat sequences in FastA format.
+      pattern: "*.trfinder.fasta.gz"
+  - stats:
+      type: file
+      description: Summary statistics of terminal repeat sequences.
+      pattern: "*.trfinder.tsv"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

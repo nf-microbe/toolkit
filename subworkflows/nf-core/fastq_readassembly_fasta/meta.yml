@@ -11,7 +11,7 @@ keywords:
   - scaffold
 components:
   - cat/fastq
-  - megahit
+  - megahit/megahit
   - plass/penguin
   - spades
   - utils_nfmicrobe_functions

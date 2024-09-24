@@ -9,7 +9,7 @@ nextflow_workflow {
     tag "subworkflows_nfcore"
     tag "subworkflows/fastq_readassembly_fasta"
     tag "cat/fastq"
-    tag "megahit"
+    tag "megahit/megahit"
     tag "plass/penguin"
     tag "spades"
     tag "subworkflows/utils_nfmicrobe_functions"

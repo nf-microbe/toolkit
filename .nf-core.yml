@@ -28,3 +28,7 @@ repository_type: pipeline
 template:
   prefix: nf-microbe
   skip: []
+update:
+  https://github.com/nf-microbe/modules.git:
+    nf-core:
+      megahit/megahit: False
