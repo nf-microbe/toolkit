@@ -1,0 +1,141 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTA_ASSEMBLYQC_FASTA"
+    script "../main.nf"
+    workflow "FASTA_ASSEMBLYQC_FASTA"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/fasta_assemblyqc_fasta"
+    tag "subworkflows/utils_nfmicrobe_functions"
+    tag "seqkit/seq"
+    tag "seqkit/stats"
+    tag "trfinder"
+    tag "tantan"
+    tag "pyrodigalgv"
+    tag "sequencestats"
+
+    test("b_fragilis - fasta.gz - test_full - no_use_trfinder_fasta") {
+        when {
+            params {
+                min_len = 1500
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test1', single_end:false ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fasta/test1.contigs.fa.gz', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2', single_end:false ], // meta map
+                        file("${projectDir}/assets/test-datasets/genomics/prokaryotes/bacteroides_fragilis/illumina/fasta/test2.contigs.fa.gz", checkIfExists: true)
+                    ]
+                )
+                input[1] = params.min_len
+                input[2] = true
+                input[3] = true
+                input[4] = false
+                input[5] = true
+                input[6] = true
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.filtered_fasta_gz,
+                    workflow.out.trfinder_tsv,
+                    workflow.out.tantan_bed,
+                    workflow.out.pyrodigalgv_faa_gz,
+                    workflow.out.seq_stats_tsv,
+                    workflow.out.versions
+                    ).match() }
+            )
+        }
+    }
+
+    test("b_fragilis - fasta.gz - test_full - use_trfinder_fasta") {
+        when {
+            params {
+                min_len = 1500
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test1', single_end:false ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fasta/test1.contigs.fa.gz', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2', single_end:false ], // meta map
+                        file("${projectDir}/assets/test-datasets/genomics/prokaryotes/bacteroides_fragilis/illumina/fasta/test2.contigs.fa.gz", checkIfExists: true)
+                    ]
+                )
+                input[1] = params.min_len
+                input[2] = true
+                input[3] = true
+                input[4] = true
+                input[5] = true
+                input[6] = true
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.filtered_fasta_gz,
+                    workflow.out.trfinder_tsv,
+                    workflow.out.tantan_bed,
+                    workflow.out.pyrodigalgv_faa_gz,
+                    workflow.out.seq_stats_tsv,
+                    workflow.out.versions
+                    ).match() }
+            )
+        }
+    }
+
+    test("b_fragilis - fasta.gz - test_nothing") {
+        when {
+            params {
+                min_len = 1500
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test1', single_end:false ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/prokaryotes/bacteroides_fragilis/illumina/fasta/test1.contigs.fa.gz', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2', single_end:false ], // meta map
+                        file("${projectDir}/assets/test-datasets/genomics/prokaryotes/bacteroides_fragilis/illumina/fasta/test2.contigs.fa.gz", checkIfExists: true)
+                    ]
+                )
+                input[1] = params.min_len
+                input[2] = false
+                input[3] = false
+                input[4] = false
+                input[5] = false
+                input[6] = false
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.filtered_fasta_gz,
+                    workflow.out.trfinder_tsv,
+                    workflow.out.tantan_bed,
+                    workflow.out.pyrodigalgv_faa_gz,
+                    workflow.out.seq_stats_tsv,
+                    workflow.out.versions
+                    ).match() }
+            )
+        }
+    }
+}

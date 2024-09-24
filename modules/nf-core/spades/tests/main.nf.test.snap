@@ -35,24 +35,6 @@
                 ]
             ],
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "21"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "73"
-                ]
-            ],
-            [
                 "versions.yml:md5,990abcdf543421412170e5cf413ec56d"
             ]
         ],
@@ -60,7 +42,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-07T06:19:03.165250013"
+        "timestamp": "2024-09-13T11:54:46.117590417"
     },
     "sarscov2 - pe - hmm ": {
         "content": [
@@ -92,24 +74,6 @@
                 ]
             ],
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "21"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "123"
-                ]
-            ],
-            [
                 "versions.yml:md5,990abcdf543421412170e5cf413ec56d"
             ]
         ],
@@ -117,7 +81,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-07T06:22:28.756834169"
+        "timestamp": "2024-09-13T11:59:27.109238286"
     },
     "sarscov2 - pe - pacbio ": {
         "content": [
@@ -155,24 +119,6 @@
                 ]
             ],
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "21"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "73"
-                ]
-            ],
-            [
                 "versions.yml:md5,990abcdf543421412170e5cf413ec56d"
             ]
         ],
@@ -180,7 +126,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-07T06:18:41.943915484"
+        "timestamp": "2024-09-13T11:54:26.231845036"
     },
     "sarscov2 - pe ": {
         "content": [
@@ -212,24 +158,6 @@
                 ]
             ],
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "21"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "73"
-                ]
-            ],
-            [
                 "versions.yml:md5,990abcdf543421412170e5cf413ec56d"
             ]
         ],
@@ -237,7 +165,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-07T06:18:19.017461119"
+        "timestamp": "2024-09-13T11:54:05.878453736"
     },
     "sarscov2 - pe - nanopore - yml ": {
         "content": [
@@ -275,24 +203,6 @@
                 ]
             ],
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "21"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "73"
-                ]
-            ],
-            [
                 "versions.yml:md5,990abcdf543421412170e5cf413ec56d"
             ]
         ],
@@ -300,7 +210,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-07T06:19:23.611405729"
+        "timestamp": "2024-09-13T11:55:06.472401228"
     },
     "sarscov2 - se ": {
         "content": [
@@ -338,24 +248,6 @@
                 ]
             ],
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "21"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "73"
-                ]
-            ],
-            [
                 "versions.yml:md5,990abcdf543421412170e5cf413ec56d"
             ]
         ],
@@ -363,7 +255,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-07T06:17:58.027321834"
+        "timestamp": "2024-09-13T11:53:44.326228309"
     },
     "sarscov2 - pe - stub ": {
         "content": [
@@ -419,7 +311,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "warnings.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.warnings.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "6": [
@@ -432,24 +324,6 @@
                     ]
                 ],
                 "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "21"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "51"
-                    ]
-                ],
-                "9": [
                     "versions.yml:md5,990abcdf543421412170e5cf413ec56d"
                 ],
                 "contigs": [
@@ -488,24 +362,6 @@
                         "test.spades.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "max_kmer": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "51"
-                    ]
-                ],
-                "min_kmer": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "21"
-                    ]
-                ],
                 "scaffolds": [
                     [
                         {
@@ -533,7 +389,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "warnings.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.warnings.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
             }
@@ -542,6 +398,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-07T06:20:01.763977329"
+        "timestamp": "2024-09-13T11:55:43.927568151"
     }
 }

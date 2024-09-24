@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "sequencestats"
+description: Calculate CDS lenth, CDS density, GC content, and N content for assemblies.
+keywords:
+  - stats
+  - quality
+  - assembly
+tools:
+  - "sequencestats":
+      description: "Calculate nusequence statistics on assemblies."
+      documentation: "https://bitbucket.org/berkeleylab/checkv/src/master/checkv/"
+      doi: "10.1038/s41587-020-00774-7"
+      licence: ["The Regents of the University of California, through Lawrence Berkeley National Laboratory"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - nucleotide_fasta:
+      type: file
+      description: Nucleotide sequences in FastA format.
+      pattern: "*.{fasta,fna,fa}.gz"
+  - proteins_faa:
+      type: file
+      description: Proteins sequences in translated FastA format.
+      pattern: "*.{fasta,faa,fa}.gz"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - stats:
+      type: file
+      description: Nucleotide statistics output in TSV format.
+      pattern: "*.nuc_stats.tsv"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

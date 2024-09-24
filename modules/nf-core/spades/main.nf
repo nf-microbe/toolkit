@@ -18,10 +18,8 @@ process SPADES {
     tuple val(meta), path('*.transcripts.fa.gz')  , optional:true, emit: transcripts
     tuple val(meta), path('*.gene_clusters.fa.gz'), optional:true, emit: gene_clusters
     tuple val(meta), path('*.assembly.gfa.gz')    , optional:true, emit: gfa
-    tuple val(meta), path('warnings.log')         , optional:true, emit: warnings
+    tuple val(meta), path('*.warnings.log')       , optional:true, emit: warnings
     tuple val(meta), path('*.spades.log')         , emit: log
-    tuple val(meta), env(min_kmer)                , emit: min_kmer
-    tuple val(meta), env(max_kmer)                , emit: max_kmer
     path  "versions.yml"                          , emit: versions
 
     when:
@@ -68,13 +66,9 @@ process SPADES {
         gzip -n ${prefix}.gene_clusters.fa
     fi
 
-    # identify min/max kmer size
-    kmer_string=\$(grep "K values to be used: \\[" ${prefix}.spades.log | sed 's/.*K values to be used: \\[//; s/\\].*//')
-    kmer_array=(\${kmer_string//,/ })
-    min_kmer=\$(IFS=\$'\\n'; echo "\${kmer_array[*]}" | sort -nr | tail -n 1)
-    max_kmer=\$(IFS=\$'\\n'; echo "\${kmer_array[*]}" | sort -nr | head -n 1)
-    echo \$min_kmer
-    echo \$max_kmer
+    if [ -f warnings.log ]; then
+        mv warnings.log ${prefix}.warnings.log
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -98,9 +92,7 @@ process SPADES {
     echo "" | gzip > ${prefix}.gene_clusters.fa.gz
     echo "" | gzip > ${prefix}.assembly.gfa.gz
     touch ${prefix}.spades.log
-    touch warnings.log
-    min_kmer=21
-    max_kmer=51
+    touch ${prefix}.warnings.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -137,7 +137,7 @@ jobs:
             --ci \
             --shard ${{ matrix.shard }}/${{ env.SHARDS }} \
             --changed-since HEAD^ \
-            --tag nfmicrobe_toolkit_ci \
+            --filter pipeline \
             --related-tests \
             --follow-dependencies \
             --profile=+${{ matrix.profile }} \

@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fasta_mgeclassification_fastatsv"
+description: Identify mobile genetic elements in assembled sequences.
+keywords:
+  - mge
+  - phage
+  - virus
+  - plasmid
+components:
+  - pyhmmer/virusclassify
+  - pyhmmer/plasmidclassify
+  - pyhmmer/buscoclassify
+  - fasta_genomad_fastatsv
+  - subworkflows/utils_nfmicrobe_functions
+
+input:
+  - fasta_gz:
+      type: file
+      description: |
+        The input channel containing nucleotide sequences in FastA format.
+        Structure: [ val(meta), path(fasta.gz) ]
+      pattern: "*.{fasta,fna,fa}.gz"
+  - faa_gz:
+      type: file
+      description: |
+        The input channel containing protein sequences in translated FastA format.
+        Structure: [ val(meta), path(faa.gz) ]
+      pattern: "*.{fasta,faa}.gz"
+  - run_genomad:
+      type: boolean
+      description: |
+        Whether to run the genomad classification.
+        Default: false
+      default: false
+  - run_pyhmmer_virus:
+      type: boolean
+      description: |
+        Whether to run the pyhmmer virus classification.
+        Default: false
+      default: false
+  - run_pyhmmer_plasmid:
+      type: boolean
+      description: |
+        Whether to run the pyhmmer plasmid classification.
+        Default: false
+      default: false
+  - run_pyhmmer_busco:
+      type: boolean
+      description: |
+        Whether to run the pyhmmer busco classification.
+        Default: false
+      default: false
+
+output:
+  - genomad_genes_tsv:
+      type: file
+      description: |
+        Channel containing geNomad gene annotations in TSV format.
+        Structure: [ val(meta), path(genes.tsv) ]
+      pattern: "*genes.tsv"
+  - genomad_features_tsv:
+      type: file
+      description: |
+        Channel containing geNomad feature annotations in TSV format.
+        Structure: [ val(meta), path(features.tsv) ]
+      pattern: "*features.tsv"
+  - genomad_scores_tsv:
+      type: file
+      description: |
+        Channel containing geNomad sequence score in TSV format.
+        Structure: [ val(meta), path(scores.tsv) ]
+      pattern: "*scores.tsv"
+  - pyhmmer_virus_tsv:
+      type: file
+      description: |
+        Channel containing pyhmmer virus markers in TSV format.
+        Structure: [ val(meta), path(virus_markers.tsv) ]
+      pattern: "*virus_markers.tsv"
+  - pyhmmer_plasmid_tsv:
+      type: file
+      description: |
+        Channel containing pyhmmer plasmid markers in TSV format.
+        Structure: [ val(meta), path(plasmid_markers.tsv) ]
+      pattern: "*plasmid_markers.tsv"
+  - pyhmmer_busco_tsv:
+      type: file
+      description: |
+        Channel containing pyhmmer busco markers in TSV format.
+        Structure: [ val(meta), path(busco_markers.tsv) ]
+      pattern: "*busco_markers.tsv"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

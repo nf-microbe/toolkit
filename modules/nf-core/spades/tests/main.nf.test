@@ -30,8 +30,6 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
-                    process.out.min_kmer,
-                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } }
@@ -62,8 +60,6 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
-                    process.out.min_kmer,
-                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
@@ -96,8 +92,6 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
-                    process.out.min_kmer,
-                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
@@ -129,8 +123,6 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
-                    process.out.min_kmer,
-                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
@@ -162,8 +154,6 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
-                    process.out.min_kmer,
-                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } },
@@ -195,8 +185,6 @@ nextflow_process {
                     process.out.transcripts,
                     process.out.gene_clusters,
                     process.out.gfa,
-                    process.out.min_kmer,
-                    process.out.max_kmer,
                     process.out.versions
                     ).match() },
                 { assert path(process.out.log[0][1]).readLines().any { it.contains("SPAdes pipeline finished") } }

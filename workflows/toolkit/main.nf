@@ -7,11 +7,13 @@
 include { paramsSummaryMap              } from 'plugin/nf-validation'
 
 // Import modules
-include { CAT_FASTQ                     } from '../../modules/nf-core/cat/fastq'
+include { CAT_FASTQ as RUNMERGE_FASTQ   } from '../../modules/nf-core/cat/fastq'
 include { CUSTOM_CLEANWORKDIRS          } from '../../modules/nf-core/custom/cleanworkdirs'
 include { FASTQC as FASTQC_RAW          } from '../../modules/nf-core/fastqc'
 include { FASTQC as FASTQC_PREPROCESSED } from '../../modules/nf-core/fastqc'
 include { FASTP                         } from '../../modules/nf-core/fastp'
+include { SEQKIT_SEQ as COBRA_SEQ       } from '../../modules/nf-core/seqkit/seq'
+include { SEQKIT_FX2TAB as COBRA_FX2TAB } from '../../modules/nf-core/seqkit/fx2tab'
 include { MULTIQC                       } from '../../modules/nf-core/multiqc'
 
 // Import functions from subworkflows
@@ -20,10 +22,14 @@ include { getWorkDirs; rmEmptyFastQs    } from '../../subworkflows/nf-core/utils
 include { methodsDescriptionText        } from '../../subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
 
 // Import subworkflows
-include { FASTQ_BOWTIE2_FASTQ           } from '../../subworkflows/nf-core/fastq_bowtie2_fastq'
-include { FASTQ_READASSEMBLY_FASTA      } from '../../subworkflows/nf-core/fastq_readassembly_fasta'
-include { paramsSummaryMultiqc          } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML        } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { FASTA_ASSEMBLYQC_FASTA                } from '../../subworkflows/nf-core/fasta_assemblyqc_fasta'
+include { FASTA_CHECKV_FASTATSV                 } from '../../subworkflows/nf-core/fasta_checkv_fastatsv'
+include { FASTA_MGECLASSIFICATION_FASTATSV      } from '../../subworkflows/nf-core/fasta_mgeclassification_fastatsv'
+include { FASTQ_BOWTIE2_FASTQ                   } from '../../subworkflows/nf-core/fastq_bowtie2_fastq'
+include { FASTQ_READASSEMBLY_FASTA              } from '../../subworkflows/nf-core/fastq_readassembly_fasta'
+include { FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA } from '../../subworkflows/nf-core/fastqfastagfa_assemblyextension_fasta'
+include { paramsSummaryMultiqc                  } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,8 +65,6 @@ workflow TOOLKIT {
         READ PREPROCESSING
     -------------------------------------------------
     */
-    ch_preprocessed_prefilt_fastq_gz    = Channel.empty()
-
     if (parameters.run_fastp) {
         //
         // MODULE: Run fastp on raw reads
@@ -72,26 +76,23 @@ workflow TOOLKIT {
             false,
             false
         )
-        ch_preprocessed_prefilt_fastq_gz    = ch_preprocessed_prefilt_fastq_gz.mix(FASTP.out.reads)
+        ch_preprocessed_prefilt_fastq_gz    = FASTP.out.reads
         ch_multiqc_files                    = ch_multiqc_files.mix(FASTP.out.json.collect{ json -> json[1] })
         ch_versions                         = ch_versions.mix(FASTP.out.versions)
-    }
 
-    // REMOVE EMPTY FASTQ FILES
-    ch_preprocessed_fastq_gz = rmEmptyFastQs(ch_preprocessed_prefilt_fastq_gz, false)
+        // REMOVE EMPTY FASTQ FILES
+        ch_preprocessed_fastq_gz = rmEmptyFastQs(ch_preprocessed_prefilt_fastq_gz, false)
 
-    // IDENTIFY WORKDIRS TO CLEAN
-    ch_pre_preprocessing_workdirs = getWorkDirs(
-        input_fastqs,
-        ch_preprocessed_fastq_gz,
-        false
-    )
-    ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
-        ch_pre_preprocessing_workdirs.map { meta, dir -> [ meta, dir, 'RAW' ] }
-    )
-
-    // Use input fasta if no preprocessing is selected
-    if (!parameters.run_fastp) {
+        // IDENTIFY WORKDIRS TO CLEAN
+        ch_pre_preprocessing_workdirs = getWorkDirs(
+            input_fastqs,
+            ch_preprocessed_fastq_gz,
+            false
+        )
+        ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
+            ch_pre_preprocessing_workdirs.map { meta, dir -> [ meta, dir, 'PREPROCESSING' ] }
+        )
+    } else {
         ch_preprocessed_fastq_gz = input_fastqs
     }
 
@@ -100,8 +101,6 @@ workflow TOOLKIT {
         RUN MERGING
     -------------------------------------------------
     */
-    ch_runmerged_fastq_gz   = Channel.empty()
-
     if (parameters.perform_run_merging) {
         // prepare reads for concatenating within runs
         ch_reads_forcat = ch_preprocessed_fastq_gz
@@ -116,11 +115,11 @@ workflow TOOLKIT {
         //
         // MODULE: Concatenate reads across runs, within samples
         //
-        CAT_FASTQ(
+        RUNMERGE_FASTQ(
             ch_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ] }
         )
-        ch_runmerged_fastq_gz   = ch_runmerged_fastq_gz.mix(CAT_FASTQ.out.reads)
-        ch_versions             = ch_versions.mix(CAT_FASTQ.out.versions)
+        ch_runmerged_fastq_gz   = RUNMERGE_FASTQ.out.reads
+        ch_versions             = ch_versions.mix(RUNMERGE_FASTQ.out.versions)
 
         // Ensure we don't have nests of nests so that structure is in form expected for assembly
         ch_reads_forcat_skipped = ch_reads_forcat.skip_cat
@@ -129,22 +128,25 @@ workflow TOOLKIT {
                 [ meta, new_reads ]
             }
 
+        // IDENTIFY WORKDIRS TO CLEAN
+        ch_pre_runmerge_workdirs = getWorkDirs(
+            ch_preprocessed_fastq_gz.map { meta, reads ->
+                if (meta.single_end) {
+                    [ meta - meta.subMap('run'), reads ]
+                } else {
+                    [ meta - meta.subMap('run'), reads[0] ]
+                }
+            },
+            ch_runmerged_fastq_gz,
+            false
+        )
+        ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
+            ch_pre_runmerge_workdirs.map { meta, dir -> [ meta, dir, 'RUNMERGING' ] }
+        )
+
         // Combine single run and multi-run-merged data
         ch_runmerged_fastq_gz = ch_runmerged_fastq_gz.mix(ch_reads_forcat_skipped)
-    }
-
-    // IDENTIFY WORKDIRS TO CLEAN
-    ch_pre_runmerge_workdirs = getWorkDirs(
-        ch_preprocessed_fastq_gz.map { meta, reads -> [ meta - meta.subMap('run'), reads[0] ] },
-        ch_runmerged_fastq_gz,
-        false
-    )
-    ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
-        ch_pre_runmerge_workdirs.map { meta, dir -> [ meta, dir, 'PREPROCESSING' ] }
-    )
-
-    // Use preprocessing fasta if no run merging is selected
-    if (!parameters.perform_run_merging) {
+    } else {
         ch_runmerged_fastq_gz = ch_preprocessed_fastq_gz
     }
 
@@ -177,8 +179,6 @@ workflow TOOLKIT {
         }
     }
 
-    ch_hostremoved_prefilt_fastq_gz = Channel.empty()
-
     if (parameters.run_bowtie2_host_removal) {
         //
         // SUBWORKFLOW: Remove host reads using Bowtie2
@@ -188,29 +188,25 @@ workflow TOOLKIT {
             ch_host_fasta_gz,
             ch_bowtie2_index
         )
-        ch_hostremoved_prefilt_fastq_gz = ch_hostremoved_prefilt_fastq_gz.mix(FASTQ_BOWTIE2_FASTQ.out.fastq_gz)
+        ch_hostremoved_prefilt_fastq_gz = FASTQ_BOWTIE2_FASTQ.out.fastq_gz
         ch_multiqc_files                = ch_multiqc_files.mix(FASTQ_BOWTIE2_FASTQ.out.bt2_log.collect{ bt2_log -> bt2_log[1] })
         ch_versions                     = ch_versions.mix(FASTQ_BOWTIE2_FASTQ.out.versions)
-    }
 
-    // REMOVE EMPTY FASTQ FILES FROM CHANNEL
-    ch_hostremoved_fastq_gz = rmEmptyFastQs(ch_hostremoved_prefilt_fastq_gz, false)
+        // REMOVE EMPTY FASTQ FILES FROM CHANNEL
+        ch_hostremoved_fastq_gz = rmEmptyFastQs(ch_hostremoved_prefilt_fastq_gz, false)
 
-    // IDENTIFY WORKDIRS TO CLEAN
-    ch_pre_hostremove_workdirs = getWorkDirs(
-        ch_runmerged_fastq_gz.map { meta, reads -> [ meta, reads[0] ] },
-        ch_hostremoved_prefilt_fastq_gz,
-        false
-    )
-    ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
-        ch_pre_hostremove_workdirs.map { meta, dir -> [ meta, dir, 'RUNMERGE' ] }
-    )
-
-    // Use runmerged fasta if no host removal is selected
-    if (!parameters.run_bowtie2_host_removal) {
+        // IDENTIFY WORKDIRS TO CLEAN
+        ch_pre_hostremove_workdirs = getWorkDirs(
+            ch_runmerged_fastq_gz.map { meta, reads -> [ meta, reads[0] ] },
+            ch_hostremoved_prefilt_fastq_gz,
+            false
+        )
+        ch_workdirs_to_clean = ch_workdirs_to_clean.mix(
+            ch_pre_hostremove_workdirs.map { meta, dir -> [ meta, dir, 'HOSTREMOVAL' ] }
+        )
+    } else {
         ch_hostremoved_fastq_gz = ch_runmerged_fastq_gz
     }
-
 
     if (parameters.run_fastp ||
         parameters.perform_run_merging ||
@@ -234,18 +230,18 @@ workflow TOOLKIT {
     // SUBWORKFLOW: Read assembly
     //
     FASTQ_READASSEMBLY_FASTA(
-        ch_preprocessed_fastq_gz,           // channel: [ [ meta.id, meta.single_end, meta.run, meta.group ], [ reads_1.fastq.gz, reads_2.fastq.gz ] ] (MANDATORY)
-        parameters.run_megahit_single,      // boolean: false
-        parameters.run_megahit_coassembly,  // boolean: false
-        parameters.run_spades_single,       // boolean: false
-        parameters.run_spades_coassembly,   // boolean: false
-        parameters.use_spades_scaffolds,    // boolean: false
-        parameters.run_penguin_single,      // boolean: false
-        parameters.run_penguin_coassembly,  // boolean: false
+        ch_hostremoved_fastq_gz,
+        parameters.run_megahit_single,
+        parameters.run_megahit_coassembly,
+        parameters.run_spades_single,
+        parameters.run_spades_coassembly,
+        parameters.use_spades_scaffolds,
+        parameters.run_penguin_single,
+        parameters.run_penguin_coassembly,
     )
     ch_assemblies_fasta_gz  = FASTQ_READASSEMBLY_FASTA.out.assemblies_fasta_gz
     ch_assembly_graph_gz    = FASTQ_READASSEMBLY_FASTA.out.assembly_graph_gz
-    ch_spades_logs          = FASTQ_READASSEMBLY_FASTA.out.spades_logs
+    ch_assembly_logs        = FASTQ_READASSEMBLY_FASTA.out.assembly_logs
     ch_multiqc_files        = ch_multiqc_files.mix(FASTQ_READASSEMBLY_FASTA.out.multiqc_files)
     ch_versions             = FASTQ_READASSEMBLY_FASTA.out.versions
 
@@ -254,49 +250,129 @@ workflow TOOLKIT {
         ASSEMBLY EXTENSION
     -------------------------------------------------
     */
+    ch_extension_fastqs = ch_hostremoved_fastq_gz
+        .filter { meta, reads -> !meta.single_end }
+
+    ch_extension_fastas = ch_assemblies_fasta_gz
+        .filter { meta, reads -> ( meta.assembler == 'megahit' || meta.assembler == 'spades' ) && !meta.single_end}
+
+    if (parameters.run_cobra) {
+        //
+        // MODULE: Identify sequences longer than 10kb
+        //
+        COBRA_SEQ(
+            ch_extension_fastas
+        )
+        ch_versions = ch_versions.mix(COBRA_SEQ.out.versions)
+
+        //
+        // MODULES: Convert fasta to tabular format
+        //
+        COBRA_FX2TAB(
+            COBRA_SEQ.out.fastx
+        )
+        ch_versions         = ch_versions.mix(COBRA_FX2TAB.out.versions)
+        ch_query_contigs    = COBRA_FX2TAB.out.text
+    } else {
+        ch_query_contigs    = []
+    }
+
+    //
+    // SUBWORKFLOW: Extend assemblies with read overlaps and graph resolution
+    //
+    FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA(
+        ch_extension_fastqs,
+        parameters.run_cobra,
+        ch_extension_fastas,
+        ch_assembly_logs,
+        ch_query_contigs,
+        parameters.run_phables,
+        ch_assembly_graph_gz,
+        file("${projectDir}/assets/configs/phables/phables_config.yml", checkIfExists:true),
+        parameters.phables_db
+    )
+    ch_versions = ch_versions.mix(FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA.out.versions)
+
+    // combine input fastas with assemblies and extended assemblies
+    ch_combined_assemblies_fasta_gz = input_fastas
+        .mix(ch_assemblies_fasta_gz)
+        .mix(FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA.out.fasta_gz)
 
     /*
     -------------------------------------------------
         ASSEMBLY QC
     -------------------------------------------------
     */
+    //
+    // SUBWORKFLOW: Assess the quality of assemblies
+    //
+    FASTA_ASSEMBLYQC_FASTA(
+        ch_combined_assemblies_fasta_gz,
+        parameters.assembly_min_len,
+        parameters.run_seqkit_stats,
+        parameters.run_trfinder,
+        parameters.use_trfinder_fasta,
+        parameters.run_tantan,
+        parameters.run_sequence_stats
+    )
+    ch_versions                     = ch_versions.mix(FASTA_ASSEMBLYQC_FASTA.out.versions)
+    ch_filtered_assembly_fasta_gz   = FASTA_ASSEMBLYQC_FASTA.out.filtered_fasta_gz
+    ch_filtered_assembly_faa_gz     = FASTA_ASSEMBLYQC_FASTA.out.pyrodigalgv_faa_gz
+    ch_workdirs_to_clean            = ch_workdirs_to_clean.mix(FASTA_ASSEMBLYQC_FASTA.out.workdirs_to_clean)
+
 
     /*
     -------------------------------------------------
-        VIRUS IDENTIFICATION
+        MGE IDENTIFICATION
+    -------------------------------------------------
+    */
+    //
+    // SUBWORKFLOW: identify MGEs in assemblies
+    //
+    FASTA_MGECLASSIFICATION_FASTATSV(
+        ch_filtered_assembly_fasta_gz,
+        ch_filtered_assembly_faa_gz,
+        parameters.run_genomad,
+        parameters.genomad_db,
+        parameters.run_pyhmmer_virus,
+        parameters.run_pyhmmer_plasmid,
+        parameters.run_pyhmmer_busco
+    )
+    ch_versions                 = ch_versions.mix(FASTA_MGECLASSIFICATION_FASTATSV.out.versions)
+
+    /*
+    -------------------------------------------------
+        VIRUS COMPLETENESS
+    -------------------------------------------------
+    */
+    if (parameters.run_checkv) {
+        FASTA_CHECKV_FASTATSV(
+            ch_filtered_assembly_fasta_gz,
+            parameters.checkv_db,
+            "${projectDir}/assets/db/ncbi_info.tsv"
+        )
+        ch_versions                 = ch_versions.mix(FASTA_CHECKV_FASTATSV.out.versions)
+        ch_checkv_contamination_tsv = FASTA_CHECKV_FASTATSV.out.contamination_tsv
+        ch_checkv_completeness_tsv  = FASTA_CHECKV_FASTATSV.out.completeness_tsv
+        ch_checkv_genbank_hits_tsv  = FASTA_CHECKV_FASTATSV.out.genbank_hits_tsv
+    } else {
+        ch_checkv_contamination_tsv = []
+        ch_checkv_completeness_tsv  = []
+        ch_checkv_genbank_hits_tsv  = []
+    }
+
+
+    /*
+    -------------------------------------------------
+        VIRUS ANNOTATION
     -------------------------------------------------
     */
 
     /*
     -------------------------------------------------
-        VIRUS QC
+        INTERMEDIATE FILE CLEANUP
     -------------------------------------------------
     */
-
-    /*
-    -------------------------------------------------
-        VIRUS TAXONOMY
-    -------------------------------------------------
-    */
-
-    /*
-    -------------------------------------------------
-        VIRUS HOST
-    -------------------------------------------------
-    */
-
-    /*
-    -------------------------------------------------
-        VIRUS LIFESTYLE
-    -------------------------------------------------
-    */
-
-    /*
-    -------------------------------------------------
-        VIRUS FUNCTION
-    -------------------------------------------------
-    */
-
     //
     // MODULE: Clean intermediate files
     //
@@ -308,6 +384,11 @@ workflow TOOLKIT {
         CUSTOM_CLEANWORKDIRS(ch_workdirs_to_clean_unique)
     }
 
+    /*
+    -------------------------------------------------
+        REPORT GENERATION
+    -------------------------------------------------
+    */
     //
     // Collate and save software versions
     //
@@ -360,14 +441,7 @@ workflow TOOLKIT {
         []
     )
 
-    // create a channel to contain all output files for testing
-    ch_outputs = ch_preprocessed_fastq_gz
-        .mix(ch_runmerged_fastq_gz)
-        .mix(ch_hostremoved_fastq_gz)
-        .mix(ch_assemblies_fasta_gz)
-
     emit:
-    output_files    = ch_outputs
     multiqc_report  = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions        = ch_versions                 // channel: [ path(versions.yml) ]
 }
