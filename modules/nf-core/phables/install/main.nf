@@ -16,7 +16,7 @@ process PHABLES_INSTALL {
     script:
     def args = task.ext.args ?: ''
     """
-    mkdir -p phables_db
+    mkdir phables_db
 
     wget -P phables_db https://raw.githubusercontent.com/metagentools/MetaCoAG/develop/src/metacoag/metacoag_utils/auxiliary/marker.hmm
     wget -P phables_db https://phrogs.lmge.uca.fr/downloads_from_website/phrog_annot_v4.tsv

@@ -70,6 +70,11 @@
                         "git_sha": "e7bcef86a9aede4874d8c4259d8a7a8dbc58111b",
                         "installed_by": ["fasta_genomad_fastatsv"]
                     },
+                    "megahit": {
+                        "branch": "master",
+                        "git_sha": "94c9de393b7de2b27e770dca3ce098f8bc4898a4",
+                        "installed_by": ["modules"]
+                    },
                     "megahit/megahit": {
                         "branch": "master",
                         "git_sha": "94c9de393b7de2b27e770dca3ce098f8bc4898a4",
@@ -83,7 +88,7 @@
                     "phables/install": {
                         "branch": "master",
                         "git_sha": "4dfc58306d6eed198aa8066e7a5e627126089da3",
-                        "installed_by": ["fastqgfa_phables_fasta"]
+                        "installed_by": ["fastqgfa_phables_fasta", "modules"]
                     },
                     "phables/run": {
                         "branch": "master",
