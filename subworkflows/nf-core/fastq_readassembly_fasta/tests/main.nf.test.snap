@@ -63,6 +63,7 @@
                     "test2.fasta.gz:md5,4645a1bcba5c26590def3928d0f4e374"
                 ]
             ],
+            null,
             [
                 [
                     {
@@ -109,7 +110,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T12:52:21.852194446"
+        "timestamp": "2024-09-26T07:42:26.954670419"
     },
     "sarscov2 - fastq - paired_end - scaffolds": {
         "content": [
@@ -205,6 +206,7 @@
                     "test2.scaffolds.fa.gz:md5,c822d360df5b09defd67ff5bfefcf8f2"
                 ]
             ],
+            null,
             [
                 [
                     {
@@ -284,7 +286,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T12:58:59.118101915"
+        "timestamp": "2024-09-26T07:50:48.650352691"
     },
     "sarscov2 - fastq - paired_end - contigs": {
         "content": [
@@ -380,6 +382,7 @@
                     "test2.contigs.fa.gz:md5,9e9ead4f95566cc91039a74d02d85d32"
                 ]
             ],
+            null,
             [
                 [
                     {
@@ -459,6 +462,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-13T12:55:40.740476442"
+        "timestamp": "2024-09-26T07:46:05.246092765"
     }
 }

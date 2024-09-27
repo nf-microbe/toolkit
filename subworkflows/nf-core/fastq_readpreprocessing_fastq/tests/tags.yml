@@ -1,2 +1,0 @@
-subworkflows/fastq_readpreprocessing_fastq:
-  - subworkflows/nf-core/fastq_readpreprocessing_fastq/**

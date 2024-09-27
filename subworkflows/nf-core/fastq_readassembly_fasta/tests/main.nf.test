@@ -47,6 +47,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.assemblies_fasta_gz,
+                    workflow.out.assemblies_fastq_gz,
                     workflow.out.assembly_graph_gz,
                     workflow.out.versions
                     ).match()
@@ -94,6 +95,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.assemblies_fasta_gz,
+                    workflow.out.assemblies_fastq_gz,
                     workflow.out.assembly_graph_gz,
                     workflow.out.versions
                     ).match()
@@ -141,6 +143,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.assemblies_fasta_gz,
+                    workflow.out.assemblies_fastq_gz,
                     workflow.out.assembly_graph_gz,
                     workflow.out.versions
                     ).match()

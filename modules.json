@@ -7,37 +7,37 @@
                 "nf-core": {
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "23f6cd2aeb95ebcddac093ba4aef37e2757698da",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fastq_bowtie2_fastq"]
                     },
                     "bowtie2/build": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fastq_bowtie2_fastq", "modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fastq_readassembly_fasta"]
                     },
                     "checkv/downloaddatabase": {
                         "branch": "master",
-                        "git_sha": "85d3929beb85a76258df988999d5a015a53a3413",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fasta_checkv_fastatsv"]
                     },
                     "checkv/endtoend": {
                         "branch": "master",
-                        "git_sha": "94c9de393b7de2b27e770dca3ce098f8bc4898a4",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fasta_checkv_fastatsv"]
                     },
                     "checkv/genbankhits": {
                         "branch": "master",
-                        "git_sha": "94c9de393b7de2b27e770dca3ce098f8bc4898a4",
+                        "git_sha": "f049da2680ec87fdfe25082f930871871eed4d4f",
                         "installed_by": ["fasta_checkv_fastatsv"]
                     },
                     "cobrameta": {
                         "branch": "master",
-                        "git_sha": "27a7cc985a2b0b73dc76486253d7bed59cbbb7cf",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fastqfasta_cobra_fasta"]
                     },
                     "coverm/contig": {
@@ -52,28 +52,38 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["modules"]
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["modules"]
                     },
                     "genomad/download": {
                         "branch": "master",
-                        "git_sha": "ad1f225fb65aa527d9143736e14db22c5944e70e",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fasta_genomad_fastatsv"]
                     },
                     "genomad/endtoend": {
                         "branch": "master",
-                        "git_sha": "e7bcef86a9aede4874d8c4259d8a7a8dbc58111b",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fasta_genomad_fastatsv"]
                     },
-                    "megahit": {
+                    "logan/contigawscli": {
                         "branch": "master",
-                        "git_sha": "94c9de393b7de2b27e770dca3ce098f8bc4898a4",
+                        "git_sha": "c5c3a061f8927780e7aa80bfc87fdd9cab1fca86",
                         "installed_by": ["modules"]
+                    },
+                    "logan/contigawsclimultiplier": {
+                        "branch": "master",
+                        "git_sha": "a11929683f364624dc8e8c3f34a563b5a536725a",
+                        "installed_by": ["accession_logan_fasta"]
+                    },
+                    "logan/unitigawsclimultiplier": {
+                        "branch": "master",
+                        "git_sha": "a11929683f364624dc8e8c3f34a563b5a536725a",
+                        "installed_by": ["accession_logan_fasta", "modules"]
                     },
                     "megahit/megahit": {
                         "branch": "master",
@@ -82,7 +92,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["modules"]
                     },
                     "phables/install": {
@@ -122,17 +132,17 @@
                     },
                     "seqkit/fx2tab": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["modules"]
                     },
                     "seqkit/seq": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fasta_assemblyqc_fasta", "modules"]
                     },
                     "seqkit/stats": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fasta_assemblyqc_fasta"]
                     },
                     "sequencestats": {
@@ -142,8 +152,13 @@
                     },
                     "spades": {
                         "branch": "master",
-                        "git_sha": "23f6cd2aeb95ebcddac093ba4aef37e2757698da",
+                        "git_sha": "7b3ce79a51871a57ac4cb6614b98684f070eca67",
                         "installed_by": ["fastq_readassembly_fasta"]
+                    },
+                    "sra/sratools": {
+                        "branch": "master",
+                        "git_sha": "f049da2680ec87fdfe25082f930871871eed4d4f",
+                        "installed_by": ["modules"]
                     },
                     "tantan": {
                         "branch": "master",
@@ -159,6 +174,11 @@
             },
             "subworkflows": {
                 "nf-core": {
+                    "accession_logan_fasta": {
+                        "branch": "master",
+                        "git_sha": "a11929683f364624dc8e8c3f34a563b5a536725a",
+                        "installed_by": ["subworkflows"]
+                    },
                     "fasta_assemblyqc_fasta": {
                         "branch": "master",
                         "git_sha": "23f6cd2aeb95ebcddac093ba4aef37e2757698da",
@@ -186,7 +206,7 @@
                     },
                     "fastq_readassembly_fasta": {
                         "branch": "master",
-                        "git_sha": "23f6cd2aeb95ebcddac093ba4aef37e2757698da",
+                        "git_sha": "a11929683f364624dc8e8c3f34a563b5a536725a",
                         "installed_by": ["subworkflows"]
                     },
                     "fastqfasta_cobra_fasta": {

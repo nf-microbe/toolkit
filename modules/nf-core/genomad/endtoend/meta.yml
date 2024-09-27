@@ -16,19 +16,20 @@ tools:
       tool_dev_url: https://github.com/apcamargo/genomad/
       doi: 10.1101/2023.03.05.531206
       licence: ["Lawrence Berkeley National Labs BSD variant license"]
+      identifier: biotools:genomad
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - fasta:
-      type: file
-      description: FASTA file containing contigs/scaffolds/chromosomes
-      pattern: "*.{fasta,fna,fa}"
-  - genomad_db:
-      type: directory
-      description: Directory pointing to geNomad database
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: FASTA file containing contigs/scaffolds/chromosomes
+        pattern: "*.{fasta,fna,fa}"
+  - - genomad_db:
+        type: directory
+        description: Directory pointing to geNomad database
 output:
   - meta:
       type: map
@@ -64,9 +65,15 @@ output:
       description: Detailed output of geNomad's feature analysis
       pattern: "*_features.tsv"
   - aggregated_classification:
-      type: file
-      description: Combined classification scores for each contig/scaffold/chromosome
-      pattern: "*_aggregated_classification.tsv"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*_aggregated_classification/*_aggregated_classification.tsv":
+          type: file
+          description: Combined classification scores for each contig/scaffold/chromosome
+          pattern: "*_aggregated_classification.tsv"
   - taxonomy:
       type: file
       description: Detailed output of geNomad's marker gene taxonomy analysis
