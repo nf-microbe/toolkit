@@ -1,0 +1,52 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    test("Test with minimal disk usage") {
+        config "../conf/test.config"
+        when {
+            params {
+                outdir                      = "$outputDir"
+                remove_intermediate_files   = false
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() == 210 },
+            )
+        }
+    }
+
+    test("Test nothing") {
+        config "../conf/test_nothing.config"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() == 5 },
+            )
+        }
+    }
+
+    test("Full stub test") {
+        config "../conf/test_full.config"
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() == 458 },
+            )
+        }
+    }
+}

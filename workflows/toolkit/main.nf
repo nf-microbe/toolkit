@@ -52,6 +52,7 @@ workflow TOOLKIT {
     ch_versions             = Channel.empty()
     ch_multiqc_files        = Channel.empty()
     ch_workdirs_to_clean    = Channel.empty()
+    ch_sra_accessions       = null
 
     if (parameters.sra_accessions) {
         // Load SRA accessions one-by-one from file

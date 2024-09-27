@@ -69,7 +69,7 @@ def getWorkDirs(ch_to_clean, ch_downstream, print_output) {
 //
 // Filter channels to remove empty FastQ files
 //
-def rmEmptyFastQs(ch_fastqs, print_output) {
+def rmEmptyFastQs(ch_fastqs, print_output, stub_run=workflow.stubRun) {
     def ch_nonempty_fastqs = ch_fastqs
         .filter { meta, fastq ->
                 if ( meta.single_end ) {
@@ -93,6 +93,10 @@ def rmEmptyFastQs(ch_fastqs, print_output) {
                 }
             }
 
+    if (stub_run) {
+        ch_nonempty_fastqs = ch_fastqs
+    }
+
     if (print_output) {
         ch_nonempty_fastqs.view()
     }
@@ -103,7 +107,7 @@ def rmEmptyFastQs(ch_fastqs, print_output) {
 //
 // Filter channels to remove empty FastA files
 //
-def rmEmptyFastAs(ch_fastas, print_output) {
+def rmEmptyFastAs(ch_fastas, print_output, stub_run=workflow.stubRun) {
     def ch_nonempty_fastas = ch_fastas
         .filter { meta, fasta ->
             try {
@@ -115,6 +119,10 @@ def rmEmptyFastAs(ch_fastas, print_output) {
                 log.warn "[rmEmptyFastAs]: ${fasta} has an EOFException, this is likely an empty gzipped file."
             }
         }
+
+    if (stub_run) {
+        ch_nonempty_fastas = ch_fastas
+    }
 
     if (print_output) {
         ch_nonempty_fastas.view()

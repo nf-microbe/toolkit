@@ -236,7 +236,7 @@
                     },
                     "utils_nfmicrobe_functions": {
                         "branch": "master",
-                        "git_sha": "c4dfde9c933760976c1a92b4c2b74d9182396df6",
+                        "git_sha": "c63a4b3d317e6c1b6fd810bc1f32d67f272ecc38",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfvalidation_plugin": {
