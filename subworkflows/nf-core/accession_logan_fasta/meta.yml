@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "accession_logan_fasta"
+description: Download logan contigs/unitigs from input accessions.
+keywords:
+  - logan
+  - download
+  - contig
+  - unitig
+components:
+  - logan/contigawsclimultiplier
+  - logan/unitigawsclimultiplier
+
+input:
+  - accessions:
+      type: string
+      description: |
+        The input channel containing SRA accessions
+        Structure: [ val(meta), val(accessions) ]
+  - download_contigs:
+      type: boolean
+      description: |
+        Whether to download Logan contigs
+  - download_unitigs:
+      type: boolean
+      description: |
+        Whether to download Logan unitigs
+
+output:
+  - logan_mult_fasta_gz:
+      type: file
+      description: |
+        Channel containing downloaded & multiplied logan contigs/unitigs
+        Structure: [ val(meta), path(fasta.gz) ]
+      pattern: "*.fasta.gz"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

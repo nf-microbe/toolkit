@@ -12,8 +12,10 @@ include { CUSTOM_CLEANWORKDIRS          } from '../../modules/nf-core/custom/cle
 include { FASTQC as FASTQC_RAW          } from '../../modules/nf-core/fastqc'
 include { FASTQC as FASTQC_PREPROCESSED } from '../../modules/nf-core/fastqc'
 include { FASTP                         } from '../../modules/nf-core/fastp'
+include { LOGAN_CONTIGAWSCLI            } from '../../modules/nf-core/logan/contigawscli'
 include { SEQKIT_SEQ as COBRA_SEQ       } from '../../modules/nf-core/seqkit/seq'
 include { SEQKIT_FX2TAB as COBRA_FX2TAB } from '../../modules/nf-core/seqkit/fx2tab'
+include { SRA_SRATOOLS                  } from '../../modules/nf-core/sra/sratools'
 include { MULTIQC                       } from '../../modules/nf-core/multiqc'
 
 // Import functions from subworkflows
@@ -22,6 +24,7 @@ include { getWorkDirs; rmEmptyFastQs    } from '../../subworkflows/nf-core/utils
 include { methodsDescriptionText        } from '../../subworkflows/local/utils_nfmicrobe_toolkit_pipeline'
 
 // Import subworkflows
+include { ACCESSION_LOGAN_FASTA                 } from '../../subworkflows/nf-core/accession_logan_fasta'
 include { FASTA_ASSEMBLYQC_FASTA                } from '../../subworkflows/nf-core/fasta_assemblyqc_fasta'
 include { FASTA_CHECKV_FASTATSV                 } from '../../subworkflows/nf-core/fasta_checkv_fastatsv'
 include { FASTA_MGECLASSIFICATION_FASTATSV      } from '../../subworkflows/nf-core/fasta_mgeclassification_fastatsv'
@@ -50,6 +53,40 @@ workflow TOOLKIT {
     ch_multiqc_files        = Channel.empty()
     ch_workdirs_to_clean    = Channel.empty()
 
+    if (parameters.sra_accessions) {
+        // Load SRA accessions one-by-one from file
+        ch_sra_accessions = Channel.fromPath(parameters.sra_accessions)
+            .splitCsv(header:false)
+            .map { row -> [ [ id: row[0], group: row[0]], row[0] ] }
+    }
+
+    /*
+    -------------------------------------------------
+        READ DOWNLOAD
+    -------------------------------------------------
+    */
+    if (ch_sra_accessions && parameters.download_sra_fastqs) {
+        //
+        // MODULE: Download SRA FastQ files
+        //
+        SRA_SRATOOLS(
+            ch_sra_accessions.map { meta, acc -> [ [ id: "sra_" + meta.id, group: "sra_" + meta.id ], acc ] }
+        )
+        ch_versions     = ch_versions.mix(SRA_SRATOOLS.out.versions)
+        input_fastqs    = input_fastqs
+            .mix(
+                SRA_SRATOOLS.out.fastq.map { meta, fastq ->
+                    meta.single_end = fastq.size() == 2 ? false : true
+                    [ meta, fastq ]
+                }
+            )
+    }
+
+    /*
+    -------------------------------------------------
+        RAW READ QC
+    -------------------------------------------------
+    */
     //
     // MODULE: Run FastQC on raw reads
     //
@@ -58,7 +95,6 @@ workflow TOOLKIT {
     )
     ch_multiqc_files    = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{ zip -> zip[1] })
     ch_versions         = ch_versions.mix(FASTQC_RAW.out.versions.first())
-
 
     /*
     -------------------------------------------------
@@ -223,27 +259,78 @@ workflow TOOLKIT {
 
     /*
     -------------------------------------------------
+        LOGAN MULTIPLIER DOWNLOAD
+    -------------------------------------------------
+    */
+    if (ch_sra_accessions && (parameters.download_logan_mult_contigs || parameters.download_logan_mult_unitigs) ) {
+        //
+        // SUBWORKFLOW: Download Logan multiplied assemblies
+        //
+        ACCESSION_LOGAN_FASTA(
+            ch_sra_accessions,
+            parameters.download_logan_mult_contigs,
+            parameters.download_logan_mult_unitigs
+        )
+        ch_versions             = ch_versions.mix(ACCESSION_LOGAN_FASTA.out.versions)
+        ch_hostremoved_fastq_gz = ch_hostremoved_fastq_gz
+            .mix(
+                ACCESSION_LOGAN_FASTA.out.logan_mult_fasta_gz.map { meta, fasta ->
+                    [ meta + [ single_end: true ], fasta ]
+                }
+            )
+    }
+
+    /*
+    -------------------------------------------------
+        ASSEMBLY DOWNLOAD
+    -------------------------------------------------
+    */
+    if (ch_sra_accessions && parameters.download_logan_contigs) {
+        //
+        // MODULE: Download Logan contigs
+        //
+        LOGAN_CONTIGAWSCLI(
+            ch_sra_accessions.map { meta, acc ->
+                [ [ id: "logan_assemblies_" + meta.id, group: "logan_assemblies_" + meta.id, assembler: 'minia', assembly_method: 'single' ], acc ] }
+        )
+        ch_versions     = ch_versions.mix(LOGAN_CONTIGAWSCLI.out.versions)
+        input_fastas    = input_fastas.mix(LOGAN_CONTIGAWSCLI.out.fasta)
+    }
+
+    /*
+    -------------------------------------------------
         READ ASSEMBLY
     -------------------------------------------------
     */
-    //
-    // SUBWORKFLOW: Read assembly
-    //
-    FASTQ_READASSEMBLY_FASTA(
-        ch_hostremoved_fastq_gz,
-        parameters.run_megahit_single,
-        parameters.run_megahit_coassembly,
-        parameters.run_spades_single,
-        parameters.run_spades_coassembly,
-        parameters.use_spades_scaffolds,
-        parameters.run_penguin_single,
-        parameters.run_penguin_coassembly,
-    )
-    ch_assemblies_fasta_gz  = FASTQ_READASSEMBLY_FASTA.out.assemblies_fasta_gz
-    ch_assembly_graph_gz    = FASTQ_READASSEMBLY_FASTA.out.assembly_graph_gz
-    ch_assembly_logs        = FASTQ_READASSEMBLY_FASTA.out.assembly_logs
-    ch_multiqc_files        = ch_multiqc_files.mix(FASTQ_READASSEMBLY_FASTA.out.multiqc_files)
-    ch_versions             = FASTQ_READASSEMBLY_FASTA.out.versions
+    if (parameters.run_megahit_single ||
+        parameters.run_megahit_coassembly ||
+        parameters.run_spades_single ||
+        parameters.run_spades_coassembly ||
+        parameters.run_penguin_single ||
+        parameters.run_penguin_coassembly) {
+            //
+            // SUBWORKFLOW: Read assembly
+            //
+            FASTQ_READASSEMBLY_FASTA(
+                ch_hostremoved_fastq_gz,
+                parameters.run_megahit_single,
+                parameters.run_megahit_coassembly,
+                parameters.run_spades_single,
+                parameters.run_spades_coassembly,
+                parameters.use_spades_scaffolds,
+                parameters.run_penguin_single,
+                parameters.run_penguin_coassembly,
+            )
+            input_fastas            = input_fastas.mix(FASTQ_READASSEMBLY_FASTA.out.assemblies_fasta_gz)
+            ch_assembly_graph_gz    = FASTQ_READASSEMBLY_FASTA.out.assembly_graph_gz
+            ch_assembly_logs        = FASTQ_READASSEMBLY_FASTA.out.assembly_logs
+            ch_hostremoved_fastq_gz = ch_hostremoved_fastq_gz.mix(FASTQ_READASSEMBLY_FASTA.out.coassembly_fastq_gz)
+            ch_multiqc_files        = ch_multiqc_files.mix(FASTQ_READASSEMBLY_FASTA.out.multiqc_files)
+            ch_versions             = FASTQ_READASSEMBLY_FASTA.out.versions
+        } else {
+            ch_assembly_graph_gz = []
+            ch_assembly_logs     = []
+        }
 
     /*
     -------------------------------------------------
@@ -253,7 +340,7 @@ workflow TOOLKIT {
     ch_extension_fastqs = ch_hostremoved_fastq_gz
         .filter { meta, reads -> !meta.single_end }
 
-    ch_extension_fastas = ch_assemblies_fasta_gz
+    ch_extension_fastas = input_fastas
         .filter { meta, reads -> ( meta.assembler == 'megahit' || meta.assembler == 'spades' ) && !meta.single_end}
 
     if (parameters.run_cobra) {
@@ -291,12 +378,9 @@ workflow TOOLKIT {
         file("${projectDir}/assets/configs/phables/phables_config.yml", checkIfExists:true),
         parameters.phables_db
     )
-    ch_versions = ch_versions.mix(FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA.out.versions)
-
-    // combine input fastas with assemblies and extended assemblies
-    ch_combined_assemblies_fasta_gz = input_fastas
-        .mix(ch_assemblies_fasta_gz)
-        .mix(FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA.out.fasta_gz)
+    ch_versions     = ch_versions.mix(FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA.out.versions)
+    input_fastas    = input_fastas.map { meta, fasta -> [ meta + [ extension: 'no_extension' ], fasta ] }
+    input_fastas    = input_fastas.mix(FASTQFASTAGFA_ASSEMBLYEXTENSION_FASTA.out.fasta_gz)
 
     /*
     -------------------------------------------------
@@ -307,7 +391,7 @@ workflow TOOLKIT {
     // SUBWORKFLOW: Assess the quality of assemblies
     //
     FASTA_ASSEMBLYQC_FASTA(
-        ch_combined_assemblies_fasta_gz,
+        input_fastas,
         parameters.assembly_min_len,
         parameters.run_seqkit_stats,
         parameters.run_trfinder,

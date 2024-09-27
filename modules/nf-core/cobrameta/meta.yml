@@ -1,5 +1,6 @@
 name: cobrameta
-description: A tool to raise the quality of viral genomes assembled from short-read metagenomes via resolving and joining of contigs fragmented during de novo assembly.
+description: A tool to raise the quality of viral genomes assembled from short-read
+  metagenomes via resolving and joining of contigs fragmented during de novo assembly.
 keywords:
   - cobra
   - contig
@@ -10,12 +11,14 @@ keywords:
   - phage
 tools:
   - cobra-meta:
-      description: COBRA is a tool to get higher quality viral genomes assembled from metagenomes.
+      description: COBRA is a tool to get higher quality viral genomes assembled from
+        metagenomes.
       homepage: https://github.com/linxingchen/cobra
       documentation: https://github.com/linxingchen/cobra
       tool_dev_url: https://github.com/linxingchen/cobra
       doi: 10.1038/s41564-023-01598-2
       licence: ["MIT"]
+      identifier: ""
 
 input:
   - meta:
@@ -78,10 +81,10 @@ output:
         Log file containing the stdout of COBRA
       pattern: "*.cobra.log"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
-
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@CarsonJM"
 maintainers:

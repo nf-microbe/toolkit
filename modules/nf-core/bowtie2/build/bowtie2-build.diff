@@ -1,9 +1,0 @@
-Changes in module 'nf-core/bowtie2/build'
-'modules/nf-core/bowtie2/build/nextflow.config' was created
-'modules/nf-core/bowtie2/build/environment.yml' is unchanged
-'modules/nf-core/bowtie2/build/meta.yml' is unchanged
-'modules/nf-core/bowtie2/build/main.nf' is unchanged
-'modules/nf-core/bowtie2/build/tests/tags.yml' is unchanged
-'modules/nf-core/bowtie2/build/tests/main.nf.test' is unchanged
-'modules/nf-core/bowtie2/build/tests/main.nf.test.snap' is unchanged
-************************************************************

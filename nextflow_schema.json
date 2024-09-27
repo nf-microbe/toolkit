@@ -33,6 +33,11 @@
                     "fa_icon": "fas fa-dna",
                     "description": "Path to input FastA files."
                 },
+                "sra_accessions": {
+                    "type": "string",
+                    "description": "Path to file containing SRA accession IDs to download.",
+                    "fa_icon": "fas fa-file-alt"
+                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
@@ -55,6 +60,18 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                }
+            }
+        },
+        "read_download_options": {
+            "title": "Read download options",
+            "type": "object",
+            "description": "Parameters for downloading reads as input into pipeline.",
+            "default": "",
+            "properties": {
+                "download_sra_fastqs": {
+                    "type": "boolean",
+                    "description": "Download FastQ files for SRA accessions?"
                 }
             }
         },
@@ -118,6 +135,27 @@
                 }
             }
         },
+        "logan_assembly_input_download_options": {
+            "title": "Logan assembly input download options",
+            "type": "object",
+            "description": "Parameters for downloading abundance multiplied contigs/unitigs that will be input into assembly modules.",
+            "default": "",
+            "properties": {
+                "download_logan_mult_unitigs": {
+                    "type": "boolean",
+                    "description": "Download Logan unitigs? (multiplied by average k-mer abundance)"
+                },
+                "download_logan_mult_contigs": {
+                    "type": "boolean",
+                    "description": "Download Logan contigs? (multiplied by average k-mer abundance)"
+                },
+                "logan_mult_min_abund": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Minimum sequence abundance to include contig/unitig in output file."
+                }
+            }
+        },
         "read_assembly_options": {
             "title": "Read assembly options",
             "type": "object",
@@ -165,6 +203,18 @@
                 "penguin_args": {
                     "type": "string",
                     "description": "CLI arguments to include when running PenguiN."
+                }
+            }
+        },
+        "assembly_download_options": {
+            "title": "Assembly download options",
+            "type": "object",
+            "description": "Parameters for downloading pre-assembled FastA files.",
+            "default": "",
+            "properties": {
+                "download_logan_contigs": {
+                    "type": "boolean",
+                    "description": "Download Logan contigs?"
                 }
             }
         },
@@ -518,10 +568,19 @@
             "$ref": "#/definitions/input_output_options"
         },
         {
+            "$ref": "#/definitions/read_download_options"
+        },
+        {
             "$ref": "#/definitions/read_preprocessing_options"
         },
         {
+            "$ref": "#/definitions/logan_assembly_input_download_options"
+        },
+        {
             "$ref": "#/definitions/read_assembly_options"
+        },
+        {
+            "$ref": "#/definitions/assembly_download_options"
         },
         {
             "$ref": "#/definitions/assembly_extension_options"

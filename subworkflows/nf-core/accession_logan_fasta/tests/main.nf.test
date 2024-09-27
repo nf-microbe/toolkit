@@ -1,0 +1,40 @@
+nextflow_workflow {
+
+    name "Test Subworkflow ACCESSION_LOGAN_FASTA"
+    script "../main.nf"
+    workflow "ACCESSION_LOGAN_FASTA"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/accession_logan_fasta"
+    tag "logan"
+    tag "logan/contigawsclimultiplier"
+    tag "logan/unitigawsclimultiplier"
+
+    test("SRR24085752 + SRR3212803") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'SRR24085752' ], // meta map
+                        'SRR24085752'
+                    ],
+                    [
+                        [ id:'SRR3212803' ], // meta map
+                        'SRR3212803'
+                    ]
+                )
+                input[1] = true
+                input[2] = true
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}

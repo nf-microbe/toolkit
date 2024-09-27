@@ -1,0 +1,81 @@
+{
+    "SRR24085752 + SRR3212803": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "logan_contig_SRR24085752",
+                            "group": "logan_contig_SRR24085752"
+                        },
+                        "SRR24085752.multiplier.fasta.gz:md5,a6d17ae95f5b21d3f2e0af976e90ffcf"
+                    ],
+                    [
+                        {
+                            "id": "logan_contig_SRR3212803",
+                            "group": "logan_contig_SRR3212803"
+                        },
+                        "SRR3212803.multiplier.fasta.gz:md5,3587519af21b20189c6a0bd7820287cd"
+                    ],
+                    [
+                        {
+                            "id": "logan_unitig_SRR24085752",
+                            "group": "logan_unitig_SRR24085752"
+                        },
+                        "SRR24085752.multiplier.fasta.gz:md5,968840dfa0f56f45294f4a389fb38297"
+                    ],
+                    [
+                        {
+                            "id": "logan_unitig_SRR3212803",
+                            "group": "logan_unitig_SRR3212803"
+                        },
+                        "SRR3212803.multiplier.fasta.gz:md5,cf5d433e360f43c403fabad14d6f1e91"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,160b6e16038e8d896f8125f989a7763d",
+                    "versions.yml:md5,4bd692847acda1f99de9a801f909e97c"
+                ],
+                "logan_mult_fasta_gz": [
+                    [
+                        {
+                            "id": "logan_contig_SRR24085752",
+                            "group": "logan_contig_SRR24085752"
+                        },
+                        "SRR24085752.multiplier.fasta.gz:md5,a6d17ae95f5b21d3f2e0af976e90ffcf"
+                    ],
+                    [
+                        {
+                            "id": "logan_contig_SRR3212803",
+                            "group": "logan_contig_SRR3212803"
+                        },
+                        "SRR3212803.multiplier.fasta.gz:md5,3587519af21b20189c6a0bd7820287cd"
+                    ],
+                    [
+                        {
+                            "id": "logan_unitig_SRR24085752",
+                            "group": "logan_unitig_SRR24085752"
+                        },
+                        "SRR24085752.multiplier.fasta.gz:md5,968840dfa0f56f45294f4a389fb38297"
+                    ],
+                    [
+                        {
+                            "id": "logan_unitig_SRR3212803",
+                            "group": "logan_unitig_SRR3212803"
+                        },
+                        "SRR3212803.multiplier.fasta.gz:md5,cf5d433e360f43c403fabad14d6f1e91"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,160b6e16038e8d896f8125f989a7763d",
+                    "versions.yml:md5,4bd692847acda1f99de9a801f909e97c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-26T09:50:43.914337634"
+    }
+}
