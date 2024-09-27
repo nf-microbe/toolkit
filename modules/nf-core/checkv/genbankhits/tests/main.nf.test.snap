@@ -1,4 +1,37 @@
 {
+    "checkv - empty aai.tsv": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_checkv_genbank_hits.tsv:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,c490ce4ec802d615af992dae067ffddf"
+                ],
+                "genbank_hits": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_checkv_genbank_hits.tsv:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,c490ce4ec802d615af992dae067ffddf"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-25T12:04:46.306386231"
+    },
     "bacteroides_fragilis - checkv - aai.tsv": {
         "content": [
             {

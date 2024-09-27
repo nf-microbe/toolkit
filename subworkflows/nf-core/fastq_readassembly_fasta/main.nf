@@ -178,6 +178,7 @@ workflow FASTQ_READASSEMBLY_FASTA {
     ch_assemblies_fasta_gz = rmEmptyFastAs(ch_assemblies_prefilt_fasta_gz, false)
 
     emit:
+    coassembly_fastq_gz = ch_coassembly_fastq_gz    // channel: [ [ meta.id, meta.single_end, meta.group ], [ reads_1.fastq.gz, reads_2.fastq.gz ] ]
     assemblies_fasta_gz = ch_assemblies_fasta_gz    // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler, meta.assembly_method, meta.mink, meta.maxk ], assembly.fasta.gz ]
     assembly_graph_gz   = ch_assembly_graph_gz      // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler ], assembly_graph.gfa.gz ]
     assembly_logs       = ch_assembly_logs          // channel: [ [ meta.id, meta.single_end, meta.group, meta.assembler ], spades.log ]

@@ -64,11 +64,15 @@ def main():
             r["target_name"] = ncbi_info.loc[r["target"]]["organism_name"]
             r["target_taxid"] = ncbi_info.loc[r["target"]]["taxid"]
             query_to_target[r["query"]] = r
-    recs = list(query_to_target.values())
-    df = pd.DataFrame(recs)
-    df = move_column_after(df, "target_name", "target")
-    df = move_column_after(df, "target_taxid", "target_name")
-    df.to_csv(outpath, sep="\t", index=False)
+    if len(query_to_target.values()) == 0:
+        df = pd.DataFrame()
+        df.to_csv(outpath, sep="\t", index=False)
+    else:
+        recs = list(query_to_target.values())
+        df = pd.DataFrame(recs)
+        df = move_column_after(df, "target_name", "target")
+        df = move_column_after(df, "target_taxid", "target_name")
+        df.to_csv(outpath, sep="\t", index=False)
 
 
 if __name__ == "__main__":

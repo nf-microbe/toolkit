@@ -14,7 +14,7 @@ nextflow_pipeline {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.trace.succeeded().size() == 143 },
+                { assert workflow.trace.succeeded().size() == 210 },
             )
         }
     }
@@ -30,6 +30,22 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert workflow.trace.succeeded().size() == 5 },
+            )
+        }
+    }
+
+    test("Full stub test") {
+        config "../conf/test_full.config"
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() == 458 },
             )
         }
     }
