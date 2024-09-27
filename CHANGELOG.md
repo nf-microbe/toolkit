@@ -11,19 +11,19 @@ Logan assemblies, and Logan sequences processed to be input into assemblers.
 ### `Added`
 
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Added options for downloading
-FastQ files from SRA (`sra/sratools` module added by @CarsonJM)
+  FastQ files from SRA (`sra/sratools` module added by @CarsonJM)
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Added options for downloading
-Logan assemblies (`logan/contigawscli` module added by @CarsonJM)
+  Logan assemblies (`logan/contigawscli` module added by @CarsonJM)
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Added options for downloading
-and processing Logan sequences for input into assembly (`logan/contigawsclimultiplier`
-`logan/unitigawsclimultiplier`, `accession_logan_fasta` modules/subworkflows added by @CarsonJM)
+  and processing Logan sequences for input into assembly (`logan/contigawsclimultiplier`
+  `logan/unitigawsclimultiplier`, `accession_logan_fasta` modules/subworkflows added by @CarsonJM)
 
 ### `Fixed`
 
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Fixed UW Hyak profile to retry with exitStatus 250, an
-out of memory error for SPAdes (Fixed by @CarsonJM)
+  out of memory error for SPAdes (Fixed by @CarsonJM)
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Fixed `checkv/genbankhits` modules erroring out
-when an empty file was input (Fixed by @CarsonJM)
+  when an empty file was input (Fixed by @CarsonJM)
 
 ### `Dependencies`
 
@@ -37,7 +37,7 @@ MGE classification, and virus completeness estimation.
 ### `Added`
 
 - [#17](https://github.com/nf-microbe/toolkit/pull/17) Added assembly extension, assembly QC,
-MGE classification, and virus completeness (added by @CarsonJM)
+  MGE classification, and virus completeness (added by @CarsonJM)
 
 ### `Fixed`
 
