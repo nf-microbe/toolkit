@@ -17,12 +17,14 @@ Logan assemblies, and Logan sequences processed to be input into assemblers.
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Added options for downloading
   and processing Logan sequences for input into assembly (`logan/contigawsclimultiplier`
   `logan/unitigawsclimultiplier`, `accession_logan_fasta` modules/subworkflows added by @CarsonJM)
+- [#21](https://github.com/nf-microbe/toolkit/pull/21) `rmEmptyFastQ` and `rmEmptyFastA` modules
+  updated, and full pipeline stub tests implemented (added by @CarsonJM)
 
 ### `Fixed`
 
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Fixed UW Hyak profile to retry with exitStatus 250, an
   out of memory error for SPAdes (Fixed by @CarsonJM)
-- [#21](https://github.com/nf-microbe/toolkit/pull/21) Fixed `checkv/genbankhits` modules erroring out
+- [#21](https://github.com/nf-microbe/toolkit/pull/21) Fixed `checkv/genbankhits` module erroring out
   when an empty file was input (Fixed by @CarsonJM)
 
 ### `Dependencies`
