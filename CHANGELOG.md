@@ -22,6 +22,8 @@ and processing Logan sequences for input into assembly (`logan/contigawsclimulti
 
 - [#21](https://github.com/nf-microbe/toolkit/pull/21) Fixed UW Hyak profile to retry with exitStatus 250, an
 out of memory error for SPAdes (Fixed by @CarsonJM)
+- [#21](https://github.com/nf-microbe/toolkit/pull/21) Fixed `checkv/genbankhits` modules erroring out
+when an empty file was input (Fixed by @CarsonJM)
 
 ### `Dependencies`
 
