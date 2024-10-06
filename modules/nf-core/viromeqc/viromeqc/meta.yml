@@ -1,0 +1,54 @@
+name: "viromeqc_viromeqc"
+description: Run ViromeQC to benchmark and quantify non-viral contamination
+keywords:
+  - virome
+  - enrichment
+  - phage
+  - virus
+tools:
+  - "viromeqc":
+      description: |
+        ViromeQC is a computational tool to benchmark and quantify non-viral contamination in VLP-enrihed viromes. ViromeQC
+        provides an enrichment score for each virome. The score is calculated with respect to the expected prokaryotic markers
+        abundances in reference metagenomes
+      homepage: "https://github.com/SegataLab/viromeqc"
+      documentation: "https://github.com/SegataLab/viromeqc"
+      tool_dev_url: "https://github.com/SegataLab/viromeqc"
+      doi: "10.1038/s41587-019-0334-5"
+      licence: ["MIT"]
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fastq:
+        type: file
+        description: Preprocessed FASTQ file containing sample reads
+        pattern: "*.{fastq}"
+  - - viromeqc_db:
+        type: directory
+        description: |
+          Directory containing ViromeQC's indices for read alignment
+
+output:
+  - tsv:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}.viromeqc.tsv":
+          type: file
+          description: TSV file containing ViromeQC enrichment data.
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

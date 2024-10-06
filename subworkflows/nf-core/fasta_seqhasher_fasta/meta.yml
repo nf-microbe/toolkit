@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fasta_seqhasher_fasta"
+description: Identify and remove duplicate sequences from FastA file(s)
+keywords:
+  - seqhasher
+  - unique
+  - deduplicate
+  - dereplicate
+components:
+  - seqhasher/seqhasher
+  - seqhasher/sequniq
+  - seqkit/grep
+  - csvtk/concat
+
+input:
+  - fasta:
+      type: file
+      description: |
+        The input channel containing FastA files
+        Structure: [ val(meta), path(fasta) ]
+  - seqhasher:
+      type: file
+      description: |
+        Path to the seq-hasher compiled binary
+
+output:
+  - unique_seqs_fasta_gz:
+      type: file
+      description: |
+        Channel containing dereplicated FastA files
+        Structure: [ val(meta), path(fasta.gz) ]
+      pattern: "*.fasta.gz"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"

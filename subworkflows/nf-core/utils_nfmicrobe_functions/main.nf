@@ -76,19 +76,19 @@ def rmEmptyFastQs(ch_fastqs, print_output, stub_run=workflow.stubRun) {
                     try {
                         fastq.countFastq(limit: 10) > 1
                     } catch (java.util.zip.ZipException e) {
-                        log.warn "[rmEmptyFastQs]: ${fastq} is not in GZIP format, this is likely because it was cleaned with --remove_intermediate_files"
+                        log.debug "[rmEmptyFastQs]: ${fastq} is not in GZIP format, this is likely because it was cleaned with --remove_intermediate_files"
                         true
                     } catch (EOFException) {
-                        log.warn "[rmEmptyFastQs]: ${fastq} has an EOFException, this is likely an empty gzipped file."
+                        log.debug "[rmEmptyFastQs]: ${fastq} has an EOFException, this is likely an empty gzipped file."
                     }
                 } else {
                     try {
                         fastq[0].countLines( limit: 10 ) > 1
                     } catch (java.util.zip.ZipException e) {
-                        log.warn "[rmEmptyFastQs]: ${fastq} is not in GZIP format, this is likely because it was cleaned with --remove_intermediate_files"
+                        log.debug "[rmEmptyFastQs]: ${fastq} is not in GZIP format, this is likely because it was cleaned with --remove_intermediate_files"
                         true
                     } catch (EOFException) {
-                        log.warn "[rmEmptyFastQs]: ${fastq[0]} has an EOFException, this is likely an empty gzipped file."
+                        log.debug "[rmEmptyFastQs]: ${fastq[0]} has an EOFException, this is likely an empty gzipped file."
                     }
                 }
             }
@@ -113,10 +113,10 @@ def rmEmptyFastAs(ch_fastas, print_output, stub_run=workflow.stubRun) {
             try {
                 fasta.countLines( limit: 10 ) > 1
             } catch (java.util.zip.ZipException e) {
-                log.warn "[rmEmptyFastAs]: ${fasta} is not in GZIP format, this is likely because it was cleaned with --remove_intermediate_files"
+                log.debug "[rmEmptyFastAs]: ${fasta} is not in GZIP format, this is likely because it was cleaned with --remove_intermediate_files"
                 true
             } catch (EOFException) {
-                log.warn "[rmEmptyFastAs]: ${fasta} has an EOFException, this is likely an empty gzipped file."
+                log.debug "[rmEmptyFastAs]: ${fasta} has an EOFException, this is likely an empty gzipped file."
             }
         }
 

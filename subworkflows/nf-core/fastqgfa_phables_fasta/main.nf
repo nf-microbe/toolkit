@@ -38,9 +38,9 @@ workflow FASTQGFA_PHABLES_FASTA {
     //
     PHABLES_RUN(
         ch_phables_input.fastq,
-        ch_phables_input.gfa.map{ meta, fastq -> [ meta + [ extension: 'phables' ], fastq ] },
+        ch_phables_input.gfa,
         phables_config,
-        ch_phables_db.first()
+        ch_phables_db
     )
     ch_phables_fasta_gz = PHABLES_RUN.out.fasta
     ch_versions = ch_versions.mix(PHABLES_RUN.out.versions)

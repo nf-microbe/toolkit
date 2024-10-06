@@ -13,27 +13,13 @@ workflow FASTQ_BOWTIE2_FASTQ {
     main:
     ch_versions = Channel.empty()
 
-    // prepare fasta and bowtie2 index
-    if (fasta_gz && bt2_index) {
-        ch_bowtie2_fasta    = Channel.value(
-            [ [ id:'bowtie2_fasta' ], file(fasta_gz, checkIfExists: true) ]
-        )
-        ch_bowtie2_index    = Channel.value(
-            [ [ id:'bowtie2_index' ], file(bt2_index, checkIfExists: true) ]
-        )
-    } else {
-        ch_bowtie2_fasta    = Channel.value(
-            [ [ id:'bowtie2_fasta' ], file(fasta_gz, checkIfExists: true) ]
-        )
-        ch_bowtie2_index   = null
-    }
 
     //
     // MODULE: Create bowtie2 database from host FASTA
     //
-    if (!ch_bowtie2_index) {
+    if (!bt2_index) {
         BOWTIE2_BUILD(
-            ch_bowtie2_fasta
+            fasta_gz
         )
         ch_bowtie2_index    = BOWTIE2_BUILD.out.index
         ch_versions         = ch_versions.mix(BOWTIE2_BUILD.out.versions)
@@ -44,8 +30,8 @@ workflow FASTQ_BOWTIE2_FASTQ {
     //
     BOWTIE2_ALIGN(
         fastq_gz,
-        ch_bowtie2_index,
-        ch_bowtie2_fasta,
+        bt2_index,
+        fasta_gz,
         true,
         true
     )

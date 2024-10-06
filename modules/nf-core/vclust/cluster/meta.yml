@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "vclust_cluster"
+description: Cluster sequences using vClust's alignment output
+keywords:
+  - vclust
+  - virus
+  - cluster
+tools:
+  - "vclust":
+      description: "Fast and accurate tool for calculating Average Nucleotide Identity (ANI) and clustering virus genomes and metagenomes"
+      homepage: "https://github.com/refresh-bio/vclust"
+      documentation: "https://github.com/refresh-bio/vclust"
+      tool_dev_url: "https://github.com/refresh-bio/vclust"
+      doi: "10.1101/2024.06.27.601020"
+      licence: ["GNU General Public v3 (GPL v3)"]
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - ani:
+        type: file
+        description: TSV file containing vclust ANI information
+        pattern: "*.tsv"
+        ontologies:
+          - edam: "http://edamontology.org/format_3475"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - ids:
+        type: file
+        description: TSV file containing vclust sequence IDs
+        pattern: "*.tsv"
+        ontologies:
+          - edam: "http://edamontology.org/format_3475"
+  - - vclust:
+        type: directory
+        description: Directory containing vClust's python scripts and binaries
+        ontologies:
+          - edam: "http://edamontology.org/data_1049"
+
+output:
+  - versions:
+      - "versions.yml":
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+  - clusters:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "${prefix}.vclust_clusters.tsv":
+          type: file
+          description: TSV file containing vclust clusters
+          ontologies:
+            - edam: "http://edamontology.org/format_3475"
+
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@CarsonJM"
