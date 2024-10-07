@@ -16,6 +16,7 @@ include { rmEmptyFastAs; rmEmptyFastQs  } from './subworkflows/nf-core/utils_nfm
 // MODULES
 include { CAT_FASTQ as CAT_FASTQ_RUNMERGE       } from './modules/nf-core/cat/fastq'
 include { CAT_FASTQ as CAT_FASTQ_COASSEMBLY     } from './modules/nf-core/cat/fastq'
+include { CSVTK_CONCAT                          } from './modules/nf-core/csvtk/concat'
 include { FASTP                                 } from './modules/nf-core/fastp'
 include { LOGAN_CONTIGAWSCLI                    } from './modules/nf-core/logan/contigawscli'
 include { LOGAN_CONTIGAWSCLIMULTIPLIER          } from './modules/nf-core/logan/contigawsclimultiplier'
@@ -31,17 +32,24 @@ include { SEQKIT_REPLACE                        } from './modules/nf-core/seqkit
 include { SEQKIT_SEQ                            } from './modules/nf-core/seqkit/seq'
 include { SEQKIT_SPLIT2                         } from './modules/nf-core/seqkit/split2'
 include { SEQKIT_STATS                          } from './modules/nf-core/seqkit/stats'
+include { SEQUENCESTATS                         } from './modules/nf-core/sequencestats'
 include { SPADES as SPADES_COASSEMBLY           } from './modules/nf-core/spades'
 include { SPADES as SPADES_SINGLE               } from './modules/nf-core/spades'
 include { SRA_SRATOOLS                          } from './modules/nf-core/sra/sratools'
 include { TANTAN                                } from './modules/nf-core/tantan'
 include { TRFINDER                              } from './modules/nf-core/trfinder'
 include { TRTRIMMER                             } from './modules/nf-core/trtrimmer'
+include { VTDB_COMBINEDATA                      } from './modules/local/vtdb/combinedata'
+include { VTDB_CLASSIFICATIONFILTER             } from './modules/local/vtdb/classificationfilter'
+include { VTDB_COMPLETENESSFILTER               } from './modules/local/vtdb/completenessfilter'
+include { VTDB_COMPOSITIONFILTER                } from './modules/local/vtdb/compositionfilter'
+include { VTDB_FILTERSEQUENCES                  } from './modules/local/vtdb/filtersequences'
 
 // SUBWORKFLOWS
 include { FASTA_CHECKV_TSV                      } from './subworkflows/nf-core/fasta_checkv_tsv'
 include { FASTA_GENOMAD_FAATSV                  } from './subworkflows/nf-core/fasta_genomad_faatsv'
 include { FASTA_SEQHASHER_FASTA                 } from './subworkflows/nf-core/fasta_seqhasher_fasta'
+include { FASTA_VCLUST_FASTA                    } from './subworkflows/nf-core/fasta_vclust_fasta'
 include { FASTQ_BOWTIE2_FASTQ                   } from './subworkflows/nf-core/fastq_bowtie2_fastq'
 include { FASTQ_VIROMEQC_TSV                    } from './subworkflows/nf-core/fastq_viromeqc_tsv'
 include { FASTQFASTA_COBRA_FASTA                } from './subworkflows/nf-core/fastqfasta_cobra_fasta'
@@ -661,7 +669,7 @@ workflow {
         // SUBWORKFLOW: Classify MGEs with geNomad
         //
         FASTA_GENOMAD_FAATSV(
-            ch_trfinder_fasta_gz,
+            ch_split_fasta_gz,
             params.genomad_db
         )
         ch_versions                 = ch_versions.mix(FASTA_GENOMAD_FAATSV.out.versions.first())
@@ -688,10 +696,10 @@ workflow {
             "${projectDir}/assets/hmms/busco_hmms/bacteria_buscos.hmm",
             "${projectDir}/assets/hmms/busco_hmms/score_cutoffs/bacteria_odb10.cutoffs"
         )
-        ch_versions                 = ch_versions.mix(PYHMMER_BUSCOCLASSIFY.out.versions)
-        ch_pyhmmer_busco_hmms_tsv   = PYHMMER_BUSCOCLASSIFY.out.markers
+        ch_versions         = ch_versions.mix(PYHMMER_BUSCOCLASSIFY.out.versions)
+        ch_busco_hmms_tsv   = PYHMMER_BUSCOCLASSIFY.out.markers
     } else {
-        ch_pyhmmer_busco_hmms_tsv = []
+        ch_busco_hmms_tsv   = []
     }
 
     if (params.run_pyhmmer_plasmid) {
@@ -702,10 +710,10 @@ workflow {
             ch_genomad_proteins_faa_gz,
             "${projectDir}/assets/hmms/plasmid_hmms/plasmid_hallmarks.hmm"
         )
-        ch_versions                 = ch_versions.mix(PYHMMER_PLASMIDCLASSIFY.out.versions)
-        ch_pyhmmer_plasmid_hmms_tsv = PYHMMER_PLASMIDCLASSIFY.out.markers
+        ch_versions         = ch_versions.mix(PYHMMER_PLASMIDCLASSIFY.out.versions)
+        ch_plasmid_hmms_tsv = PYHMMER_PLASMIDCLASSIFY.out.markers
     } else {
-        ch_pyhmmer_plasmid_hmms_tsv = []
+        ch_plasmid_hmms_tsv = []
     }
 
     if (params.run_pyhmmer_virus) {
@@ -718,10 +726,10 @@ workflow {
             "${projectDir}/assets/hmms/virus_hmms/inovirus_MCP_virus_hallmarks.hmm",
             "${projectDir}/assets/hmms/virus_hmms/pleolipoviridae_virus_hallmarks.hmm"
         )
-        ch_versions                 = ch_versions.mix(PYHMMER_VIRUSCLASSIFY.out.versions)
-        ch_pyhmmer_virus_hmms_tsv   = PYHMMER_VIRUSCLASSIFY.out.markers
+        ch_versions         = ch_versions.mix(PYHMMER_VIRUSCLASSIFY.out.versions)
+        ch_virus_hmms_tsv   = PYHMMER_VIRUSCLASSIFY.out.markers
     } else {
-        ch_pyhmmer_virus_hmms_tsv = []
+        ch_virus_hmms_tsv   = []
     }
 
     /*
@@ -731,7 +739,7 @@ workflow {
     */
     if (params.run_checkv) {
         FASTA_CHECKV_TSV(
-            ch_trfinder_fasta_gz,
+            ch_split_fasta_gz,
             params.checkv_db,
             "${projectDir}/assets/db/ncbi_info.tsv"
         )
@@ -747,7 +755,7 @@ workflow {
 
     /*
     -------------------------------------------------
-        MGE QC/FILTERING
+        MGE QC
     -------------------------------------------------
     */
 
@@ -756,12 +764,206 @@ workflow {
         // MODULE: identify low-complexity regions
         //
         TANTAN(
-            ch_trfinder_fasta_gz
+            ch_split_fasta_gz
         )
         ch_tantan_bed   = TANTAN.out.bed
         ch_versions     = ch_versions.mix(TANTAN.out.versions.first())
     } else {
         ch_tantan_bed = []
+    }
+
+    if (params.run_sequence_stats) {
+        // join inputs by meta.id for sequence stats
+        ch_seq_stats_inputs = ch_split_fasta_gz
+            .join(ch_genomad_proteins_faa_gz)
+            .multiMap { meta, fasta, faa ->
+                fasta:  [ meta, fasta ]
+                faa:    [ meta, faa ]
+            }
+
+        //
+        // MODULE: Calculate sequence statistics
+        //
+        SEQUENCESTATS(
+            ch_seq_stats_inputs.fasta,
+            ch_seq_stats_inputs.faa
+        )
+        ch_versions             = ch_versions.mix(SEQUENCESTATS.out.versions)
+        ch_sequence_stats_tsv   = SEQUENCESTATS.out.stats
+    } else {
+        ch_sequence_stats_tsv   = []
+    }
+
+    // /*
+    // -------------------------------------------------
+    //     MGE FILTERING
+    // -------------------------------------------------
+    // */
+
+    if (!params.combined_data &&
+        (
+            params.run_trfinder ||
+            params.run_genomad ||
+            params.run_pyhmmer_buscoclassify ||
+            params.run_pyhmmer_plasmidclassify ||
+            params.run_pyhmmer_virusclassify ||
+            params.run_checkv ||
+            params.run_tantan ||
+            params.run_sequence_stats
+        )
+    ) {
+        // join all sequence data files for input
+        ch_combinedata_input    = ch_split_fasta_gz
+            .join(ch_trfinder_tsv)
+            .join(ch_genomad_scores_tsv)
+            .join(ch_genomad_genes_tsv)
+            .join(ch_genomad_taxonomy_tsv)
+            .join(ch_busco_hmms_tsv)
+            .join(ch_plasmid_hmms_tsv)
+            .join(ch_virus_hmms_tsv)
+            .join(ch_checkv_completeness_tsv)
+            .join(ch_checkv_contamination_tsv)
+            .join(ch_tantan_bed)
+            .join(ch_sequence_stats_tsv)
+            .multiMap { it ->
+                fasta:          [ it[0], it[1] ]
+                trfinder:       [ it[0], it[2] ]
+                genomad_scores: [ it[0], it[3] ]
+                genomad_genes:  [ it[0], it[4] ]
+                genomad_taxa:   [ it[0], it[5] ]
+                busco_hmms:     [ it[0], it[6] ]
+                plasmid_hmms:   [ it[0], it[7] ]
+                virus_hmms:     [ it[0], it[8] ]
+                completeness:   [ it[0], it[9] ]
+                contamination:  [ it[0], it[10] ]
+                tantan:         [ it[0], it[11] ]
+                nuc_stats:      [ it[0], it[12] ]
+            }
+
+        //
+        // MODULE: Combine all sequence data into one TSV file
+        //
+        VTDB_COMBINEDATA(
+            ch_combinedata_input.fasta,
+            ch_combinedata_input.trfinder,
+            ch_combinedata_input.genomad_scores,
+            ch_combinedata_input.genomad_genes,
+            ch_combinedata_input.genomad_taxa,
+            ch_combinedata_input.busco_hmms,
+            ch_combinedata_input.plasmid_hmms,
+            ch_combinedata_input.virus_hmms,
+            ch_combinedata_input.completeness,
+            ch_combinedata_input.contamination,
+            ch_combinedata_input.tantan,
+            ch_combinedata_input.nuc_stats
+        )
+        ch_combined_data_tsv    = VTDB_COMBINEDATA.out.tsv
+        ch_versions             = ch_versions.mix(VTDB_COMBINEDATA.out.versions)
+    } else if (params.combined_data) {
+        // load combined data file from params
+        ch_combined_data_tsv    = [
+            [ id:'all_samples' ],
+            file(params.combined_data, checkIfExists:true)
+        ]
+    } else {
+        ch_combined_data_tsv    = Channel.empty()
+    }
+
+    if (params.classification_filters) {
+        //
+        // MODULE: Assess whether sequence passes viral classification filters
+        //
+        VTDB_CLASSIFICATIONFILTER(
+            ch_combined_data_tsv,
+            params.classification_filters
+        )
+        ch_class_data_tsv   = VTDB_CLASSIFICATIONFILTER.out.class_data
+        ch_versions         = ch_versions.mix(VTDB_CLASSIFICATIONFILTER.out.versions)
+    } else {
+        ch_class_data_tsv   = ch_combined_data_tsv
+    }
+
+    if (params.composition_filters) {
+        //
+        // MODULE: Assess whether sequence passes composition filters
+        //
+        VTDB_COMPOSITIONFILTER(
+            ch_class_data_tsv,
+            params.composition_filters
+        )
+        ch_compos_data_tsv  = VTDB_COMPOSITIONFILTER.out.compos_data
+        ch_versions         = ch_versions.mix(VTDB_COMPOSITIONFILTER.out.versions)
+
+    } else {
+        ch_compos_data_tsv  = ch_class_data_tsv
+    }
+
+    if (params.completeness_filters) {
+        //
+        // MODULE: Assess whether sequence passes completeness filters
+        //
+        VTDB_COMPLETENESSFILTER(
+            ch_compos_data_tsv,
+            params.completeness_filters
+        )
+        ch_compl_data_tsv   = VTDB_COMPLETENESSFILTER.out.compl_data
+        ch_versions         = ch_versions.mix(VTDB_COMPLETENESSFILTER.out.versions)
+    } else {
+        ch_compl_data_tsv   = ch_compos_data_tsv
+    }
+
+    // combine all completeness data files
+    ch_csvtk_concat_input   = ch_compl_data_tsv
+        .map { meta, tsv -> [ [ id: "all_samples" ], tsv ] }
+        .groupTuple(sort: 'deep')
+
+    //
+    // MODULE: Create a combined TSV file of all filtered data
+    //
+    CSVTK_CONCAT(
+        ch_csvtk_concat_input,
+        "tsv",
+        "tsv"
+    )
+    ch_concat_compl_data_tsv    = CSVTK_CONCAT.out.csv
+    ch_versions                 = ch_versions.mix(CSVTK_CONCAT.out.versions)
+
+
+    /*----------------------------------------------------------------------------
+        Filter viral sequences/proteins based on classification, composition, and completeness
+    ------------------------------------------------------------------------------*/
+    if (params.run_sequence_filtering) {
+        // join completeness data and sequences
+        ch_filter_input = ch_split_fasta_gz
+            .join(ch_genomad_proteins_faa_gz)
+            .join(ch_compl_data_tsv)
+            .multiMap { meta, fasta, proteins, compl_data ->
+                fasta:      [ meta, fasta ]
+                proteins:   [ meta, proteins ]
+                compl_data: [ meta, compl_data ]
+            }
+
+        if (!params.sequences_to_keep) {
+            ch_seqs_to_keep = []
+        } else {
+            ch_seqs_to_keep = file(params.sequences_to_keep, checkIfExists:true)
+        }
+
+        //
+        // MODULE: Filter sequences and proteins
+        //
+        VTDB_FILTERSEQUENCES(
+            ch_filter_input.fasta,
+            ch_filter_input.proteins,
+            ch_filter_input.compl_data,
+            ch_seqs_to_keep
+            )
+        ch_mge_filt_fasta_gz    = VTDB_FILTERSEQUENCES.out.fasta
+        ch_mge_filt_faa_gz      = VTDB_FILTERSEQUENCES.out.proteins
+        ch_versions                     = ch_versions.mix(VTDB_FILTERSEQUENCES.out.versions)
+    } else {
+        ch_mge_filt_fasta_gz    = ch_split_fasta_gz
+        ch_mge_filt_faa_gz      = ch_genomad_proteins_faa_gz
     }
 
     /*
@@ -774,13 +976,13 @@ workflow {
         // MODULE: Trim tandem repeats from assemblies
         //
         TRTRIMMER(
-            ch_trfinder_fasta_gz,
+            ch_mge_filt_fasta_gz,
             "${projectDir}/bin/tr-trimmer"
         )
         ch_versions             = ch_versions.mix(TRTRIMMER.out.versions)
         ch_trtrimmer_fasta_gz   = TRTRIMMER.out.fasta
     } else {
-        ch_trtrimmer_fasta_gz   = ch_trfinder_fasta_gz
+        ch_trtrimmer_fasta_gz   = ch_mge_filt_fasta_gz
     }
 
     if (params.run_seqhasher) {
@@ -796,6 +998,71 @@ workflow {
     } else {
         ch_derep_fasta_gz   = ch_trtrimmer_fasta_gz
     }
+
+    /*
+    -------------------------------------------------
+        MGE TAXONOMY
+    -------------------------------------------------
+    */
+    // TODO: Add Taxmyphage
+
+
+    /*
+    -------------------------------------------------
+        PHAGE LIFESTYLE
+    -------------------------------------------------
+    */
+    // TODO: Add BACPHLIP
+    // TODO: Add integrase detection
+
+
+
+    /*
+    -------------------------------------------------
+        MGE HOST
+    -------------------------------------------------
+    */
+    // TODO: Add iPHoP
+    // TODO: Add phist
+
+
+    /*
+    -------------------------------------------------
+        FUNCTIONAL ANNOTATION
+    -------------------------------------------------
+    */
+    // TODO:
+
+    /*
+    -------------------------------------------------
+        VIRUS CLUSTERING
+    -------------------------------------------------
+    */
+    if (params.run_vclust) {
+        FASTA_VCLUST_FASTA(
+            ch_derep_fasta_gz,
+            "${projectDir}/bin/vclust"
+        )
+        ch_versions         = ch_versions.mix(FASTA_VCLUST_FASTA.out.versions)
+        ch_vclust_fasta_gz  = FASTA_VCLUST_FASTA.out.cluster_reps_fasta_gz
+    } else {
+        ch_vclust_fasta_gz  = ch_derep_fasta_gz
+    }
+
+    /*
+    -------------------------------------------------
+        READ ALIGNMENT
+    -------------------------------------------------
+    */
+    // TODO: Add Coverm/contig
+
+    /*
+    -------------------------------------------------
+        MICRODIVERSITY
+    -------------------------------------------------
+    */
+    // TODO: Add instrain/profile and instrain/compare
+
 
 }
 
