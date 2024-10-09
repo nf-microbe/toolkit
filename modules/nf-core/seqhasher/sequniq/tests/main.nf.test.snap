@@ -1,0 +1,108 @@
+{
+    "duplicated fasta.gz": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dups.tsv:md5,063b88a9c4317628426c4cc0b12116df"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.seq-uniq.tsv:md5,063b88a9c4317628426c4cc0b12116df"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,0fdab31c01fc55b29ac740f577cb358d"
+                ],
+                "dups": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dups.tsv:md5,063b88a9c4317628426c4cc0b12116df"
+                    ]
+                ],
+                "unique": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.seq-uniq.tsv:md5,063b88a9c4317628426c4cc0b12116df"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0fdab31c01fc55b29ac740f577cb358d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-07T16:57:15.638844783"
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dups.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.seq-uniq.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,0fdab31c01fc55b29ac740f577cb358d"
+                ],
+                "dups": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.dups.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "unique": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.seq-uniq.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0fdab31c01fc55b29ac740f577cb358d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-07T16:57:42.882877318"
+    }
+}

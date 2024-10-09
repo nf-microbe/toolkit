@@ -5,19 +5,230 @@
         "https://github.com/nf-microbe/modules.git": {
             "modules": {
                 "nf-core": {
+                    "allthebacteria/aria2seqkittrfinder": {
+                        "branch": "master",
+                        "git_sha": "c906daac7a5af9fe9a832df8c70e461f50e2c940",
+                        "installed_by": ["modules"]
+                    },
+                    "bowtie2/align": {
+                        "branch": "master",
+                        "git_sha": "6fac39fd87722b0f8d854ca52bdfbbff9ab3cbb1",
+                        "installed_by": ["modules"]
+                    },
+                    "bowtie2/build": {
+                        "branch": "master",
+                        "git_sha": "6fac39fd87722b0f8d854ca52bdfbbff9ab3cbb1",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "6fac39fd87722b0f8d854ca52bdfbbff9ab3cbb1",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "installed_by": ["modules"]
+                    },
+                    "checkv/downloaddatabase": {
+                        "branch": "master",
+                        "git_sha": "6fac39fd87722b0f8d854ca52bdfbbff9ab3cbb1",
+                        "installed_by": ["modules"]
+                    },
+                    "checkv/endtoend": {
+                        "branch": "master",
+                        "git_sha": "4cfd013354e9f62e7ed060bc50ac51864cd7ae7a",
+                        "installed_by": ["modules"]
+                    },
+                    "checkv/genbankhits": {
+                        "branch": "master",
+                        "git_sha": "535c3d04c7e7ae7913e5078e0e0a48462500d8c3",
+                        "installed_by": ["modules"]
+                    },
+                    "cobrameta": {
+                        "branch": "master",
+                        "git_sha": "f541160ec83b7d7346f4a3590d0a7a3755849147",
+                        "installed_by": ["modules"]
+                    },
+                    "coverm/contig": {
+                        "branch": "master",
+                        "git_sha": "6fac39fd87722b0f8d854ca52bdfbbff9ab3cbb1",
+                        "installed_by": ["modules"]
+                    },
+                    "csvtk/concat": {
+                        "branch": "master",
+                        "git_sha": "f541160ec83b7d7346f4a3590d0a7a3755849147",
+                        "installed_by": ["modules"]
+                    },
+                    "ena/aria2seqkittrfinder": {
+                        "branch": "master",
+                        "git_sha": "c906daac7a5af9fe9a832df8c70e461f50e2c940",
+                        "installed_by": ["modules"]
                     },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "6fac39fd87722b0f8d854ca52bdfbbff9ab3cbb1",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "installed_by": ["modules"]
+                    },
+                    "genomad/download": {
+                        "branch": "master",
+                        "git_sha": "bff6d2861e324de7994bf01e2ad979059f50184c",
+                        "installed_by": ["modules"]
+                    },
+                    "genomad/endtoend": {
+                        "branch": "master",
+                        "git_sha": "c906daac7a5af9fe9a832df8c70e461f50e2c940",
+                        "installed_by": ["modules"]
+                    },
+                    "logan/contigawscli": {
+                        "branch": "master",
+                        "git_sha": "2cbc96424d1e7ca603f660e231c289caadf701bd",
+                        "installed_by": ["modules"]
+                    },
+                    "logan/contigawsclimultiplier": {
+                        "branch": "master",
+                        "git_sha": "2cbc96424d1e7ca603f660e231c289caadf701bd",
+                        "installed_by": ["modules"]
+                    },
+                    "logan/unitigawsclimultiplier": {
+                        "branch": "master",
+                        "git_sha": "2cbc96424d1e7ca603f660e231c289caadf701bd",
+                        "installed_by": ["modules"]
+                    },
+                    "megahit": {
+                        "branch": "master",
+                        "git_sha": "1e16e56e4f8c9dfe05c08a26731bdae4500d8f74",
+                        "installed_by": ["modules"]
+                    },
+                    "phables/install": {
+                        "branch": "master",
+                        "git_sha": "2cbc96424d1e7ca603f660e231c289caadf701bd",
+                        "installed_by": ["modules"]
+                    },
+                    "phables/run": {
+                        "branch": "master",
+                        "git_sha": "2cbc96424d1e7ca603f660e231c289caadf701bd",
+                        "installed_by": ["modules"]
+                    },
+                    "plass/penguin": {
+                        "branch": "master",
+                        "git_sha": "69dd822c1fa092ad27db0aa63bb6971d4065c975",
+                        "installed_by": ["modules"]
+                    },
+                    "pyhmmer/buscoclassify": {
+                        "branch": "master",
+                        "git_sha": "69dd822c1fa092ad27db0aa63bb6971d4065c975",
+                        "installed_by": ["modules"]
+                    },
+                    "pyhmmer/plasmidclassify": {
+                        "branch": "master",
+                        "git_sha": "69dd822c1fa092ad27db0aa63bb6971d4065c975",
+                        "installed_by": ["modules"]
+                    },
+                    "pyhmmer/virusclassify": {
+                        "branch": "master",
+                        "git_sha": "69dd822c1fa092ad27db0aa63bb6971d4065c975",
+                        "installed_by": ["modules"]
+                    },
+                    "pyrodigalgv": {
+                        "branch": "master",
+                        "git_sha": "69dd822c1fa092ad27db0aa63bb6971d4065c975",
+                        "installed_by": ["modules"]
+                    },
+                    "seqhasher/seqhasher": {
+                        "branch": "master",
+                        "git_sha": "69dd822c1fa092ad27db0aa63bb6971d4065c975",
+                        "installed_by": ["modules"]
+                    },
+                    "seqhasher/sequniq": {
+                        "branch": "master",
+                        "git_sha": "761322663e88897343283d44ac737f3209237b40",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/concat": {
+                        "branch": "master",
+                        "git_sha": "e2120f503989c3a9f3b3980fb6d5d93be56eb88c",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/fx2tab": {
+                        "branch": "master",
+                        "git_sha": "61ee5fcf8011932b9ab1afdc65ce1e5c1cb6e29a",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/grep": {
+                        "branch": "master",
+                        "git_sha": "5c29bf20bafe333e104d2e1cfdba92b2bd8ed8fd",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/replace": {
+                        "branch": "master",
+                        "git_sha": "8b01f4aa92598a434910ade3d82a4ad103e1a779",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/seq": {
+                        "branch": "master",
+                        "git_sha": "512ce973b945a0f3d77ef5316ab07218888aa6f6",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/split2": {
+                        "branch": "master",
+                        "git_sha": "7b6b22cdea6b7b3f96445cf1d57f95d582c4d646",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/stats": {
+                        "branch": "master",
+                        "git_sha": "61ee5fcf8011932b9ab1afdc65ce1e5c1cb6e29a",
+                        "installed_by": ["modules"]
+                    },
+                    "sequencestats": {
+                        "branch": "master",
+                        "git_sha": "50418e5fe173e78a0e55762cef5c433c5277ab88",
+                        "installed_by": ["modules"]
+                    },
+                    "spades": {
+                        "branch": "master",
+                        "git_sha": "b069a926dc7e28d1dbbd206fbdca53faf4c50fbb",
+                        "installed_by": ["modules"]
+                    },
+                    "sra/sratools": {
+                        "branch": "master",
+                        "git_sha": "d6b063c4389d2fd45e127554425191e1fe81a09f",
+                        "installed_by": ["modules"]
+                    },
+                    "tantan": {
+                        "branch": "master",
+                        "git_sha": "4506d41aefe6cc8519519fecb924b8791065d81a",
+                        "installed_by": ["modules"]
+                    },
+                    "trfinder": {
+                        "branch": "master",
+                        "git_sha": "ef4f0d63b055f86ca7745b6d58719fa962e32c9e",
+                        "installed_by": ["modules"]
+                    },
+                    "trtrimmer": {
+                        "branch": "master",
+                        "git_sha": "4506d41aefe6cc8519519fecb924b8791065d81a",
+                        "installed_by": ["modules"]
+                    },
+                    "vclust/align": {
+                        "branch": "master",
+                        "git_sha": "4506d41aefe6cc8519519fecb924b8791065d81a",
+                        "installed_by": ["modules"]
+                    },
+                    "vclust/cluster": {
+                        "branch": "master",
+                        "git_sha": "4506d41aefe6cc8519519fecb924b8791065d81a",
+                        "installed_by": ["modules"]
+                    },
+                    "vclust/prefilter": {
+                        "branch": "master",
+                        "git_sha": "4506d41aefe6cc8519519fecb924b8791065d81a",
+                        "installed_by": ["modules"]
+                    },
+                    "viromeqc/install": {
+                        "branch": "master",
+                        "git_sha": "d0411c09638213bbe32e00609b2ed46d3a301c3e",
+                        "installed_by": ["modules"]
+                    },
+                    "viromeqc/viromeqc": {
+                        "branch": "master",
+                        "git_sha": "b49d0e150e464b4455f4f426c229f37e4fff97c1",
+                        "installed_by": ["modules"]
                     }
                 }
             }
