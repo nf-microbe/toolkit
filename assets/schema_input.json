@@ -14,10 +14,9 @@
                 "meta": ["id"]
             },
             "run": {
-                "type": "string",
-                "pattern": "^\\S+$",
+                "type": "integer",
+                "pattern": "^\\d+$",
                 "meta": ["run"],
-                "unique": ["sample"],
                 "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
             },
             "group": {
@@ -38,7 +37,6 @@
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["fastq_1"],
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "fasta": {
@@ -60,6 +58,9 @@
                 "meta": ["assembly_method"],
                 "errorMessage": "Column 'assembly_method' contains an empty field. Either remove column 'assembly_method' or fill each field with a value."
             }
+        },
+        "dependentRequired": {
+            "fastq_2": ["fastq_1"]
         },
         "required": ["sample"]
     }

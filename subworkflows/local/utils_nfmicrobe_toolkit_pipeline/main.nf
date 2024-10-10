@@ -2,11 +2,7 @@
 // Subworkflow with functionality specific to the nf-microbe/toolkit pipeline
 //
 
-/*
-========================================================================================
-    FUNCTIONS
-========================================================================================
-*/
+
 //
 // Validate channels from input samplesheet
 //

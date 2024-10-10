@@ -1,2 +1,0 @@
-subworkflows/fastqgfa_graphresolution_phables:
-  - subworkflows/nf-core/fastqgfa_graphresolution_phables/**
