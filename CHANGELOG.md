@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.4-beta - Breaking ground [2024-10-17]
 
 Fourth beta release of nf-microbe/toolkit. Includes MAJOR restructuring and additions to pipeline.
+In essence, this is the first release of a new pipeline because of the deletions and restructuring that took place.
 
 ### `Description of changes`
 
