@@ -10,7 +10,6 @@ nextflow_process {
     tag "checkv/endtoend"
     tag "checkv/downloaddatabase"
 
-
     setup {
         run("CHECKV_DOWNLOADDATABASE") {
             script "../../downloaddatabase/main.nf"
@@ -32,9 +31,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.quality_summary,
+                { assert snapshot(
+                    process.out.quality_summary,
                     process.out.contamination,
                     process.out.complete_genomes,
+                    process.out.aai,
                     process.out.versions).match() },
                 { assert new File(process.out.completeness[0][1]).exists() }
             )

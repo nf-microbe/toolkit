@@ -21,6 +21,7 @@ process GENOMAD_ENDTOEND {
     tuple val(meta), path("${prefix}_features.tsv")                     , emit: features
     tuple val(meta), path("${prefix}_aggregated_classification.tsv")    , emit: scores
     tuple val(meta), path("${prefix}_taxonomy.tsv")                     , emit: taxonomy
+    tuple val(meta), path("${prefix}_proteins.faa.gz")                  , emit: faa
     path "versions.yml"                                                 , emit: versions
 
     when:
@@ -59,6 +60,7 @@ process GENOMAD_ENDTOEND {
     mv *_annotate/*_taxonomy.tsv ${prefix}_taxonomy.tsv
     mv *_annotate/*_genes.tsv ${prefix}_genes.tsv
     mv *_marker_classification/*_features.tsv ${prefix}_features.tsv
+    gzip -c *_annotate/*_proteins.faa > ${prefix}_proteins.faa.gz
 
     # clean output directories
     rm -rf ./${filename}_*/*
@@ -77,13 +79,9 @@ process GENOMAD_ENDTOEND {
     touch ${prefix}_virus_summary.tsv
     touch ${prefix}_virus_genes.tsv
     touch ${prefix}_provirus.tsv
-    echo "" | gzip > ${prefix}_virus.fna.gz
-    echo "" | gzip > ${prefix}_virus_proteins.faa.gz
 
     touch ${prefix}_plasmid_summary.tsv
     touch ${prefix}_plasmid_genes.tsv
-    echo "" | gzip > ${prefix}_plasmid.fna.gz
-    echo "" | gzip > ${prefix}_plasmid_proteins.faa.gz
 
     echo "" | gzip > ${prefix}_proteins.faa.gz
     touch ${prefix}_aggregated_classification.tsv

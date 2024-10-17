@@ -1,2 +1,0 @@
-subworkflows/utils_nfmicrobe_functions:
-  - subworkflows/nf-core/utils_nfmicrobe_functions/**

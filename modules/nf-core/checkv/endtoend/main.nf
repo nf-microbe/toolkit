@@ -17,8 +17,8 @@ process CHECKV_ENDTOEND {
     tuple val(meta), path ("${prefix}_contamination.tsv")   , emit: contamination
     tuple val(meta), path ("${prefix}_complete_genomes.tsv"), emit: complete_genomes
     tuple val(meta), path ("${prefix}_aai.tsv")             , emit: aai
-    // tuple val(meta), path ("${prefix}_proviruses.fna.gz")   , emit: proviruses
-    // tuple val(meta), path ("${prefix}_viruses.fna.gz")      , emit: viruses
+    // tuple val(meta), path ("${prefix}/proviruses.fna")      , emit: proviruses
+    // tuple val(meta), path ("${prefix}/viruses.fna")         , emit: viruses
     path "versions.yml"                                     , emit: versions
 
     when:
@@ -44,6 +44,8 @@ process CHECKV_ENDTOEND {
     mv ${prefix}/complete_genomes.tsv ${prefix}_complete_genomes.tsv
     mv ${prefix}/tmp/aai.tsv ${prefix}_aai.tsv
 
+    rm ${prefix}/proviruses.fna
+    rm ${prefix}/viruses.fna
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -56,6 +58,7 @@ process CHECKV_ENDTOEND {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    mkdir -p ${prefix}
     touch ${prefix}_quality_summary.tsv
     touch ${prefix}_completeness.tsv
     touch ${prefix}_contamination.tsv

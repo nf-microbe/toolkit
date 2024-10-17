@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-microbe/toolkit/master/assets/schema_input.json",
     "title": "nf-microbe/toolkit pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
@@ -14,10 +14,8 @@
                 "meta": ["id"]
             },
             "run": {
-                "type": "string",
-                "pattern": "^\\S+$",
+                "type": "integer",
                 "meta": ["run"],
-                "unique": ["sample"],
                 "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
             },
             "group": {
@@ -38,7 +36,6 @@
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["fastq_1"],
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "fasta": {
@@ -48,6 +45,9 @@
                 "pattern": "^\\S+\\.f(asta|na|a)\\.gz$",
                 "errorMessage": "FastA file contain spaces and must have extension '.fasta.gz' or '.fna.gz' or '.fa.gz'"
             }
+        },
+        "dependentRequired": {
+            "fastq_2": ["fastq_1"]
         },
         "required": ["sample"]
     }

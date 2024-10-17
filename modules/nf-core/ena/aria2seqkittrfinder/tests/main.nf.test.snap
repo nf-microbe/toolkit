@@ -1,0 +1,100 @@
+{
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,fcc251bebbb031253b43d97b358c534f"
+                ],
+                "fasta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,fcc251bebbb031253b43d97b358c534f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-11T08:37:34.654469937"
+    },
+    "SRR11489779 + SRR11489784": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.fasta.gz:md5,dbafb1295aa3c6cbdd0b8742f4091933"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.tsv:md5,e433c00d8f62031e3e3cd72ceabbcd9f"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,fcc251bebbb031253b43d97b358c534f"
+                ],
+                "fasta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.fasta.gz:md5,dbafb1295aa3c6cbdd0b8742f4091933"
+                    ]
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.trfinder.tsv:md5,e433c00d8f62031e3e3cd72ceabbcd9f"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,fcc251bebbb031253b43d97b358c534f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-11T15:35:06.817897365"
+    }
+}

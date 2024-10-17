@@ -11,6 +11,7 @@ nextflow_process {
     tag "genomad/download"
 
     test("No input") {
+
         then {
             assertAll(
                 { assert process.success },
@@ -20,7 +21,9 @@ nextflow_process {
     }
 
     test("No input - stub") {
+
         options "-stub"
+
         then {
             assertAll(
                 { assert process.success },

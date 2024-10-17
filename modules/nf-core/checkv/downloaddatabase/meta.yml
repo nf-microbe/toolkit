@@ -2,10 +2,16 @@ name: "checkv_downloaddatabase"
 description: Construct the database necessary for checkv's quality assessment
 keywords:
   - checkv
+  - checkm
+  - mag
+  - metagenome
   - quality
+  - isolates
   - virus
   - completeness
   - contamination
+  - download
+  - database
 tools:
   - "checkv":
       description: Assess the quality of metagenome-assembled viral genomes.
@@ -17,9 +23,10 @@ tools:
       identifier: biotools:checkv
 output:
   - checkv_db:
-      type: directory
-      description: directory pointing to database
-      pattern: "checkv_db"
+      - ${prefix}/*:
+          type: directory
+          description: directory pointing to database
+          pattern: "${prefix}/"
   - versions:
       - versions.yml:
           type: file
@@ -29,4 +36,3 @@ authors:
   - "@Joon-Klaps"
 maintainers:
   - "@Joon-Klaps"
-  - "@CarsonJM"

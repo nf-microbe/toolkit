@@ -1,0 +1,3 @@
+classification	name	criteria
+viral	tr_type	`tr_type` == "DTR"
+viral	tr_type	`tr_type` == "ITR"

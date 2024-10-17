@@ -1,16 +1,28 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-microbe/toolkit/master/nextflow_schema.json",
     "title": "nf-microbe/toolkit pipeline parameters",
-    "description": "A toolkit for running microbe-related analyses within a Nextflow infrastructure.",
+    "description": "A Nextflow pipeline for running microbe-related analyses",
     "type": "object",
-    "definitions": {
+    "$defs": {
+        "read_download_options": {
+            "title": "Read download options",
+            "type": "object",
+            "description": "Specify accessions/methods for downloading archived reads.",
+            "default": "",
+            "properties": {
+                "sra_accessions": {
+                    "type": "string"
+                }
+            },
+            "fa_icon": "fas fa-arrow-circle-down"
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["outdir"],
+            "required": ["input", "outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -24,423 +36,18 @@
                     "fa_icon": "fas fa-file-csv"
                 },
                 "fastqs": {
-                    "type": "array",
-                    "fa_icon": "fas fa-dna",
-                    "description": "Path to input FastQ files."
+                    "type": "string",
+                    "fa_icon": "fas fa-dna"
                 },
                 "fastas": {
                     "type": "string",
-                    "fa_icon": "fas fa-dna",
-                    "description": "Path to input FastA files."
-                },
-                "sra_accessions": {
-                    "type": "string",
-                    "description": "Path to file containing SRA accession IDs to download.",
-                    "fa_icon": "fas fa-file-alt"
+                    "fa_icon": "fas fa-dna"
                 },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
-                },
-                "remove_intermediate_files": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-trash-alt",
-                    "description": "Delete intermediate files after all directly following steps have been completed?"
-                },
-                "email": {
-                    "type": "string",
-                    "description": "Email address for completion summary.",
-                    "fa_icon": "fas fa-envelope",
-                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "multiqc_title": {
-                    "type": "string",
-                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
-                    "fa_icon": "fas fa-file-signature"
-                }
-            }
-        },
-        "read_download_options": {
-            "title": "Read download options",
-            "type": "object",
-            "description": "Parameters for downloading reads as input into pipeline.",
-            "default": "",
-            "properties": {
-                "download_sra_fastqs": {
-                    "type": "boolean",
-                    "description": "Download FastQ files for SRA accessions?"
-                }
-            }
-        },
-        "read_preprocessing_options": {
-            "title": "Read preprocessing options",
-            "type": "object",
-            "description": "Parameters for read trimming, complexity filtering, and host read removal.",
-            "default": "",
-            "fa_icon": "fas fa-ban",
-            "properties": {
-                "run_fastp": {
-                    "type": "boolean",
-                    "description": "Run fastp on raw reads?"
-                },
-                "fastp_args": {
-                    "type": "string",
-                    "description": "CLI arguments to include when running fastp."
-                },
-                "save_preprocessed_fastq": {
-                    "type": "boolean",
-                    "description": "Save preprocessed reads?"
-                },
-                "perform_run_merging": {
-                    "type": "boolean",
-                    "description": "Merge runs within samples?"
-                },
-                "save_run_merged_fastq": {
-                    "type": "boolean",
-                    "description": "Save run merged reads?"
-                },
-                "run_bowtie2_host_removal": {
-                    "type": "boolean",
-                    "description": "Run bowtie2 to remove host reads?"
-                },
-                "bowtie2_host_removal_args": {
-                    "type": "string",
-                    "description": "CLI arguments to include when running bowtie2 for host removal."
-                },
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference to use for host removal.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "igenomes_ignore": {
-                    "type": "boolean",
-                    "description": "Do not load the iGenomes reference config.",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
-                },
-                "host_fasta": {
-                    "type": "string",
-                    "description": "Local FastA file containing reference genome",
-                    "help_text": "This option is an alternative to using the `--genomes` parameter, which will automatically download a specific host FastA and bowtie2 index."
-                },
-                "host_bowtie2_index": {
-                    "type": "string",
-                    "description": "Local directory containing a reference bowtie2 index.",
-                    "help_text": "This option is an alternative to using the `--genomes` parameter, which will automatically download a specific host FastA and bowtie2 index."
-                }
-            }
-        },
-        "logan_assembly_input_download_options": {
-            "title": "Logan assembly input download options",
-            "type": "object",
-            "description": "Parameters for downloading abundance multiplied contigs/unitigs that will be input into assembly modules.",
-            "default": "",
-            "properties": {
-                "download_logan_mult_unitigs": {
-                    "type": "boolean",
-                    "description": "Download Logan unitigs? (multiplied by average k-mer abundance)"
-                },
-                "download_logan_mult_contigs": {
-                    "type": "boolean",
-                    "description": "Download Logan contigs? (multiplied by average k-mer abundance)"
-                },
-                "logan_mult_min_abund": {
-                    "type": "integer",
-                    "default": 0,
-                    "description": "Minimum sequence abundance to include contig/unitig in output file."
-                }
-            }
-        },
-        "read_assembly_options": {
-            "title": "Read assembly options",
-            "type": "object",
-            "description": "Parameters for read assembly.",
-            "default": "",
-            "fa_icon": "fas fa-tools",
-            "properties": {
-                "run_megahit_single": {
-                    "type": "boolean",
-                    "description": "Run megahit single sample assembly?"
-                },
-                "run_megahit_coassembly": {
-                    "type": "boolean",
-                    "description": "Run megahit coassembly?"
-                },
-                "megahit_args": {
-                    "type": "string",
-                    "description": "CLI arguments to include when running megahit."
-                },
-                "run_spades_single": {
-                    "type": "boolean",
-                    "description": "Run SPAdes single sample assembly?"
-                },
-                "run_spades_coassembly": {
-                    "type": "boolean",
-                    "description": "Run SPAdes coassembly?"
-                },
-                "spades_args": {
-                    "type": "string",
-                    "description": "CLI arguments to include when running SPAdes.",
-                    "default": "--meta"
-                },
-                "use_spades_scaffolds": {
-                    "type": "boolean",
-                    "description": "Use SPAdes scaffolds output (instead of contigs)."
-                },
-                "run_penguin_single": {
-                    "type": "boolean",
-                    "description": "Run PenguiN single sample assembly?"
-                },
-                "run_penguin_coassembly": {
-                    "type": "boolean",
-                    "description": "Run PenguiN coassembly?"
-                },
-                "penguin_args": {
-                    "type": "string",
-                    "description": "CLI arguments to include when running PenguiN."
-                }
-            }
-        },
-        "assembly_download_options": {
-            "title": "Assembly download options",
-            "type": "object",
-            "description": "Parameters for downloading pre-assembled FastA files.",
-            "default": "",
-            "properties": {
-                "download_logan_contigs": {
-                    "type": "boolean",
-                    "description": "Download Logan contigs?"
-                }
-            }
-        },
-        "assembly_extension_options": {
-            "title": "Assembly extension options",
-            "type": "object",
-            "description": "Parameters to use when extending assemblies.",
-            "default": "",
-            "properties": {
-                "run_cobra": {
-                    "type": "boolean",
-                    "description": "Run COBRA to extend assemblies?"
-                },
-                "cobra_min_len": {
-                    "type": "integer",
-                    "default": 10000,
-                    "description": "Minimum sequence length for a sequence to be used as a seed for COBRA extension."
-                },
-                "cobra_coverm_args": {
-                    "type": "string",
-                    "description": "CLI arguments to use when running CoverM to calculate sequences coverage for COBRA."
-                },
-                "cobra_args": {
-                    "type": "string",
-                    "description": "CLI arguments to use when running COBRA."
-                },
-                "run_phables": {
-                    "type": "boolean",
-                    "description": "Run Phables to resolve phage componenets in assembly graph?"
-                },
-                "phables_db": {
-                    "type": "string",
-                    "description": "Path to predownloaded Phables database."
-                },
-                "phables_args": {
-                    "type": "string",
-                    "description": "CLI arguments to use when running Phables."
-                }
-            },
-            "fa_icon": "fas fa-arrow-right"
-        },
-        "assembly_quality_control_options": {
-            "title": "Assembly quality control options",
-            "type": "object",
-            "description": "Parameters for assessing the quality of and filtering assemblies",
-            "default": "",
-            "properties": {
-                "assembly_min_len": {
-                    "type": "integer",
-                    "default": 1500,
-                    "description": "Remove assembly sequences shorter than defined length."
-                },
-                "save_filtered_fasta": {
-                    "type": "boolean",
-                    "description": "Save length filtered assemblies?"
-                },
-                "run_seqkit_stats": {
-                    "type": "boolean",
-                    "description": "Run seqkit/stats to obtain assembly statistics?"
-                },
-                "run_trfinder": {
-                    "type": "boolean",
-                    "description": "Run TRFinder to identify terminal repeats in assembly sequences?"
-                },
-                "trfinder_args": {
-                    "type": "string",
-                    "description": "CLI arguments to use when running TRFinder."
-                },
-                "use_trfinder_fasta": {
-                    "type": "boolean",
-                    "description": "Use TRFinder's output FastA in downstream analyses (as opposed to the length filtered FastA)"
-                },
-                "run_tantan": {
-                    "type": "boolean",
-                    "description": "Run tantan to identify low-complexity regions?"
-                },
-                "tantan_args": {
-                    "type": "string",
-                    "default": "-s 0.9",
-                    "description": "CLI arguments to use when running tantan."
-                },
-                "pyrodigalgv_args": {
-                    "type": "string",
-                    "description": "CLI arguments to use when running pyrodigal-gv."
-                },
-                "run_nucleotide_stats": {
-                    "type": "boolean",
-                    "description": "Run nucleotide stats to calculate sequence length, GC content, N content, and CDS density?"
-                }
-            },
-            "fa_icon": "fas fa-search"
-        },
-        "mge_classification_options": {
-            "title": "MGE classification options",
-            "type": "object",
-            "description": "Parameters to use when classifying mobile genetic elements.",
-            "default": "",
-            "properties": {
-                "run_genomad": {
-                    "type": "boolean",
-                    "description": "Run geNomad to classify viruses and plasmids?"
-                },
-                "genomad_db": {
-                    "type": "string",
-                    "description": "Path to pre-downloaded geNomad database."
-                },
-                "genomad_args": {
-                    "type": "string",
-                    "description": "CLI arguments to use when running geNomad."
-                },
-                "run_pyhmmer_virus": {
-                    "type": "boolean",
-                    "description": "Run pyhmmer to identify virus hallmark HMMs?"
-                },
-                "run_pyhmmer_plasmid": {
-                    "type": "boolean",
-                    "description": "Run pyhmmer to identify plasmid hallmark HMMs?"
-                },
-                "run_pyhmmer_busco": {
-                    "type": "boolean",
-                    "description": "Run pyhmmer to identify cellular hallmark HMMs?"
-                }
-            },
-            "fa_icon": "fas fa-viruses"
-        },
-        "virus_completeness_options": {
-            "title": "Virus completeness options",
-            "type": "object",
-            "description": "Parameters to use when assessing virus completeness.",
-            "default": "",
-            "properties": {
-                "run_checkv": {
-                    "type": "boolean",
-                    "description": "Run CheckV to calculate virus completeness?"
-                },
-                "checkv_db": {
-                    "type": "string",
-                    "description": "Path to pre-downloaded Checkv database."
-                },
-                "checkv_args": {
-                    "type": "string",
-                    "description": "CLI arguments to use when running CheckV."
-                }
-            },
-            "fa_icon": "fas fa-circle-notch"
-        },
-        "institutional_config_options": {
-            "title": "Institutional config options",
-            "type": "object",
-            "fa_icon": "fas fa-university",
-            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
-            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
-            "properties": {
-                "custom_config_version": {
-                    "type": "string",
-                    "description": "Git commit id for Institutional configs.",
-                    "default": "master",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "custom_config_base": {
-                    "type": "string",
-                    "description": "Base directory for Institutional configs.",
-                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
-                    "hidden": true,
-                    "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "config_profile_name": {
-                    "type": "string",
-                    "description": "Institutional config name.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "config_profile_description": {
-                    "type": "string",
-                    "description": "Institutional config description.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "config_profile_contact": {
-                    "type": "string",
-                    "description": "Institutional config contact information.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "config_profile_url": {
-                    "type": "string",
-                    "description": "Institutional config URL link.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                }
-            }
-        },
-        "max_job_request_options": {
-            "title": "Max job request options",
-            "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
-            "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
-            "properties": {
-                "max_cpus": {
-                    "type": "integer",
-                    "description": "Maximum number of CPUs that can be requested for any single job.",
-                    "default": 16,
-                    "fa_icon": "fas fa-microchip",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
-                },
-                "max_memory": {
-                    "type": "string",
-                    "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
-                    "fa_icon": "fas fa-memory",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
-                },
-                "max_time": {
-                    "type": "string",
-                    "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
-                    "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
                 }
             }
         },
@@ -451,79 +58,11 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
-                },
-                "publish_dir_mode": {
-                    "type": "string",
-                    "default": "copy",
-                    "description": "Method used to save pipeline results to output directory.",
-                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
-                    "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
-                    "hidden": true
-                },
-                "email_on_fail": {
-                    "type": "string",
-                    "description": "Email address for completion summary, only when pipeline fails.",
-                    "fa_icon": "fas fa-exclamation-triangle",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
-                    "help_text": "An email address to send a summary email to when the pipeline is completed - ONLY sent if the pipeline does not exit successfully.",
-                    "hidden": true
-                },
-                "plaintext_email": {
-                    "type": "boolean",
-                    "description": "Send plain-text email instead of HTML.",
-                    "fa_icon": "fas fa-remove-format",
-                    "hidden": true
-                },
-                "max_multiqc_email_size": {
-                    "type": "string",
-                    "description": "File size limit when attaching MultiQC reports to summary emails.",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "default": "25.MB",
-                    "fa_icon": "fas fa-file-upload",
-                    "hidden": true
-                },
-                "monochrome_logs": {
-                    "type": "boolean",
-                    "description": "Do not use coloured log outputs.",
-                    "fa_icon": "fas fa-palette",
-                    "hidden": true
-                },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
-                    "hidden": true
-                },
-                "multiqc_config": {
-                    "type": "string",
-                    "format": "file-path",
-                    "description": "Custom config file to supply to MultiQC.",
-                    "fa_icon": "fas fa-cog",
-                    "hidden": true
-                },
-                "multiqc_logo": {
-                    "type": "string",
-                    "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
-                    "fa_icon": "fas fa-image",
-                    "hidden": true
-                },
-                "multiqc_methods_description": {
-                    "type": "string",
-                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
-                    "fa_icon": "fas fa-cog"
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -531,77 +70,335 @@
                     "default": true,
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
-                },
-                "validationShowHiddenParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "validationFailUnrecognisedParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
-                    "hidden": true,
-                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
-                },
-                "validationLenientMode": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters in lenient more.",
-                    "hidden": true,
-                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
-                },
-                "pipelines_testdata_base_path": {
-                    "type": "string",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Base URL or local path to location of pipeline test dataset files",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
-                    "hidden": true
                 }
             }
         }
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/read_download_options"
         },
         {
-            "$ref": "#/definitions/read_download_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/read_preprocessing_options"
-        },
-        {
-            "$ref": "#/definitions/logan_assembly_input_download_options"
-        },
-        {
-            "$ref": "#/definitions/read_assembly_options"
-        },
-        {
-            "$ref": "#/definitions/assembly_download_options"
-        },
-        {
-            "$ref": "#/definitions/assembly_extension_options"
-        },
-        {
-            "$ref": "#/definitions/assembly_quality_control_options"
-        },
-        {
-            "$ref": "#/definitions/mge_classification_options"
-        },
-        {
-            "$ref": "#/definitions/virus_completeness_options"
-        },
-        {
-            "$ref": "#/definitions/institutional_config_options"
-        },
-        {
-            "$ref": "#/definitions/max_job_request_options"
-        },
-        {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "publish_dir_mode": {
+            "type": "string",
+            "default": "copy"
+        },
+        "run_fastp": {
+            "type": "boolean"
+        },
+        "fastp_args": {
+            "type": "string"
+        },
+        "run_bowtie2_host_removal": {
+            "type": "boolean"
+        },
+        "bowtie2_host_removal_args": {
+            "type": "string"
+        },
+        "igenomes_host_key": {
+            "type": "string",
+            "default": "EB2"
+        },
+        "host_fasta": {
+            "type": "string"
+        },
+        "host_bowtie2_index": {
+            "type": "string"
+        },
+        "run_viromeqc": {
+            "type": "boolean"
+        },
+        "viromeqc_db": {
+            "type": "string"
+        },
+        "viromeqc_args": {
+            "type": "string"
+        },
+        "perform_run_merging": {
+            "type": "boolean"
+        },
+        "run_megahit_single": {
+            "type": "boolean"
+        },
+        "run_megahit_coassembly": {
+            "type": "boolean"
+        },
+        "megahit_args": {
+            "type": "string"
+        },
+        "run_spades_single": {
+            "type": "boolean"
+        },
+        "run_spades_coassembly": {
+            "type": "boolean"
+        },
+        "spades_args": {
+            "type": "string",
+            "default": "--meta"
+        },
+        "use_spades_scaffolds": {
+            "type": "boolean"
+        },
+        "run_penguin_single": {
+            "type": "boolean"
+        },
+        "run_penguin_coassembly": {
+            "type": "boolean"
+        },
+        "penguin_args": {
+            "type": "string"
+        },
+        "run_cobra": {
+            "type": "boolean"
+        },
+        "cobra_min_len": {
+            "type": "integer",
+            "default": 10000
+        },
+        "cobra_coverm_args": {
+            "type": "string"
+        },
+        "cobra_args": {
+            "type": "string"
+        },
+        "run_phables": {
+            "type": "boolean"
+        },
+        "phables_db": {
+            "type": "string"
+        },
+        "phables_args": {
+            "type": "string"
+        },
+        "download_logan_contigs": {
+            "type": "boolean"
+        },
+        "assembly_min_len": {
+            "type": "integer",
+            "default": 0
+        },
+        "run_seqkit_stats": {
+            "type": "boolean"
+        },
+        "run_trfinder": {
+            "type": "boolean"
+        },
+        "trfinder_args": {
+            "type": "string"
+        },
+        "use_trfinder_fasta": {
+            "type": "boolean"
+        },
+        "prepend_sample_id": {
+            "type": "boolean"
+        },
+        "assembly_split_size": {
+            "type": "integer",
+            "default": 0
+        },
+        "run_genomad": {
+            "type": "boolean"
+        },
+        "genomad_db": {
+            "type": "string"
+        },
+        "genomad_args": {
+            "type": "string"
+        },
+        "run_pyhmmer_virus": {
+            "type": "boolean"
+        },
+        "run_pyhmmer_plasmid": {
+            "type": "boolean"
+        },
+        "run_pyhmmer_busco": {
+            "type": "boolean"
+        },
+        "run_checkv": {
+            "type": "boolean"
+        },
+        "checkv_db": {
+            "type": "string"
+        },
+        "checkv_args": {
+            "type": "string"
+        },
+        "run_sequence_stats": {
+            "type": "boolean"
+        },
+        "run_tantan": {
+            "type": "boolean"
+        },
+        "tantan_args": {
+            "type": "string",
+            "default": "-s 0.9"
+        },
+        "combined_stats": {
+            "type": "string"
+        },
+        "classification_filters": {
+            "type": "string"
+        },
+        "composition_filters": {
+            "type": "string"
+        },
+        "completeness_filters": {
+            "type": "string"
+        },
+        "checkv_min_aai_completeness": {
+            "type": "integer",
+            "default": 80
+        },
+        "run_sequence_filtering": {
+            "type": "boolean"
+        },
+        "sequences_to_keep": {
+            "type": "string"
+        },
+        "run_trtrimmer": {
+            "type": "boolean"
+        },
+        "trtrimmer_args": {
+            "type": "string"
+        },
+        "run_seqhasher": {
+            "type": "boolean"
+        },
+        "seqhasher_args": {
+            "type": "string"
+        },
+        "run_vclust": {
+            "type": "boolean"
+        },
+        "vclust_prefilter_args": {
+            "type": "string"
+        },
+        "vclust_align_args": {
+            "type": "string"
+        },
+        "vclust_cluster_args": {
+            "type": "string"
+        },
+        "genome": {
+            "type": "string"
+        },
+        "igenomes_base": {
+            "type": "string",
+            "default": "s3://ngi-igenomes/igenomes/"
+        },
+        "igenomes_ignore": {
+            "type": "boolean"
+        },
+        "monochrome_logs": {
+            "type": "boolean"
+        },
+        "pipelines_testdata_base_path": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/"
+        },
+        "sra_download_method": {
+            "type": "string"
+        },
+        "sratools_args": {
+            "type": "string"
+        },
+        "logan_contigs_min_abund": {
+            "type": "integer",
+            "default": 0
+        },
+        "logan_contigs_multiplier": {
+            "type": "boolean"
+        },
+        "assemble_logan_contigs": {
+            "type": "boolean"
+        },
+        "download_logan_unitigs": {
+            "type": "boolean"
+        },
+        "logan_unitigs_min_abund": {
+            "type": "integer",
+            "default": 0
+        },
+        "logan_unitigs_multiplier": {
+            "type": "boolean"
+        },
+        "atb_urls": {
+            "type": "string"
+        },
+        "ena_urls": {
+            "type": "string"
+        },
+        "ena_download_method": {
+            "type": "string"
+        },
+        "download_aria2_args": {
+            "type": "string"
+        },
+        "download_trfinder_args": {
+            "type": "string"
+        },
+        "download_seqkit_args": {
+            "type": "string"
+        },
+        "pyrodigalgv_args": {
+            "type": "string"
+        },
+        "no_taxa_virus_min_len": {
+            "type": "integer",
+            "default": 1000000
+        },
+        "run_iphop": {
+            "type": "boolean"
+        },
+        "iphop_db": {
+            "type": "string"
+        },
+        "iphop_db_version": {
+            "type": "string"
+        },
+        "iphop_args": {
+            "type": "string"
+        },
+        "run_bacphlip": {
+            "type": "boolean"
+        },
+        "provirus_min_len": {
+            "type": "integer",
+            "default": 10000
+        },
+        "run_mvirs": {
+            "type": "boolean"
+        },
+        "mvirs_args": {
+            "type": "string"
+        },
+        "run_prophage_tracer": {
+            "type": "boolean"
+        },
+        "prophage_tracer_args": {
+            "type": "string"
+        },
+        "provirus_derep_prefilt_args": {
+            "type": "string"
+        },
+        "provirus_derep_align_args": {
+            "type": "string"
+        },
+        "provirus_derep_cluster_args": {
+            "type": "string"
+        },
+        "run_coverm": {
+            "type": "boolean"
+        },
+        "coverm_args": {
+            "type": "string"
+        }
+    }
 }
