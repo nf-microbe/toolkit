@@ -3,6 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4-beta - Breaking ground [2024-10-17]
+
+Fourth beta release of nf-microbe/toolkit. Includes MAJOR restructuring and additions to pipeline.
+
+### `Description of changes`
+
+- [#26](https://github.com/nf-microbe/toolkit/pull/26)
+1. All uneccessary nf-core code was removed to simplify the pipeline.
+2. Nested subworkflows were simplified and broken up, so subworkflows contain only one level.
+Many subworkflows were broken back down into individual modules.
+3. Assembly downloads, assembly splitting, MGE filtering, MGE dereplication, Phage host ID, MGE clustering, provirus activity,
+virus lifestyle, and MGE abundance functionalities were added
+4. pipeline nf-tests were removed. They will be added back in release 0.5-beta
+5. The modules repository was also updated and simplified (see here: https://github.com/nf-microbe/modules)
+
+
 ## v0.3beta - Testing grounds [2024-09-27]
 
 Third beta release of nf-microbe/toolkit. Includes options for downloading SRA FastQ files,
