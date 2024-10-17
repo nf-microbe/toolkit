@@ -2,6 +2,9 @@ name: "checkv_endtoend"
 description: Assess the quality of metagenome-assembled viral genomes.
 keywords:
   - checkv
+  - checkm
+  - mag
+  - metagenome
   - quality
   - isolates
   - virus

@@ -9,8 +9,7 @@ process PYHMMER_PLASMIDCLASSIFY {
 
     input:
     tuple val(meta), path(faa)
-    path conjscan_hmms
-    path pfam_ncbifam_hmms
+    path plasmid_hmms
 
     output:
     tuple val(meta), path("${prefix}.plasmid_hmms.tsv")     , emit: hits
@@ -26,8 +25,7 @@ process PYHMMER_PLASMIDCLASSIFY {
     """
     pyhmmer_plasmidclassify.py \\
         --input ${faa} \\
-        --conjscan ${conjscan_hmms} \\
-        --pfam_ncbifam ${pfam_ncbifam_hmms} \\
+        --plasmid_hallmarks ${plasmid_hmms} \\
         --prefix ${prefix} \\
         ${args}
 

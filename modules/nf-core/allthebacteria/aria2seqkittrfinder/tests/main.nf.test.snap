@@ -1,0 +1,100 @@
+{
+    "achromobacter_xylosoxidans__01": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.fasta.gz:md5,eec7430cdc2ca58b32a80563d620b450"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.tsv:md5,9be5dec8d2f7ff5ed8ae346d37d73e14"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,4d537387f97a1af2fac93bb00835f3e4"
+                ],
+                "fasta": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.fasta.gz:md5,eec7430cdc2ca58b32a80563d620b450"
+                    ]
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.tsv:md5,9be5dec8d2f7ff5ed8ae346d37d73e14"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4d537387f97a1af2fac93bb00835f3e4"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-11T08:32:34.133236198"
+    },
+    "achromobacter_xylosoxidans__01 - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,4d537387f97a1af2fac93bb00835f3e4"
+                ],
+                "fasta": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "achromobacter_xylosoxidans__01"
+                        },
+                        "achromobacter_xylosoxidans__01.trfinder.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4d537387f97a1af2fac93bb00835f3e4"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-11T07:34:51.605829282"
+    }
+}

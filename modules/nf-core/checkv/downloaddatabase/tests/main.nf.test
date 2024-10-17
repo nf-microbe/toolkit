@@ -3,6 +3,7 @@ nextflow_process {
     name "Test Process CHECKV_DOWNLOADDATABASE"
     script "../main.nf"
     process "CHECKV_DOWNLOADDATABASE"
+    config "./nextflow.config"
 
     tag "modules"
     tag "modules_nfcore"
@@ -10,6 +11,7 @@ nextflow_process {
     tag "checkv/downloaddatabase"
 
     test("No input: download only") {
+
         then {
             assertAll(
                 { assert process.success },
@@ -19,7 +21,9 @@ nextflow_process {
     }
 
     test("No input: download only - stub") {
+
         options "-stub"
+
         then {
             assertAll(
                 { assert process.success },
@@ -27,4 +31,5 @@ nextflow_process {
             )
         }
     }
+
 }
