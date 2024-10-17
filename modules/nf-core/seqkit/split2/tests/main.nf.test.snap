@@ -208,7 +208,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-07T22:54:10.880361031"
+        "timestamp": "2024-10-15T17:22:20.329718591"
     },
     "single_end - part - stub": {
         "content": [
@@ -249,7 +249,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-07T22:53:38.393969135"
+        "timestamp": "2024-10-15T17:21:30.503538291"
     },
     "single_end - length - stub": {
         "content": [
@@ -290,7 +290,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-07T22:53:06.044969678"
+        "timestamp": "2024-10-15T17:20:36.034689508"
     },
     "paired_end - part": {
         "content": [

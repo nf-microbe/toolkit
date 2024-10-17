@@ -20,7 +20,7 @@ process SEQKIT_SPLIT2 {
     script:
     def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if(meta.single_end == null || meta.single_end){
+    if(meta.assembler != null || meta.single_end){
         """
         seqkit \\
             split2 \\
@@ -55,6 +55,8 @@ process SEQKIT_SPLIT2 {
     def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
+    echo ${args}
+
     mkdir -p ${prefix}
     echo "" | gzip > ${prefix}/${prefix}.part_001.fasta.gz
     echo "" | gzip > ${prefix}/${prefix}.part_002.fasta.gz

@@ -13,9 +13,6 @@
             "properties": {
                 "sra_accessions": {
                     "type": "string"
-                },
-                "download_sra_fastqs": {
-                    "type": "boolean"
                 }
             },
             "fa_icon": "fas fa-arrow-circle-down"
@@ -106,7 +103,8 @@
             "type": "string"
         },
         "igenomes_host_key": {
-            "type": "string"
+            "type": "string",
+            "default": "EB2"
         },
         "host_fasta": {
             "type": "string"
@@ -125,16 +123,6 @@
         },
         "perform_run_merging": {
             "type": "boolean"
-        },
-        "download_logan_mult_contigs": {
-            "type": "boolean"
-        },
-        "download_logan_mult_unitigs": {
-            "type": "boolean"
-        },
-        "logan_mult_min_abund": {
-            "type": "integer",
-            "default": 0
         },
         "run_megahit_single": {
             "type": "boolean"
@@ -315,7 +303,101 @@
             "type": "string",
             "default": "https://raw.githubusercontent.com/nf-core/test-datasets/"
         },
-        "fasta": {
+        "sra_download_method": {
+            "type": "string"
+        },
+        "sratools_args": {
+            "type": "string"
+        },
+        "logan_contigs_min_abund": {
+            "type": "integer",
+            "default": 0
+        },
+        "logan_contigs_multiplier": {
+            "type": "boolean"
+        },
+        "assemble_logan_contigs": {
+            "type": "boolean"
+        },
+        "download_logan_unitigs": {
+            "type": "boolean"
+        },
+        "logan_unitigs_min_abund": {
+            "type": "integer",
+            "default": 0
+        },
+        "logan_unitigs_multiplier": {
+            "type": "boolean"
+        },
+        "atb_urls": {
+            "type": "string"
+        },
+        "ena_urls": {
+            "type": "string"
+        },
+        "ena_download_method": {
+            "type": "string"
+        },
+        "download_aria2_args": {
+            "type": "string"
+        },
+        "download_trfinder_args": {
+            "type": "string"
+        },
+        "download_seqkit_args": {
+            "type": "string"
+        },
+        "pyrodigalgv_args": {
+            "type": "string"
+        },
+        "no_taxa_virus_min_len": {
+            "type": "integer",
+            "default": 1000000
+        },
+        "run_iphop": {
+            "type": "boolean"
+        },
+        "iphop_db": {
+            "type": "string"
+        },
+        "iphop_db_version": {
+            "type": "string"
+        },
+        "iphop_args": {
+            "type": "string"
+        },
+        "run_bacphlip": {
+            "type": "boolean"
+        },
+        "provirus_min_len": {
+            "type": "integer",
+            "default": 10000
+        },
+        "run_mvirs": {
+            "type": "boolean"
+        },
+        "mvirs_args": {
+            "type": "string"
+        },
+        "run_prophage_tracer": {
+            "type": "boolean"
+        },
+        "prophage_tracer_args": {
+            "type": "string"
+        },
+        "provirus_derep_prefilt_args": {
+            "type": "string"
+        },
+        "provirus_derep_align_args": {
+            "type": "string"
+        },
+        "provirus_derep_cluster_args": {
+            "type": "string"
+        },
+        "run_coverm": {
+            "type": "boolean"
+        },
+        "coverm_args": {
             "type": "string"
         }
     }

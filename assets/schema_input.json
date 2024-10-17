@@ -15,7 +15,6 @@
             },
             "run": {
                 "type": "integer",
-                "pattern": "^\\d+$",
                 "meta": ["run"],
                 "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
             },
@@ -45,18 +44,6 @@
                 "exists": true,
                 "pattern": "^\\S+\\.f(asta|na|a)\\.gz$",
                 "errorMessage": "FastA file contain spaces and must have extension '.fasta.gz' or '.fna.gz' or '.fa.gz'"
-            },
-            "assembler": {
-                "type": "string",
-                "pattern": "^\\S+$",
-                "meta": ["assembler"],
-                "errorMessage": "Column 'assembler' contains an empty field. Either remove column 'assembler' or fill each field with a value."
-            },
-            "assembly_method": {
-                "type": "string",
-                "pattern": "^\\S+$",
-                "meta": ["assembly_method"],
-                "errorMessage": "Column 'assembly_method' contains an empty field. Either remove column 'assembly_method' or fill each field with a value."
             }
         },
         "dependentRequired": {
