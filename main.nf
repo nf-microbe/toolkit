@@ -400,11 +400,11 @@ workflow {
         // load and parse allthebacteria urls
         ch_atb_urls = Channel
             .fromPath(params.atb_urls)
-            .splitCsv(header: false)
-            .flatten()
+            .splitCsv(header:false, sep:'\t')
             .map { row ->
-                [ [ id: file(row).getSimpleName(), run: 1, assembler:'shovill' ], [row] ]
+                [ [ id: file(row[0]).getName(), run: 1, assembler:'shovill' ], [row[1]] ]
             }
+            .view()
 
         //
         // MODULE: Download allthebacteria terminal repeat sequences
