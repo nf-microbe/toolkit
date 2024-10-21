@@ -132,7 +132,7 @@
                     },
                     "mvirs/oprs": {
                         "branch": "master",
-                        "git_sha": "0d9db7e3497351df04390ae70409c8b3ec9e065c",
+                        "git_sha": "46a0af7a582082fbdcfdb282e3fba08ec7ca364e",
                         "installed_by": ["fastqfasta_mvirs_tsv"]
                     },
                     "phables/install": {
@@ -157,7 +157,7 @@
                     },
                     "prophagetracer/wgs": {
                         "branch": "master",
-                        "git_sha": "0d9db7e3497351df04390ae70409c8b3ec9e065c",
+                        "git_sha": "46a0af7a582082fbdcfdb282e3fba08ec7ca364e",
                         "installed_by": ["fastqfasta_prophagetracer_tsv"]
                     },
                     "pyhmmer/buscoclassify": {
@@ -361,12 +361,12 @@
                     },
                     "fastqfasta_mvirs_tsv": {
                         "branch": "master",
-                        "git_sha": "892acf0d7837ada8d5c1755b9a6f95dae8ec76db",
+                        "git_sha": "46a0af7a582082fbdcfdb282e3fba08ec7ca364e",
                         "installed_by": ["subworkflows"]
                     },
                     "fastqfasta_prophagetracer_tsv": {
                         "branch": "master",
-                        "git_sha": "892acf0d7837ada8d5c1755b9a6f95dae8ec76db",
+                        "git_sha": "46a0af7a582082fbdcfdb282e3fba08ec7ca364e",
                         "installed_by": ["subworkflows"]
                     },
                     "fastqgfa_phables_fasta": {
