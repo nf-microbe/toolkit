@@ -132,7 +132,7 @@
                     },
                     "mvirs/oprs": {
                         "branch": "master",
-                        "git_sha": "039c1d7f5291a1d63b94aaeafb6aa06850418d29",
+                        "git_sha": "9748b321a184cf4a0198df76df7641278367c56b",
                         "installed_by": ["fastqfasta_mvirs_tsv"]
                     },
                     "phables/install": {
