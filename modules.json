@@ -12,7 +12,7 @@
                     },
                     "allthebacteria/aria2seqkittrfinder": {
                         "branch": "master",
-                        "git_sha": "f055e0b360fb61143408302819be1a037da15871",
+                        "git_sha": "c28f8df0c42cac4356ee11f9e3c492843e54c448",
                         "installed_by": ["modules"]
                     },
                     "bacphlip": {
@@ -132,7 +132,7 @@
                     },
                     "mvirs/oprs": {
                         "branch": "master",
-                        "git_sha": "46a0af7a582082fbdcfdb282e3fba08ec7ca364e",
+                        "git_sha": "039c1d7f5291a1d63b94aaeafb6aa06850418d29",
                         "installed_by": ["fastqfasta_mvirs_tsv"]
                     },
                     "phables/install": {
