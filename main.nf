@@ -1243,7 +1243,6 @@ workflow {
 
     if (params.run_mvirs) {
         //
-        //
         // SUBWORKFLOW: Predict provirus activity
         //
         FASTQFASTA_MVIRS_TSV(
@@ -1255,7 +1254,6 @@ workflow {
 
     if (params.run_prophage_tracer) {
         //
-        //
         // SUBWORKFLOW: Predict provirus activity
         //
         FASTQFASTA_PROPHAGETRACER_TSV(
@@ -1263,6 +1261,17 @@ workflow {
             ch_provirus_subworkflow_input.fasta.unique()
         )
         ch_versions = ch_versions.mix(FASTQFASTA_PROPHAGETRACER_TSV.out.versions)
+    }
+
+    if (params.run_mgefinder) {
+        //
+        // SUBWORKFLOW: Predict MGE activity
+        //
+        FASTQFASTA_MGEFINDER_TSV(
+            ch_provirus_subworkflow_input.fastq,
+            ch_provirus_subworkflow_input.fasta.unique()
+        )
+        ch_versions = ch_versions.mix(FASTQFASTA_MGEFINDER_TSV.out.versions)
     }
 
     // TODO: Add propagate
