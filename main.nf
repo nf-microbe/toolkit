@@ -776,6 +776,10 @@ workflow {
         ch_genomad_scores_tsv       = FASTA_GENOMAD_FAATSV.out.scores_tsv
         ch_genomad_taxonomy_tsv     = FASTA_GENOMAD_FAATSV.out.taxonomy_tsv
         ch_genomad_proteins_faa_gz  = FASTA_GENOMAD_FAATSV.out.proteins_faa_gz
+
+        if (params.use_genomad_fasta) {
+            ch_trfinder_fasta_gz = FASTA_GENOMAD_FAATSV.out.virus_fna_gz
+        }
     } else {
         ch_genomad_genes_tsv    = ch_empty_channel
         ch_genomad_features_tsv = ch_empty_channel
