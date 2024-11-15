@@ -65,6 +65,7 @@ include { FASTA_VCLUST_FASTATSV as FASTA_VCLUST_FASTATSV_PROVIRUS   } from './su
 include { FASTQ_BOWTIE2_FASTQ                   } from './subworkflows/nf-core/fastq_bowtie2_fastq'
 include { FASTQ_VIROMEQC_TSV                    } from './subworkflows/nf-core/fastq_viromeqc_tsv'
 include { FASTQFASTA_COBRA_FASTA                } from './subworkflows/nf-core/fastqfasta_cobra_fasta'
+include { FASTQFASTA_MGEFINDER_TSV              } from './subworkflows/nf-core/fastqfasta_mgefinder_tsv'
 include { FASTQFASTA_MVIRS_TSV                  } from './subworkflows/nf-core/fastqfasta_mvirs_tsv'
 include { FASTQFASTA_PROPHAGETRACER_TSV         } from './subworkflows/nf-core/fastqfasta_prophagetracer_tsv'
 include { FASTQGFA_PHABLES_FASTA                } from './subworkflows/nf-core/fastqgfa_phables_fasta'
@@ -1188,7 +1189,7 @@ workflow {
         PROVIRUS ACTIVITY
     -------------------------------------------------
     */
-    if (params.run_mvirs || params.run_prophage_tracer) {
+    if (params.run_mvirs || params.run_prophage_tracer || params.run_mgefinder) {
         //
         // MODULE: Remove low length assemblies before combining within groups
         //
