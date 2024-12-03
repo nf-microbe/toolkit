@@ -30,6 +30,7 @@ include { MEGAHIT as MEGAHIT_COASSEMBLY                 } from './modules/nf-cor
 include { MEGAHIT as MEGAHIT_SINGLE                     } from './modules/nf-core/megahit'
 include { PLASS_PENGUIN as PLASS_PENGUIN_COASSEMBLY     } from './modules/nf-core/plass/penguin'
 include { PLASS_PENGUIN as PLASS_PENGUIN_SINGLE         } from './modules/nf-core/plass/penguin'
+include { PROPAGATE                                     } from './modules/nf-core/propagate'
 include { PYHMMER_BUSCOCLASSIFY                         } from './modules/nf-core/pyhmmer/buscoclassify'
 include { PYHMMER_PLASMIDCLASSIFY                       } from './modules/nf-core/pyhmmer/plasmidclassify'
 include { PYHMMER_VIRUSCLASSIFY                         } from './modules/nf-core/pyhmmer/virusclassify'
@@ -58,11 +59,13 @@ include { VTDB_FILTERSEQUENCES                          } from './modules/nf-cor
 // SUBWORKFLOWS
 include { FASTA_CHECKV_TSV                      } from './subworkflows/nf-core/fasta_checkv_tsv'
 include { FASTA_GENOMAD_FAATSV                  } from './subworkflows/nf-core/fasta_genomad_faatsv'
+include { FASTA_GENOMAD_FAATSV as PROVIRUS_GENOMAD  } from './subworkflows/nf-core/fasta_genomad_faatsv'
 include { FASTA_IPHOP_TSV                       } from './subworkflows/nf-core/fasta_iphop_tsv'
 include { FASTA_SEQHASHER_FASTA                 } from './subworkflows/nf-core/fasta_seqhasher_fasta'
 include { FASTA_VCLUST_FASTATSV                 } from './subworkflows/nf-core/fasta_vclust_fastatsv'
 include { FASTA_VCLUST_FASTATSV as FASTA_VCLUST_FASTATSV_PROVIRUS   } from './subworkflows/nf-core/fasta_vclust_fastatsv'
 include { FASTQ_BOWTIE2_FASTQ                   } from './subworkflows/nf-core/fastq_bowtie2_fastq'
+include { FASTQ_HOSTILE_FASTQ                   } from './subworkflows/nf-core/fastq_hostile_fastq'
 include { FASTQ_VIROMEQC_TSV                    } from './subworkflows/nf-core/fastq_viromeqc_tsv'
 include { FASTQFASTA_COBRA_FASTA                } from './subworkflows/nf-core/fastqfasta_cobra_fasta'
 include { FASTQFASTA_MGEFINDER_TSV              } from './subworkflows/nf-core/fastqfasta_mgefinder_tsv'
@@ -83,6 +86,7 @@ workflow {
     ch_versions             = Channel.empty()
     ch_input_fastqs_prefilt = Channel.empty()
     ch_input_fastas_prefilt = Channel.empty()
+    ch_input_sra            = Channel.empty()
 
     /*
     -------------------------------------------------
@@ -95,18 +99,22 @@ workflow {
         //
         ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
             .map {
-                meta, fastq_1, fastq_2, fasta ->
+                meta, fastq_1, fastq_2, sra, fasta ->
                     meta.run        = meta.run == null ? 1 : meta.run
                     meta.group      = meta.group == null ? meta.id : meta.group
                     meta.single_end = fastq_2 ? false : true
+                    no_fastq        = !fastq_1 && !fastq_2
                     if (meta.single_end) {
-                        return [ meta, [ fastq_1 ], fasta ]
+                        return [ meta, [ fastq_1 ], sra, fasta ]
+                    } else if (!no_fastq) {
+                        return [ meta, [ fastq_1, fastq_2 ], sra, fasta ]
                     } else {
-                        return [ meta, [ fastq_1, fastq_2 ], fasta ]
+                        return [ meta, [], sra, fasta ]
                     }
             }
-            .multiMap { meta, fastqs, fastas ->
+            .multiMap { meta, fastqs, sra, fastas ->
                 fastqs: [ meta, fastqs ]
+                sra:    [ meta, sra ]
                 fastas: [ meta, fastas ]
             }
 
@@ -120,6 +128,7 @@ workflow {
 
         ch_input_fastqs_prefilt = ch_input_fastqs_prefilt.mix(ch_samplesheet.fastqs)
         ch_input_fastas_prefilt = ch_input_fastas_prefilt.mix(ch_samplesheet.fastas)
+        ch_input_sra            = ch_input_sra.mix(ch_samplesheet.sra)
     }
 
     if (params.fastqs) {
@@ -161,13 +170,13 @@ workflow {
     ch_input_fastqs = ch_input_fastqs_prefilt.filter { meta, fastqs -> fastqs[0] }
     ch_input_fastas = ch_input_fastas_prefilt.filter { meta, fastas -> fastas }
 
-    ch_sra_accessions       = null
-
-    if (params.sra_accessions) {
-        // Load SRA accessions one-by-one from file
-        ch_sra_accessions = Channel.fromPath(params.sra_accessions)
-            .splitCsv(header:false)
-            .map { row -> [ [ id: row[0], run: 1, group: row[0] ], row[0] ] }
+    // Check if outputs exist (better than nextflow -resume feature)
+    ch_input_fastqs.branch { meta, fastqs ->
+        // runmerged: file("${params.outdir}/cat_fastq_runmerge/${meta.id}*.fastq.gz").size > 0
+        // hostremoved: file("${params.outdir}/cat_fastq_runmerge/${meta.id}*.fastq.gz").exists() || file("${params.outdir}/fastq_hostile_fastq/hostile_clean/*${meta.id}*.fastq.gz").exists()
+        // processed: file("${params.outdir}/fastp/*${meta.id}*fastp.fastq.gz").exists()
+        // downloaded: file("${params.outdir}/sra_asperacli/*${meta.id}*.fastq.gz").exists() || file("${params.outdir}/sra_sratool/*${meta.id}*.fastq.gz").exists()
+        nothing: true
     }
 
     /*
@@ -175,12 +184,12 @@ workflow {
         READ DOWNLOAD
     -------------------------------------------------
     */
-    if (ch_sra_accessions && params.sra_download_method == 'sratools') {
+    if (params.sra_download_method == 'sratools') {
         //
         // MODULE: Download SRA FastQ files
         //
         SRA_SRATOOLS(
-            ch_sra_accessions.map { meta, acc -> [ [ id: "sra_" + meta.id, run: meta.run, group: meta.id ], acc ] }
+            ch_input_sra.map { meta, acc -> [ [ id: meta.id, run: meta.run, group: meta.group ], acc ] }
         )
         ch_versions     = ch_versions.mix(SRA_SRATOOLS.out.versions)
         ch_input_fastqs = ch_input_fastqs
@@ -192,12 +201,12 @@ workflow {
             )
     }
 
-    if (ch_sra_accessions && params.sra_download_method == 'asperacli') {
+    if (params.sra_download_method == 'asperacli') {
         //
         // MODULE: Download SRA FastQ files
         //
         SRA_ASPERACLI(
-            ch_sra_accessions.map { meta, acc -> [ [ id: "sra_" + meta.id, run: meta.run, group: meta.id ], acc ] }
+            ch_input_sra.map { meta, acc -> [ [ id: meta.id, run: meta.run, group: meta.group ], acc ] }
         )
         ch_versions     = ch_versions.mix(SRA_ASPERACLI.out.versions)
         ch_input_fastqs = ch_input_fastqs
@@ -239,7 +248,7 @@ workflow {
         HOST READ REMOVAL
     -------------------------------------------------
     */
-    if (params.run_bowtie2_host_removal) {
+    if (params.host_removal_method == "bowtie2") {
         // Load igenomes fasta and bowtie2 index
         igenomes_fasta   = params.genomes[params.igenomes_host_key]['fasta']
         igenomes_index   = params.genomes[params.igenomes_host_key]['bowtie2']
@@ -279,9 +288,17 @@ workflow {
         ch_hostremoved_fastq_gz = ch_fastp_fastq_gz
     }
 
-    //
-    // TODO: MODULE: Count reads after host removal
-    //
+    if (params.host_removal_method == "hostile") {
+        //
+        // SUBWORKFLOW: Remove host reads
+        //
+        FASTQ_HOSTILE_FASTQ(
+            ch_fastp_fastq_gz,
+            params.hostile_index
+        )
+        ch_hostremoved_fastq_gz = FASTQ_HOSTILE_FASTQ.out.fastq_gz
+        ch_versions             = ch_versions.mix(FASTQ_HOSTILE_FASTQ.out.versions)
+    }
 
     /*
     -------------------------------------------------
@@ -346,12 +363,12 @@ workflow {
         LOGAN CONTIG/UNITIG DOWNLOAD
     -------------------------------------------------
     */
-    if (ch_sra_accessions && (params.download_logan_contigs)) {
+    if ((params.download_logan_contigs)) {
         //
         // MODULE: Download logan contigs
         //
         LOGAN_CONTIGAWSCLIMULTIPLIER(
-            ch_sra_accessions.map { meta, accession -> [ [ id: "logan_contig_" + meta.id, run: 1, group: "logan_contig_" + meta.id, single_end: true ], accession] }
+            ch_input_sra.map { meta, accession -> [ [ id: "logan_contig_" + meta.id, run: 1, group: "logan_contig_" + meta.id, single_end: true ], accession] }
         )
         ch_versions                     = ch_versions.mix(LOGAN_CONTIGAWSCLIMULTIPLIER.out.versions.first())
         ch_logan_contig_fa_gz           = LOGAN_CONTIGAWSCLIMULTIPLIER.out.raw_fasta
@@ -372,12 +389,12 @@ workflow {
         }
     }
 
-    if (ch_sra_accessions && (params.download_logan_unitigs)) {
+    if ((params.download_logan_unitigs)) {
         //
         // MODULE: Download logan contigs
         //
         LOGAN_UNITIGAWSCLIMULTIPLIER(
-            ch_sra_accessions.map { meta, accession -> [ [ id: "logan_unitig_" + meta.id, run: 1, group: "logan_unitig_" + meta.id, single_end: true ], accession] }
+            ch_input_sra.map { meta, accession -> [ [ id: "logan_unitig_" + meta.id, run: 1, group: "logan_unitig_" + meta.id, single_end: true ], accession] }
         )
         ch_versions                     = ch_versions.mix(LOGAN_UNITIGAWSCLIMULTIPLIER.out.versions.first())
         ch_logan_unitig_fa_gz           = LOGAN_UNITIGAWSCLIMULTIPLIER.out.raw_fasta
@@ -405,7 +422,6 @@ workflow {
             .map { row ->
                 [ [ id: file(row[0]).getName(), run: 1, assembler:'shovill' ], [row[1]] ]
             }
-            .view()
 
         //
         // MODULE: Download allthebacteria terminal repeat sequences
@@ -422,7 +438,7 @@ workflow {
         // MODULE: Download allthebacteria sample-specific assemblies
         //
         ALLTHEBACTERIA_ARIA2SEQKIT(
-            ch_sra_accessions.map { meta, accession -> [ [ id: "atb_" + meta.id, run: 1, group: meta.id, assembler: 'shovill' ], accession] },
+            ch_input_sra.map { meta, accession -> [ [ id: "atb_" + meta.id, run: 1, group: meta.id, assembler: 'shovill' ], accession] },
             "${projectDir}/assets/db/atb_file_list.all.2024_10_17.tsv"
         )
         ch_versions     = ch_versions.mix(ALLTHEBACTERIA_ARIA2SEQKIT.out.versions)
@@ -772,6 +788,7 @@ workflow {
             params.genomad_db
         )
         ch_versions                 = ch_versions.mix(FASTA_GENOMAD_FAATSV.out.versions.first())
+        ch_virus_summary_tsv        = FASTA_GENOMAD_FAATSV.out.virus_tsv
         ch_genomad_genes_tsv        = FASTA_GENOMAD_FAATSV.out.genes_tsv
         ch_genomad_features_tsv     = FASTA_GENOMAD_FAATSV.out.features_tsv
         ch_genomad_scores_tsv       = FASTA_GENOMAD_FAATSV.out.scores_tsv
@@ -786,6 +803,7 @@ workflow {
         ch_genomad_features_tsv = ch_empty_channel
         ch_genomad_scores_tsv   = ch_empty_channel
         ch_genomad_taxonomy_tsv = ch_empty_channel
+        ch_virus_summary_tsv    = ch_empty_channel
 
         if (params.run_pyhmmer_busco ||
             params.run_pyhmmer_plasmid ||
@@ -1189,18 +1207,22 @@ workflow {
         PROVIRUS ACTIVITY
     -------------------------------------------------
     */
-    if (params.run_mvirs || params.run_prophage_tracer || params.run_mgefinder) {
-        //
-        // MODULE: Remove low length assemblies before combining within groups
-        //
-        SEQKIT_SEQ_PROVIRUS(
-            ch_derep_fasta_gz
-        )
-        ch_versions                     = ch_versions.mix(SEQKIT_SEQ_PROVIRUS.out.versions)
-        ch_provirus_prefilt_fasta_gz    = SEQKIT_SEQ_PROVIRUS.out.fastx
+    if (params.run_mvirs || params.run_prophage_tracer || params.run_mgefinder || params.run_propagate) {
+        if (params.provirus_min_len > 0) {
+            //
+            // MODULE: Remove low length assemblies before combining within groups
+            //
+            SEQKIT_SEQ_PROVIRUS(
+                ch_derep_fasta_gz
+            )
+            ch_versions                     = ch_versions.mix(SEQKIT_SEQ_PROVIRUS.out.versions)
+            ch_provirus_prefilt_fasta_gz    = SEQKIT_SEQ_PROVIRUS.out.fastx
 
-        // REMOVE EMPTY FASTA FILES FROM CHANNEL
-        ch_provirus_fasta_gz    = rmEmptyFastAs(ch_provirus_prefilt_fasta_gz, false)
+            // REMOVE EMPTY FASTA FILES FROM CHANNEL
+            ch_provirus_fasta_gz    = rmEmptyFastAs(ch_provirus_prefilt_fasta_gz, false)
+        } else {
+            ch_provirus_fasta_gz   = ch_derep_fasta_gz
+        }
 
         // combine all input fasta files into a single file
         ch_provirus_group_fasta_gz  = ch_provirus_fasta_gz
@@ -1223,26 +1245,47 @@ workflow {
         ch_provirus_concat_fasta_gz = SEQKIT_CONCAT_PROVIRUS.out.fastx.mix(ch_provirus_group_fasta_gz.skip)
 
         if (params.run_provirus_dereplication) {
+            // don't dereplicate groups with only one fasta
+            ch_provirus_derep_fasta_gz = ch_provirus_concat_fasta_gz
+                .branch { meta, fasta ->
+                    derep: fasta.size() > 1
+                    skip:  true
+                }
+
             //
             // SUBWORKFLOW: Dereplicate provirus fastas
             //
             FASTA_VCLUST_FASTATSV_PROVIRUS(
-                ch_provirus_concat_fasta_gz,
+                ch_provirus_derep_fasta_gz.derep,
                 "${projectDir}/bin/vclust"
             )
             ch_versions                 = ch_versions.mix(FASTA_VCLUST_FASTATSV_PROVIRUS.out.versions)
-            ch_provirus_derep_fasta_gz  = FASTA_VCLUST_FASTATSV_PROVIRUS.out.cluster_reps_fasta_gz
+            ch_provirus_derep_fasta_gz  = FASTA_VCLUST_FASTATSV_PROVIRUS.out.cluster_reps_fasta_gz.mix(
+                ch_provirus_derep_fasta_gz.skip
+            )
+
+            //
+            // SUBWORKFLOW: Classify dereplicated proviruses with geNomad
+            //
+            PROVIRUS_GENOMAD(
+                ch_provirus_derep_fasta_gz,
+                params.genomad_db
+            )
+            ch_provirus_summary_tsv = PROVIRUS_GENOMAD.out.virus_tsv
         } else {
             ch_provirus_derep_fasta_gz  = ch_provirus_concat_fasta_gz
+            ch_provirus_summary_tsv     = ch_empty_channel
         }
 
         // combine input by meta.group
         ch_provirus_subworkflow_input = ch_runmerged_fastq_gz.filter { meta, fastq -> meta.single_end == false }
             .map { meta, fastq -> [ [ id: meta.group ], meta, fastq ] }
             .combine(ch_provirus_derep_fasta_gz, by:0)
-            .multiMap { meta_group, meta_fastq, fastq, fasta ->
+            .combine(ch_provirus_summary_tsv, by:0)
+            .multiMap { meta_group, meta_fastq, fastq, fasta, tsv ->
                 fastq:  [ meta_fastq, fastq ]
                 fasta:  [ meta_group, fasta ]
+                tsv:    [ meta_group, tsv ]
             }
     }
 
@@ -1279,7 +1322,17 @@ workflow {
         ch_versions = ch_versions.mix(FASTQFASTA_MGEFINDER_TSV.out.versions)
     }
 
-    // TODO: Add propagate
+    // join fastq, fasta, and genomad data for provirus activity
+    if (params.run_propagate) {
+        //
+        // MODULE: Run propagate to look for increased coverage in provirus regions
+        //
+        PROPAGATE(
+            ch_provirus_subworkflow_input.fastq,
+            ch_provirus_subworkflow_input.fasta,
+            ch_provirus_subworkflow_input.tsv
+        )
+    }
 
 
     /*

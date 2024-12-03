@@ -10,15 +10,12 @@ process PROPAGATE {
     input:
     tuple val(meta) , path(fastq)
     tuple val(meta2), path(fasta)
-    tuple val(meta3), path(coords)
+    tuple val(meta3), path(genomad)
 
     output:
     tuple val(meta), path("${prefix}.propagate.tsv")    , emit: results
     tuple val(meta), path("${prefix}.propagate.log")    , emit: log     , optional: true
     path  "versions.yml"                                , emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
@@ -30,9 +27,19 @@ process PROPAGATE {
         gzip -c -d ${fasta} > ${fasta_name}
     fi
 
+    # convert genomad to coords
+    echo -e "scaffold\tfragment\tstart\tstop" > ${prefix}.coords.tsv
+    cat ${genomad} | \\
+    grep "|provirus" | \\
+    awk -F'\t' '{ print \$1 "\t" \$1 "\t" \$4 }' | sed 's/|provirus[^\t]*//1; s/-/\t/' \\
+    >> ${prefix}.coords.tsv
+
+    # remove description (after space) from sequence headers
+    sed '/^>/ s/ .*//' ${fasta_name} > ${prefix}.renamed.fasta
+
     Propagate \\
-        -f ${fasta_name} \\
-        -v ${coords} \\
+        -f ${prefix}.renamed.fasta \\
+        -v ${prefix}.coords.tsv \\
         -r ${fastq} \\
         -o ${prefix}.propagate \\
         -t ${task.cpus} \\

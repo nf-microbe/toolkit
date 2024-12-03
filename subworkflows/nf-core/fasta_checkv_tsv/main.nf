@@ -30,7 +30,7 @@ workflow FASTA_CHECKV_TSV {
     //
     CHECKV_ENDTOEND(
         virus_fasta_gz,
-        ch_checkv_db.first()
+        ch_checkv_db
     )
     ch_versions = ch_versions.mix(CHECKV_ENDTOEND.out.versions)
 
@@ -40,7 +40,7 @@ workflow FASTA_CHECKV_TSV {
     CHECKV_GENBANKHITS(
         CHECKV_ENDTOEND.out.aai,
         ncbi_info,
-        ch_checkv_db.first()
+        ch_checkv_db
     )
     ch_versions     = ch_versions.mix(CHECKV_GENBANKHITS.out.versions)
 

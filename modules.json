@@ -100,6 +100,16 @@
                         "git_sha": "3acf99a2b94f56b2110852a6762f4787e86ded08",
                         "installed_by": ["fasta_genomad_faatsv", "modules"]
                     },
+                    "hostile/clean": {
+                        "branch": "master",
+                        "git_sha": "82e6196d4013491def80d207440a957a2b13431b",
+                        "installed_by": ["fastq_hostile_fastq", "modules"]
+                    },
+                    "hostile/fetch": {
+                        "branch": "master",
+                        "git_sha": "82e6196d4013491def80d207440a957a2b13431b",
+                        "installed_by": ["fastq_hostile_fastq", "modules"]
+                    },
                     "iphop/download": {
                         "branch": "master",
                         "git_sha": "dd0a0b20f319195b5d7e6f2b9da29681df7ea3c7",
@@ -123,6 +133,26 @@
                     "megahit": {
                         "branch": "master",
                         "git_sha": "1e16e56e4f8c9dfe05c08a26731bdae4500d8f74",
+                        "installed_by": ["modules"]
+                    },
+                    "mgefinder/find": {
+                        "branch": "master",
+                        "git_sha": "8cc890896b3879d79bfc9a121d73210c5fc61423",
+                        "installed_by": ["modules"]
+                    },
+                    "mgefinder/formatbam": {
+                        "branch": "master",
+                        "git_sha": "8cc890896b3879d79bfc9a121d73210c5fc61423",
+                        "installed_by": ["modules"]
+                    },
+                    "mgefinder/inferseqreference": {
+                        "branch": "master",
+                        "git_sha": "8cc890896b3879d79bfc9a121d73210c5fc61423",
+                        "installed_by": ["modules"]
+                    },
+                    "mgefinder/pair": {
+                        "branch": "master",
+                        "git_sha": "8cc890896b3879d79bfc9a121d73210c5fc61423",
                         "installed_by": ["modules"]
                     },
                     "mvirs/index": {
@@ -347,6 +377,11 @@
                     "fastq_bowtie2_fastq": {
                         "branch": "master",
                         "git_sha": "9c32bbc0106d6a61943a898781b0d0a22b96729f",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fastq_hostile_fastq": {
+                        "branch": "master",
+                        "git_sha": "7a805d368b067efbe06327a52ae0c89e48f6a3a8",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_viromeqc_tsv": {
